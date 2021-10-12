@@ -1,0 +1,14 @@
+
+.bloop/
+
+.bsp/
+
+.DS_Store
+
+.metals/
+
+.vscode/
+
+target/
+
+metals.sbt
