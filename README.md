@@ -15,11 +15,9 @@ A pure Scala logging library with no reflection
 ## Example 
 
 ```scala
-import cats.effect.kernel.Sync
+import cats.effect.ExitCode
 import cats.effect.IO
 import cats.effect.IOApp
-import cats.effect.ExitCode
-import cats.effect.std.Console
 import clog.*
 
 object MainCats extends IOApp:
@@ -47,9 +45,9 @@ and running it yields:
 ```scala
 import cats.effect.unsafe.implicits.global
 MainCats.run(Nil).unsafeRunSync()
-// 12:31:51 [DEBUG] repl.MdocSession$.App.MainCats$: This is some debug (.:36)
-// 12:31:51 [INFO ] repl.MdocSession$.App.MainCats$: HEY! (.:37)
-// 12:31:51 [WARN ] repl.MdocSession$.App.MainCats$: I'm warning you (.:38)
-// 12:31:51 [ERROR] repl.MdocSession$.App.MainCats$: I give up (.:39)
+// 12:35:54 [DEBUG] repl.MdocSession$.App.MainCats$: This is some debug (.:30)
+// 12:35:55 [INFO ] repl.MdocSession$.App.MainCats$: HEY! (.:31)
+// 12:35:55 [WARN ] repl.MdocSession$.App.MainCats$: I'm warning you (.:32)
+// 12:35:55 [ERROR] repl.MdocSession$.App.MainCats$: I give up (.:33)
 // res0: ExitCode = ExitCode(0)
 ```

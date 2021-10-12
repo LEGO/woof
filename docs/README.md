@@ -15,11 +15,9 @@ A pure Scala logging library with no reflection
 ## Example 
 
 ```scala mdoc
-import cats.effect.kernel.Sync
+import cats.effect.ExitCode
 import cats.effect.IO
 import cats.effect.IOApp
-import cats.effect.ExitCode
-import cats.effect.std.Console
 import clog.*
 
 object MainCats extends IOApp:
