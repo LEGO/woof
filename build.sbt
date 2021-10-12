@@ -14,25 +14,38 @@ val D = new {
 }
 
 val commonSettings = Seq(
-  scalaVersion := V.scala,
+  scalaVersion     := V.scala,
+  organization     := "clog",
+  githubOwner      := "LEGO",
+  githubRepository := "clog",
 )
 
-lazy val core = project
-  .in(file("core"))
-  .settings(commonSettings)
-  .settings(
-    name    := "Clog",
-    version := "0.1.0-SNAPSHOT",
-    scalacOptions ++= Seq("-source", "future"),
-    libraryDependencies ++= Seq(
-      D.cats,
-      D.catsEffect,
-      D.munit           % Test,
-      D.munitCatsEffect % Test,
-    ),
-  )
+def clogProject(file: File): Project =
+  Project(s"clog-${file.getName()}", file)
+    .settings(
+      commonSettings,
+      name := s"clog-${file.getName()}",
+    )
 
-lazy val examples = project
-  .in(file("examples"))
-  .settings(commonSettings)
-  .dependsOn(core)
+lazy val core =
+  clogProject(file("core"))
+    .settings(
+      version := "0.1.0-SNAPSHOT",
+      scalacOptions ++= Seq("-source", "future"),
+      libraryDependencies ++= Seq(
+        D.cats,
+        D.catsEffect,
+        D.munit           % Test,
+        D.munitCatsEffect % Test,
+      ),
+    )
+
+lazy val examples =
+  clogProject(file("examples"))
+    .dependsOn(core)
+
+lazy val docs =
+  clogProject(file("usage-docs"))
+    .settings(mdocOut := file("."))
+    .dependsOn(core)
+    .enablePlugins(MdocPlugin)

@@ -7,7 +7,7 @@ import clog.*
 
 object MainCats extends IOApp:
 
-  import Logger.given
+  import Logger.given_Printer
   val logger = new Logger[IO](Output.fromConsole)
 
   override def run(args: List[String]): IO[ExitCode] =

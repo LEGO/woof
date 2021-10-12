@@ -23,16 +23,17 @@ object Output:
     def outputError(str: String): F[Unit] = Console[F].errorln(str)
 end Output
 
-class Logger[F[_]: Monad: Clock](outputs: Output[F]*)(using Printer):
+class Logger[F[_]: Monad: Clock](output: Output[F], outputs: Output[F]*)(using Printer):
 
   private[clog] def makeLogLine(level: LogLevel, info: Logging.LogInfo, message: String): F[String] =
     Clock[F].realTimeInstant.map(now => summon[Printer].toPrint(now, level, info, message))
 
   inline def log(level: LogLevel, inline message: String): F[Unit] =
     val info = Logging.info(message)
-    val doOutput: String => F[Unit] = (s:String) => level match
-      case LogLevel.Error => outputs.traverse(_.outputError(s)).map(_.combineAll)
-      case _              => outputs.traverse(_.output(s)).map(_.combineAll)
+    val doOutput: String => F[Unit] = (s: String) =>
+      level match
+        case LogLevel.Error => (outputs.prepended(output)).traverse(_.outputError(s)).map(_.combineAll)
+        case _              => (outputs.prepended(output)).traverse(_.output(s)).map(_.combineAll)
     makeLogLine(level, info, message) >>= doOutput
   end log
 

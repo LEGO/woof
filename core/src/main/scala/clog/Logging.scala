@@ -29,7 +29,7 @@ object Logging:
       val nameExpr = Expr(name)
 
       val position   = Position.ofMacroExpansion
-      val filePath   = position.sourceFile.jpath
+      val filePath   = if position.sourceFile.jpath != null then position.sourceFile.jpath else Path.of(".")
       val lineNumber = Expr(position.startLine)
       val file       = Expr(File(filePath.toString))
 
