@@ -18,6 +18,9 @@ val commonSettings = Seq(
   organization     := "clog",
   githubOwner      := "LEGO",
   githubRepository := "clog",
+  githubTokenSource := TokenSource.GitConfig("github.token") || TokenSource.Environment(
+    "GITHUB_USERTOKEN",
+  ) || TokenSource.Environment("GITHUB_TOKEN"),
 )
 
 def clogProject(file: File): Project =
@@ -27,8 +30,15 @@ def clogProject(file: File): Project =
       name := s"clog-${file.getName()}",
     )
 
+lazy val root =
+  project
+    .in(file("."))
+    .settings(
+      commonSettings,
+    ) // we have to have a root project, otherwise we cannot override the TokenSource for `sbt-github-packages`
+
 lazy val core =
-  clogProject(file("core"))
+  clogProject(file("./modules/core"))
     .settings(
       version := "0.1.0-SNAPSHOT",
       scalacOptions ++= Seq("-source", "future"),
@@ -41,11 +51,11 @@ lazy val core =
     )
 
 lazy val examples =
-  clogProject(file("examples"))
+  clogProject(file("./modules/examples"))
     .dependsOn(core)
 
 lazy val docs =
-  clogProject(file("usage-docs"))
+  clogProject(file("./modules/usage-docs"))
     .settings(mdocOut := file("."))
     .dependsOn(core)
     .enablePlugins(MdocPlugin)

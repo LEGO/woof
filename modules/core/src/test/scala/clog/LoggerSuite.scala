@@ -14,6 +14,7 @@ import cats.Show
 import cats.effect.Temporal
 import ColorPrinter.Theme
 import Logger.LogLevel
+
 class LoggerSuite extends CatsEffectSuite:
 
   class StringWriter(val ref: Ref[IO, String]) extends Output[IO]:
@@ -47,7 +48,7 @@ class LoggerSuite extends CatsEffectSuite:
 
     val message  = "log message"
     val logInfo  = Logging.info(message)
-    val expected = "13:37:00 [WARN ] clog.LoggerSuite: log message (LoggerSuite.scala:49)"
+    val expected = "13:37:00 [WARN ] clog.LoggerSuite: log message (LoggerSuite.scala:50)"
 
     logger
       .makeLogLine(Logger.LogLevel.Warn, logInfo, message)
@@ -62,7 +63,7 @@ class LoggerSuite extends CatsEffectSuite:
     val reset         = Theme.Style.Reset
     val postfixFormat = theme.postfixFormat
     val expected = s"""13:37:00 ${theme
-      .levelFormat(LogLevel.Warn)}[WARN ]$reset ${postfixFormat}clog.LoggerSuite$reset: This is a warning $postfixFormat(LoggerSuite.scala:71)$reset
+      .levelFormat(LogLevel.Warn)}[WARN ]$reset ${postfixFormat}clog.LoggerSuite$reset: This is a warning $postfixFormat(LoggerSuite.scala:72)$reset
 """
 
     for
@@ -94,7 +95,7 @@ class LoggerSuite extends CatsEffectSuite:
       assert(times.count(_ == '\n') >= 5)
       assertEquals(
         times.split("\n")(2),
-        "13:37:00 [DEBUG] clog.LoggerSuite: 400 elapsed (LoggerSuite.scala:88)",
+        "13:37:00 [DEBUG] clog.LoggerSuite: 400 elapsed (LoggerSuite.scala:89)",
       )
   }
 

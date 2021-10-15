@@ -20,7 +20,7 @@ open class ColorPrinter(theme: Theme = Theme.defaultTheme, zoneId: ZoneId = Zone
 
     val levelColor   = theme.levelFormat(level)
     val postfixColor = theme.postfixFormat
-    val reset        = Theme.Style.Reset
+    val reset        = theme.reset
     val prefix       = level.productPrefix.toUpperCase.padTo(5, ' ')
     val time         = dateTimeFormatter.format(instant)
     s"$time $levelColor[$prefix]$reset $postfixColor${info.prefix}$reset: $message $postfixColor${info.postfix}$reset"
@@ -43,9 +43,13 @@ object ColorPrinter:
           case LogLevel.Error => Foreground.Red.withBackground(Background.White)
       ,
       Foreground.Magenta,
+      Style.Reset
     )
 
-    type Formatting = Foreground | Background | Style | Composite
+    type Formatting = Foreground | Background | Style | Composite | Empty.type
+
+    case object Empty:
+      override def toString = ""
 
     extension (f: Formatting)
       def getCode: String = f match
@@ -53,8 +57,10 @@ object ColorPrinter:
         case bg: Background => bg.code
         case st: Style      => st.code
         case cmp: Composite => cmp.code
+        case Empty          => ""
       def withStyle(s: Style): Composite            = Composite(f.getCode + s.code)
       def withBackground(bg: Background): Composite = Composite(f.getCode + bg.code)
+    end extension
 
     case class Composite(code: String):
       override def toString = code
@@ -94,6 +100,6 @@ object ColorPrinter:
     end Background
   end Theme
 
-  case class Theme(levelFormat: LogLevel => Formatting, postfixFormat: Formatting)
+  case class Theme(levelFormat: LogLevel => Formatting, postfixFormat: Formatting, reset:Formatting)
 
 end ColorPrinter
