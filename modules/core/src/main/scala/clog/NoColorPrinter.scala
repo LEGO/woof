@@ -11,5 +11,5 @@ class NoColorPrinter(zoneId: ZoneId = ZoneId.systemDefault())
 end NoColorPrinter
 
 object NoColorPrinter:
-  val noColorTheme = ColorPrinter.Theme(_ => Theme.Empty, Theme.Empty, Theme.Empty)
+  val noColorTheme = ColorPrinter.Theme(_ => Theme.Empty, Theme.Empty, Theme.Empty, Theme.Empty, Theme.Empty)
 end NoColorPrinter

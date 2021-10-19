@@ -8,7 +8,7 @@ import cats.syntax.all.*
 
 class LocalSuite extends CatsEffectSuite:
 
-  test("local should work") {
+  test("local should add context") {
     import Local.given
 
     def getContext(using strLoc: Local[IO, String]): IO[String] = strLoc.ask
@@ -21,6 +21,10 @@ class LocalSuite extends CatsEffectSuite:
       assertEquals(level1, "CONTEXT1")
       assertEquals(level2, "CONTEXT2CONTEXT1")
     end for
+  }
+
+  test("Should use local context") {
+
   }
 
 end LocalSuite

@@ -16,14 +16,27 @@ open class ColorPrinter(theme: Theme = Theme.defaultTheme, zoneId: ZoneId = Zone
     .ofPattern("HH:mm:ss")
     .withZone(zoneId);
 
-  override def toPrint(instant: Instant, level: LogLevel, info: Logging.LogInfo, message: String): String =
+  override def toPrint(
+      instant: Instant,
+      level: LogLevel,
+      info: Logging.LogInfo,
+      message: String,
+      context: List[(String, String)],
+  ): String =
 
     val levelColor   = theme.levelFormat(level)
     val postfixColor = theme.postfixFormat
     val reset        = theme.reset
     val prefix       = level.productPrefix.toUpperCase.padTo(5, ' ')
     val time         = dateTimeFormatter.format(instant)
-    s"$time $levelColor[$prefix]$reset $postfixColor${info.prefix}$reset: $message $postfixColor${info.postfix}$reset"
+    val contextPart =
+      if context.isEmpty then ""
+      else
+        " " +
+          context
+            .map((key, value) => s"${theme.contextKey}$key${theme.reset}=${theme.contextValue}$value")
+            .mkString(", ") + theme.reset.getCode
+    s"$time $levelColor[$prefix]$reset$contextPart $postfixColor${info.prefix}$reset: $message $postfixColor${info.postfix}$reset"
 
   end toPrint
 
@@ -43,7 +56,9 @@ object ColorPrinter:
           case LogLevel.Error => Foreground.Red.withBackground(Background.White)
       ,
       Foreground.Magenta,
-      Style.Reset
+      Style.Reset,
+      Style.Bold,
+      Empty,
     )
 
     type Formatting = Foreground | Background | Style | Composite | Empty.type
@@ -100,6 +115,12 @@ object ColorPrinter:
     end Background
   end Theme
 
-  case class Theme(levelFormat: LogLevel => Formatting, postfixFormat: Formatting, reset:Formatting)
+  case class Theme(
+      levelFormat: LogLevel => Formatting,
+      postfixFormat: Formatting,
+      reset: Formatting,
+      contextKey: Formatting,
+      contextValue: Formatting,
+  )
 
 end ColorPrinter

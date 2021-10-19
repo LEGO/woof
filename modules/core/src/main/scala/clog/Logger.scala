@@ -12,29 +12,31 @@ import cats.effect.kernel.Clock
 import cats.FlatMap
 import util.chaining.scalaUtilChainingOps
 import cats.Monad
+import clog.local.Local
+import cats.effect.IO
 
-trait Output[F[_]]:
-  def output(str: String): F[Unit]
-  def outputError(str: String): F[Unit]
-end Output
-object Output:
-  def fromConsole[F[_]: Console]: Output[F] = new Output[F]:
-    def output(str: String): F[Unit]      = Console[F].println(str)
-    def outputError(str: String): F[Unit] = Console[F].errorln(str)
-end Output
+open class Logger[F[_]: StringLocal: Monad: Clock](output: Output[F], outputs: Output[F]*)(using Printer):
 
-class Logger[F[_]: Monad: Clock](output: Output[F], outputs: Output[F]*)(using Printer):
-
-  private[clog] def makeLogLine(level: LogLevel, info: Logging.LogInfo, message: String): F[String] =
-    Clock[F].realTimeInstant.map(now => summon[Printer].toPrint(now, level, info, message))
+  private[clog] def makeLogLine(
+      level: LogLevel,
+      info: Logging.LogInfo,
+      message: String,
+      context: List[(String, String)],
+  ): F[String] =
+    Clock[F].realTimeInstant.map(now => summon[Printer].toPrint(now, level, info, message, context))
 
   inline def log(level: LogLevel, inline message: String): F[Unit] =
-    val info = Logging.info(message)
-    val doOutput: String => F[Unit] = (s: String) =>
+    val info       = Logging.info(message)
+    val allOutputs = outputs.prepended(output)
+    val doOutputs: String => F[Unit] = (s: String) =>
       level match
-        case LogLevel.Error => (outputs.prepended(output)).traverse(_.outputError(s)).map(_.combineAll)
-        case _              => (outputs.prepended(output)).traverse(_.output(s)).map(_.combineAll)
-    makeLogLine(level, info, message) >>= doOutput
+        case LogLevel.Error => allOutputs.traverse_(_.outputError(s))
+        case _              => allOutputs.traverse_(_.output(s))
+    for
+      context <- summon[StringLocal[F]].ask
+      logLine <- makeLogLine(level, info, message, context)
+      _       <- doOutputs(logLine)
+    yield ()
   end log
 
   inline def debug(inline message: String): F[Unit] = log(LogLevel.Debug, message)
@@ -46,9 +48,15 @@ end Logger
 
 object Logger:
 
+  type Kvp               = (String, String)
+  type StringLocal[F[_]] = Local[F, List[Kvp]]
+
   def apply[F[_]](using l: Logger[F]): Logger[F] = l
 
   given Printer = ColorPrinter()
+  def makeIoLogger(using Clock[IO], Printer): IO[Logger[IO]] =
+    for given StringLocal[IO] <- Local.makeIoLocal[List[(String, String)]]
+    yield new Logger[IO](Output.fromConsole)
 
   enum LogLevel:
     case Debug, Info, Warn, Error
