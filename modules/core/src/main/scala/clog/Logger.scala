@@ -17,6 +17,8 @@ import cats.effect.IO
 
 open class Logger[F[_]: StringLocal: Monad: Clock](output: Output[F], outputs: Output[F]*)(using Printer):
 
+  private[clog] val stringLocal: StringLocal[F] = summon[StringLocal[F]]
+
   private[clog] def makeLogLine(
       level: LogLevel,
       info: Logging.LogInfo,
@@ -47,6 +49,9 @@ open class Logger[F[_]: StringLocal: Monad: Clock](output: Output[F], outputs: O
 end Logger
 
 object Logger:
+
+  extension [F[_]: Logger, A](fa: F[A])
+    def withLogContext(key: String, value: String): F[A] = Logger[F].stringLocal.local(fa)(ctx => (key, value) :: ctx)
 
   type Kvp               = (String, String)
   type StringLocal[F[_]] = Local[F, List[Kvp]]

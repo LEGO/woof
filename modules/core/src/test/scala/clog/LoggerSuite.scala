@@ -13,9 +13,8 @@ import cats.effect.std.Console
 import cats.Show
 import cats.effect.Temporal
 import ColorPrinter.Theme
-import Logger.LogLevel
+import Logger.*
 import clog.local.Local
-import Logger.StringLocal
 class LoggerSuite extends CatsEffectSuite:
 
   class StringWriter(val ref: Ref[IO, String]) extends Output[IO]:
@@ -48,7 +47,7 @@ class LoggerSuite extends CatsEffectSuite:
 
     val message  = "log message"
     val logInfo  = Logging.info(message)
-    val expected = "13:37:00 [WARN ] clog.LoggerSuite: log message (LoggerSuite.scala:50)"
+    val expected = "13:37:00 [WARN ] clog.LoggerSuite: log message (LoggerSuite.scala:49)"
 
     for
       logger <- Logger.makeIoLogger
@@ -64,7 +63,7 @@ class LoggerSuite extends CatsEffectSuite:
     val reset         = Theme.Style.Reset
     val postfixFormat = theme.postfixFormat
     // format: off
-    val expected = s"""13:37:00 ${theme.levelFormat(LogLevel.Warn)}[WARN ]$reset$reset ${postfixFormat}clog.LoggerSuite$reset: This is a warning $postfixFormat(LoggerSuite.scala:74)$reset
+    val expected = s"""13:37:00 ${theme.levelFormat(LogLevel.Warn)}[WARN ]$reset ${postfixFormat}clog.LoggerSuite$reset: This is a warning $postfixFormat(LoggerSuite.scala:73)$reset
 """
     // format: on
     for
@@ -73,7 +72,7 @@ class LoggerSuite extends CatsEffectSuite:
       logger = new Logger[IO](StringWriter(strRef))(using stringLocal)
       _      <- logger.warn("This is a warning")
       output <- strRef.get
-    yield assertEquals(output.toList.takeRight(10), expected.toList.takeRight(10))
+    yield assertEquals(output.toList, expected.toList)
     end for
   }
 
@@ -98,7 +97,7 @@ class LoggerSuite extends CatsEffectSuite:
       assert(times.count(_ == '\n') >= 5)
       assertEquals(
         times.split("\n")(2),
-        "13:37:00 [DEBUG] clog.LoggerSuite: 400 elapsed (LoggerSuite.scala:92)",
+        "13:37:00 [DEBUG] clog.LoggerSuite: 400 elapsed (LoggerSuite.scala:91)",
       )
   }
 
@@ -118,18 +117,20 @@ class LoggerSuite extends CatsEffectSuite:
 
 
     // format: off
-    val expected = """13:37:00 [INFO ] correlation-id=21c78595-ef21-4df0-987e-8af6aab6f346, locale=da-DK clog.LoggerSuite: some info (LoggerSuite.scala:112)
-13:37:00 [INFO ] clog.LoggerSuite: some info (LoggerSuite.scala:112)
+    val expected = """13:37:00 [INFO ] correlation-id=21c78595-ef21-4df0-987e-8af6aab6f346, locale=da-DK clog.LoggerSuite: some info (LoggerSuite.scala:111)
+13:37:00 [INFO ] clog.LoggerSuite: some info (LoggerSuite.scala:111)
 """
     // format: on
-    import clog.local.*
     for
       given StringLocal[IO] <- Local.makeIoLocal[List[(String, String)]]
       strRef                <- Ref[IO].of("")
       given Logger[IO] = new Logger[IO](StringWriter(strRef))
-      _      <- programLogic.withAddedContext(context)
+      _ <- programLogic
+        .withLogContext("correlation-id", "21c78595-ef21-4df0-987e-8af6aab6f346")
+        .withLogContext("locale", "da-DK")
       _      <- programLogic
       output <- strRef.get
     yield assertEquals(output, expected)
+    end for
   }
 end LoggerSuite
