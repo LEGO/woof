@@ -26,8 +26,6 @@ val consoleOutput: Output[IO] = new Output[IO]:
 
 given Printer = NoColorPrinter()
 
-val ioLogger: IO[Logger[IO]] = Logger.makeIoLogger(consoleOutput)
-
 def program(using Logger[IO]): IO[Unit] = 
   for
     _ <- Logger[IO].debug("This is some debug")
@@ -38,10 +36,9 @@ def program(using Logger[IO]): IO[Unit] =
 
 val main: IO[Unit] = 
   for
-    given Logger[IO]  <- ioLogger
+    given Logger[IO]  <- Logger.makeIoLogger(consoleOutput)
     _                 <- program
-  yield
-    ()
+  yield ()
 ```
 
 and running it yields:
@@ -58,7 +55,7 @@ We can also re-use the program and add context to our logger:
 import Logger.*
 val mainWithContext: IO[Unit] = 
   for
-    given Logger[IO]  <- ioLogger
+    given Logger[IO]  <- Logger.makeIoLogger(consoleOutput)
     _                 <- program.withLogContext("trace-id", "4d334544-6462-43fa-b0b1-12846f871573")
   yield ()
 ```
