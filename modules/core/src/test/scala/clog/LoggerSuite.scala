@@ -50,7 +50,7 @@ class LoggerSuite extends CatsEffectSuite:
     val expected = "13:37:00 [WARN ] clog.LoggerSuite: log message (LoggerSuite.scala:49)"
 
     for
-      logger <- Logger.makeIoLogger
+      logger <- Logger.makeIoLogger(Output.fromConsole)
       line   <- logger.makeLogLine(Logger.LogLevel.Warn, logInfo, message, Nil)
     yield assertEquals(line, expected)
   }

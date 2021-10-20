@@ -59,9 +59,11 @@ object Logger:
   def apply[F[_]](using l: Logger[F]): Logger[F] = l
 
   given Printer = ColorPrinter()
-  def makeIoLogger(using Clock[IO], Printer): IO[Logger[IO]] =
-    for given StringLocal[IO] <- Local.makeIoLocal[List[(String, String)]]
-    yield new Logger[IO](Output.fromConsole)
+
+  val ioStringLocal = Local.makeIoLocal[List[(String, String)]]
+  def makeIoLogger(output: Output[IO], outputs: Output[IO]*)(using Clock[IO], Printer): IO[Logger[IO]] =
+    for given StringLocal[IO] <- ioStringLocal
+    yield new Logger[IO](output, outputs*)
 
   enum LogLevel:
     case Debug, Info, Warn, Error

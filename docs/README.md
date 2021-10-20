@@ -14,36 +14,57 @@ A pure Scala logging library with no reflection
 
 ## Example 
 
-```scala mdoc
+```scala mdoc:silent
 import cats.effect.ExitCode
 import cats.effect.IO
 import cats.effect.IOApp
 import clog.*
 
-object MainCats extends IOApp:
+val consoleOutput: Output[IO] = new Output[IO]:
+  def output(str: String)      = IO.delay(println(str))
+  def outputError(str: String) = output(str) // MDOC ignores stderr
 
-  val consoleOutput: Output[IO] = new Output[IO]:
-    def output(str: String)      = IO.delay(println(str))
-    def outputError(str: String) = output(str) // MDOC ignores stderr
+given Printer = NoColorPrinter()
 
-  given Printer = NoColorPrinter()
-  val logger = new Logger[IO](consoleOutput)
+val ioLogger: IO[Logger[IO]] = Logger.makeIoLogger(consoleOutput)
 
-  override def run(args: List[String]): IO[ExitCode] =
-    for
-      _ <- logger.debug("This is some debug")
-      _ <- logger.info("HEY!")
-      _ <- logger.warn("I'm warning you")
-      _ <- logger.error("I give up")
-    yield ExitCode.Success
+def program(using Logger[IO]): IO[Unit] = 
+  for
+    _ <- Logger[IO].debug("This is some debug")
+    _ <- Logger[IO].info("HEY!")
+    _ <- Logger[IO].warn("I'm warning you")
+    _ <- Logger[IO].error("I give up")
+  yield ()
 
-end MainCats
-
+val main: IO[Unit] = 
+  for
+    given Logger[IO]  <- ioLogger
+    _                 <- program
+  yield
+    ()
 ```
 
 and running it yields:
 
 ```scala mdoc
 import cats.effect.unsafe.implicits.global
-MainCats.run(Nil).unsafeRunSync()
+main.unsafeRunSync()
+```
+
+
+We can also re-use the program and add context to our logger:
+
+```scala mdoc:silent
+import Logger.*
+val mainWithContext: IO[Unit] = 
+  for
+    given Logger[IO]  <- ioLogger
+    _                 <- program.withLogContext("trace-id", "4d334544-6462-43fa-b0b1-12846f871573")
+  yield ()
+```
+
+And running with context yields:
+
+```scala mdoc
+mainWithContext.unsafeRunSync()
 ```
