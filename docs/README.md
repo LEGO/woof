@@ -25,6 +25,7 @@ val consoleOutput: Output[IO] = new Output[IO]:
   def output(str: String)      = IO.delay(println(str))
   def outputError(str: String) = output(str) // MDOC ignores stderr
 
+given Filter = Filter.everything
 given Printer = NoColorPrinter()
 
 def program(using Logger[IO]): IO[Unit] = 

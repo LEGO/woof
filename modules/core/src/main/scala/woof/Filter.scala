@@ -4,6 +4,7 @@ import woof.Logging.LogInfo
 import Logger.LogLevel
 import cats.syntax.order.*
 import scala.util.matching.Regex
+import cats.kernel.Monoid
 
 case class LogLine(level: LogLevel, info: LogInfo, message: String)
 
@@ -17,6 +18,10 @@ object Filter:
   val nothing: Filter                  = _ => false
   val everything: Filter               = _ => true
 
+  given Monoid[Filter] with
+    def empty: Filter                         = everything
+    def combine(f: Filter, g: Filter): Filter = f or g
+    
 end Filter
 
 extension (f: Filter)

@@ -10,6 +10,8 @@ import cats.effect.Clock
 import cats.Applicative
 import cats.syntax.all.*
 import Logger.*
+import Filter.given_Monoid_Filter
+import cats.kernel.Monoid
 class FilterSuite extends CatsEffectSuite:
 
   given Printer = NoColorPrinter(ZoneId.of("Europe/Copenhagen"))
@@ -63,7 +65,7 @@ class FilterSuite extends CatsEffectSuite:
   }
 
   test("filter exact log levels") {
-    given Filter = Filter.exactLevel(LogLevel.Info) or Filter.exactLevel(LogLevel.Warn)
+    given Filter = List(Filter.exactLevel(LogLevel.Info), Filter.exactLevel(LogLevel.Warn)).combineAll
     for
       stringWriter     <- newStringWriter
       given Logger[IO] <- Logger.makeIoLogger(stringWriter)(using constantClock)

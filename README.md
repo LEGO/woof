@@ -25,6 +25,7 @@ val consoleOutput: Output[IO] = new Output[IO]:
   def output(str: String)      = IO.delay(println(str))
   def outputError(str: String) = output(str) // MDOC ignores stderr
 
+given Filter = Filter.everything
 given Printer = NoColorPrinter()
 
 def program(using Logger[IO]): IO[Unit] = 
@@ -47,10 +48,10 @@ and running it yields:
 ```scala
 import cats.effect.unsafe.implicits.global
 main.unsafeRunSync()
-// 09:37:18 [DEBUG] repl.MdocSession$.App: This is some debug (.:30)
-// 09:37:18 [INFO ] repl.MdocSession$.App: HEY! (.:31)
-// 09:37:18 [WARN ] repl.MdocSession$.App: I'm warning you (.:32)
-// 09:37:18 [ERROR] repl.MdocSession$.App: I give up (.:33)
+// 12:01:29 [DEBUG] repl.MdocSession$.App: This is some debug (.:33)
+// 12:01:29 [INFO ] repl.MdocSession$.App: HEY! (.:34)
+// 12:01:29 [WARN ] repl.MdocSession$.App: I'm warning you (.:35)
+// 12:01:29 [ERROR] repl.MdocSession$.App: I give up (.:36)
 ```
 
 
@@ -69,8 +70,8 @@ And running with context yields:
 
 ```scala
 mainWithContext.unsafeRunSync()
-// 09:37:18 [DEBUG] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: This is some debug (.:30)
-// 09:37:18 [INFO ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: HEY! (.:31)
-// 09:37:18 [WARN ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I'm warning you (.:32)
-// 09:37:18 [ERROR] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I give up (.:33)
+// 12:01:29 [DEBUG] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: This is some debug (.:33)
+// 12:01:29 [INFO ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: HEY! (.:34)
+// 12:01:29 [WARN ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I'm warning you (.:35)
+// 12:01:29 [ERROR] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I give up (.:36)
 ```
