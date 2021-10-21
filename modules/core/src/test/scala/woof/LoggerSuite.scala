@@ -14,12 +14,10 @@ import cats.Show
 import cats.effect.Temporal
 import ColorPrinter.Theme
 import Logger.*
-import clog.local.Local
+import woof.local.Local
 class LoggerSuite extends CatsEffectSuite:
 
-  class StringWriter(val ref: Ref[IO, String]) extends Output[IO]:
-    def output(str: String): IO[Unit]      = ref.update(log => s"$log$str\n")
-    def outputError(str: String): IO[Unit] = output(str)
+  given Filter = Filter.everything
 
   val startTime = 549459420.seconds
 
@@ -47,7 +45,7 @@ class LoggerSuite extends CatsEffectSuite:
 
     val message  = "log message"
     val logInfo  = Logging.info(message)
-    val expected = "13:37:00 [WARN ] clog.LoggerSuite: log message (LoggerSuite.scala:49)"
+    val expected = "13:37:00 [WARN ] woof.LoggerSuite: log message (LoggerSuite.scala:47)"
 
     for
       logger <- Logger.makeIoLogger(Output.fromConsole)
@@ -63,7 +61,7 @@ class LoggerSuite extends CatsEffectSuite:
     val reset         = Theme.Style.Reset
     val postfixFormat = theme.postfixFormat
     // format: off
-    val expected = s"""13:37:00 ${theme.levelFormat(LogLevel.Warn)}[WARN ]$reset ${postfixFormat}clog.LoggerSuite$reset: This is a warning $postfixFormat(LoggerSuite.scala:73)$reset
+    val expected = s"""13:37:00 ${theme.levelFormat(LogLevel.Warn)}[WARN ]$reset ${postfixFormat}woof.LoggerSuite$reset: This is a warning $postfixFormat(LoggerSuite.scala:71)$reset
 """
     // format: on
     for
@@ -97,7 +95,7 @@ class LoggerSuite extends CatsEffectSuite:
       assert(times.count(_ == '\n') >= 5)
       assertEquals(
         times.split("\n")(2),
-        "13:37:00 [DEBUG] clog.LoggerSuite: 400 elapsed (LoggerSuite.scala:91)",
+        "13:37:00 [DEBUG] woof.LoggerSuite: 400 elapsed (LoggerSuite.scala:89)",
       )
   }
 
@@ -117,8 +115,8 @@ class LoggerSuite extends CatsEffectSuite:
 
 
     // format: off
-    val expected = """13:37:00 [INFO ] correlation-id=21c78595-ef21-4df0-987e-8af6aab6f346, locale=da-DK clog.LoggerSuite: some info (LoggerSuite.scala:111)
-13:37:00 [INFO ] clog.LoggerSuite: some info (LoggerSuite.scala:111)
+    val expected = """13:37:00 [INFO ] correlation-id=21c78595-ef21-4df0-987e-8af6aab6f346, locale=da-DK woof.LoggerSuite: some info (LoggerSuite.scala:109)
+13:37:00 [INFO ] woof.LoggerSuite: some info (LoggerSuite.scala:109)
 """
     // format: on
     for

@@ -11,6 +11,7 @@ import Logger.LogLevel
 
 import scala.concurrent.duration.FiniteDuration
 
+@FunctionalInterface
 trait Sleep[F[_]]:
   def sleep(duration: FiniteDuration): F[Unit]
 object Sleep:

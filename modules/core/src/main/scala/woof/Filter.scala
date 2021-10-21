@@ -1,0 +1,24 @@
+package woof
+
+import woof.Logging.LogInfo
+import Logger.LogLevel
+import cats.syntax.order.*
+import scala.util.matching.Regex
+
+case class LogLine(level: LogLevel, info: LogInfo, message: String)
+
+type Filter = LogLine => Boolean
+
+object Filter:
+
+  val atLeastLevel: LogLevel => Filter = level => line => line.level >= level
+  val exactLevel: LogLevel => Filter   = level => line => line.level == level
+  val regexFilter: Regex => Filter     = regex => line => regex.matches(line.info.enclosingClass)
+  val nothing: Filter                  = _ => false
+  val everything: Filter               = _ => true
+
+end Filter
+
+extension (f: Filter)
+  infix def and(g: Filter): Filter = line => f(line) && g(line)
+  infix def or(g: Filter): Filter  = line => f(line) || g(line)

@@ -14,8 +14,9 @@ import util.chaining.scalaUtilChainingOps
 import cats.Monad
 import woof.local.Local
 import cats.effect.IO
+import cats.kernel.Order
 
-open class Logger[F[_]: StringLocal: Monad: Clock](output: Output[F], outputs: Output[F]*)(using Printer):
+open class Logger[F[_]: StringLocal: Monad: Clock](output: Output[F], outputs: Output[F]*)(using Printer, Filter):
 
   private[woof] val stringLocal: StringLocal[F] = summon[StringLocal[F]]
 
@@ -37,7 +38,7 @@ open class Logger[F[_]: StringLocal: Monad: Clock](output: Output[F], outputs: O
     for
       context <- summon[StringLocal[F]].ask
       logLine <- makeLogLine(level, info, message, context)
-      _       <- doOutputs(logLine)
+      _       <- doOutputs(logLine).whenA(summon[Filter](LogLine(level, info, logLine)))
     yield ()
   end log
 
@@ -61,11 +62,12 @@ object Logger:
   given Printer = ColorPrinter()
 
   val ioStringLocal = Local.makeIoLocal[List[(String, String)]]
-  def makeIoLogger(output: Output[IO], outputs: Output[IO]*)(using Clock[IO], Printer): IO[Logger[IO]] =
+  def makeIoLogger(output: Output[IO], outputs: Output[IO]*)(using Clock[IO], Printer, Filter): IO[Logger[IO]] =
     for given StringLocal[IO] <- ioStringLocal
     yield new Logger[IO](output, outputs*)
 
   enum LogLevel:
     case Debug, Info, Warn, Error
+  given Order[LogLevel] = (x, y) => Order[Int].compare(x.ordinal, y.ordinal)
 
 end Logger
