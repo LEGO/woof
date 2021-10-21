@@ -1,4 +1,4 @@
-package clog.local
+package woof.local
 
 import munit.CatsEffectSuite
 import cats.effect.IO

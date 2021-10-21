@@ -1,4 +1,4 @@
-package clog
+package woof
 import cats.effect.std.Console
 
 trait Output[F[_]]:

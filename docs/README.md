@@ -1,11 +1,12 @@
-# Clog
+# Woof
 
 A pure Scala logging library with no reflection
 
+![](dog-svgrepo-com.svg)
 
 ## Highlights
 
-* Pure _Scala_ library
+* Pure **Scala 3** library
 * Made with _Cats Effect_
 * Macro based (_no runtime reflection_)
   * Can be built for _scala.js_ in the future!
@@ -18,7 +19,7 @@ A pure Scala logging library with no reflection
 import cats.effect.ExitCode
 import cats.effect.IO
 import cats.effect.IOApp
-import clog.*
+import woof.*
 
 val consoleOutput: Output[IO] = new Output[IO]:
   def output(str: String)      = IO.delay(println(str))

@@ -1,4 +1,4 @@
-package clog
+package woof
 
 import java.time.Instant
 import Logger.LogLevel

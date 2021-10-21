@@ -1,11 +1,12 @@
-# Clog
+# Woof
 
 A pure Scala logging library with no reflection
 
+![](dog-svgrepo-com.svg)
 
 ## Highlights
 
-* Pure _Scala_ library
+* Pure **Scala 3** library
 * Made with _Cats Effect_
 * Macro based (_no runtime reflection_)
   * Can be built for _scala.js_ in the future!
@@ -18,7 +19,7 @@ A pure Scala logging library with no reflection
 import cats.effect.ExitCode
 import cats.effect.IO
 import cats.effect.IOApp
-import clog.*
+import woof.*
 
 val consoleOutput: Output[IO] = new Output[IO]:
   def output(str: String)      = IO.delay(println(str))
@@ -46,10 +47,10 @@ and running it yields:
 ```scala
 import cats.effect.unsafe.implicits.global
 main.unsafeRunSync()
-// 09:04:19 [DEBUG] repl.MdocSession$.App: This is some debug (.:30)
-// 09:04:19 [INFO ] repl.MdocSession$.App: HEY! (.:31)
-// 09:04:19 [WARN ] repl.MdocSession$.App: I'm warning you (.:32)
-// 09:04:19 [ERROR] repl.MdocSession$.App: I give up (.:33)
+// 09:37:18 [DEBUG] repl.MdocSession$.App: This is some debug (.:30)
+// 09:37:18 [INFO ] repl.MdocSession$.App: HEY! (.:31)
+// 09:37:18 [WARN ] repl.MdocSession$.App: I'm warning you (.:32)
+// 09:37:18 [ERROR] repl.MdocSession$.App: I give up (.:33)
 ```
 
 
@@ -68,8 +69,8 @@ And running with context yields:
 
 ```scala
 mainWithContext.unsafeRunSync()
-// 09:04:19 [DEBUG] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: This is some debug (.:30)
-// 09:04:19 [INFO ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: HEY! (.:31)
-// 09:04:19 [WARN ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I'm warning you (.:32)
-// 09:04:19 [ERROR] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I give up (.:33)
+// 09:37:18 [DEBUG] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: This is some debug (.:30)
+// 09:37:18 [INFO ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: HEY! (.:31)
+// 09:37:18 [WARN ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I'm warning you (.:32)
+// 09:37:18 [ERROR] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I give up (.:33)
 ```

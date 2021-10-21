@@ -1,4 +1,4 @@
-package clog
+package woof
 
 import cats.Applicative
 import cats.FlatMap

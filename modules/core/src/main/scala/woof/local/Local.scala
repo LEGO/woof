@@ -1,4 +1,4 @@
-package clog.local
+package woof.local
 
 import cats.effect.IO
 import cats.effect.IOLocal

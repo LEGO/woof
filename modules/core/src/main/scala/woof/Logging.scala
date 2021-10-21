@@ -1,4 +1,4 @@
-package clog
+package woof
 
 import scala.quoted.Expr
 import scala.quoted.*

@@ -15,19 +15,19 @@ val D = new {
 
 val commonSettings = Seq(
   scalaVersion     := V.scala,
-  organization     := "clog",
+  organization     := "woof",
   githubOwner      := "LEGO",
-  githubRepository := "clog",
+  githubRepository := "woof",
   githubTokenSource := TokenSource.GitConfig("github.token") || TokenSource.Environment(
     "GITHUB_USERTOKEN",
   ) || TokenSource.Environment("GITHUB_TOKEN"),
 )
 
 def clogProject(file: File): Project =
-  Project(s"clog-${file.getName()}", file)
+  Project(s"woof-${file.getName()}", file)
     .settings(
       commonSettings,
-      name := s"clog-${file.getName()}",
+      name := s"woof-${file.getName()}",
     )
 
 lazy val root =
@@ -35,7 +35,10 @@ lazy val root =
     .in(file("."))
     .settings(
       commonSettings,
+      mdocOut := file(".")
     ) // we have to have a root project, otherwise we cannot override the TokenSource for `sbt-github-packages`
+    .enablePlugins(MdocPlugin)
+    .dependsOn(core)
 
 lazy val core =
   clogProject(file("./modules/core"))
@@ -49,13 +52,3 @@ lazy val core =
         D.munitCatsEffect % Test,
       ),
     )
-
-lazy val examples =
-  clogProject(file("./modules/examples"))
-    .dependsOn(core)
-
-lazy val docs =
-  clogProject(file("./modules/usage-docs"))
-    .settings(mdocOut := file("."))
-    .dependsOn(core)
-    .enablePlugins(MdocPlugin)

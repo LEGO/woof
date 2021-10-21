@@ -1,4 +1,4 @@
-package clog
+package woof
 
 import cats.effect.std.Console
 import Logger.*
@@ -12,14 +12,14 @@ import cats.effect.kernel.Clock
 import cats.FlatMap
 import util.chaining.scalaUtilChainingOps
 import cats.Monad
-import clog.local.Local
+import woof.local.Local
 import cats.effect.IO
 
 open class Logger[F[_]: StringLocal: Monad: Clock](output: Output[F], outputs: Output[F]*)(using Printer):
 
-  private[clog] val stringLocal: StringLocal[F] = summon[StringLocal[F]]
+  private[woof] val stringLocal: StringLocal[F] = summon[StringLocal[F]]
 
-  private[clog] def makeLogLine(
+  private[woof] def makeLogLine(
       level: LogLevel,
       info: Logging.LogInfo,
       message: String,
