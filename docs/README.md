@@ -16,18 +16,10 @@ A pure Scala logging library with no reflection
 ## Example 
 
 ```scala mdoc:silent
-import cats.effect.ExitCode
 import cats.effect.IO
-import cats.effect.IOApp
 import woof.*
 
-val consoleOutput: Output[IO] = new Output[IO]:
-  def output(str: String)      = IO.delay(println(str))
-  def outputError(str: String) = output(str) // MDOC ignores stderr
-
-given Filter = Filter.everything
-given Printer = NoColorPrinter()
-
+// Main program
 def program(using Logger[IO]): IO[Unit] = 
   for
     _ <- Logger[IO].debug("This is some debug")
@@ -36,6 +28,15 @@ def program(using Logger[IO]): IO[Unit] =
     _ <- Logger[IO].error("I give up")
   yield ()
 
+// Setup/configuration of logger
+val consoleOutput: Output[IO] = new Output[IO]:
+  def output(str: String)      = IO.delay(println(str))
+  def outputError(str: String) = output(str) // MDOC ignores stderr
+
+given Filter  = Filter.everything
+given Printer = NoColorPrinter()
+
+// Running the program
 val main: IO[Unit] = 
   for
     given Logger[IO]  <- Logger.makeIoLogger(consoleOutput)
