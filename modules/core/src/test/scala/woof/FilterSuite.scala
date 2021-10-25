@@ -32,8 +32,8 @@ class FilterSuite extends CatsEffectSuite:
     yield ()
 
   test("filter based on levels") {
-    val expected = """13:37:00 [WARN ] woof.FilterSuite: Warning message (FilterSuite.scala:28)
-13:37:00 [ERROR] woof.FilterSuite: Error message (FilterSuite.scala:29)
+    val expected = """13:37:00 [WARN ] woof.FilterSuite: Warning message (FilterSuite.scala:30)
+13:37:00 [ERROR] woof.FilterSuite: Error message (FilterSuite.scala:31)
 """
     given Filter = Filter.atLeastLevel(LogLevel.Warn)
     for
@@ -65,7 +65,7 @@ class FilterSuite extends CatsEffectSuite:
   }
 
   test("filter exact log levels") {
-    given Filter = List(Filter.exactLevel(LogLevel.Info), Filter.exactLevel(LogLevel.Warn)).combineAll
+    given Filter =  Filter.exactLevel(LogLevel.Info) or Filter.exactLevel(LogLevel.Warn)
     for
       stringWriter     <- newStringWriter
       given Logger[IO] <- Logger.makeIoLogger(stringWriter)(using constantClock)

@@ -12,3 +12,4 @@
 target/
 
 metals.sbt
+.idea/

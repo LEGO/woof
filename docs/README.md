@@ -1,6 +1,6 @@
 # Woof
 
-A pure Scala logging library with no reflection
+A **pure** _(in both senses of the word!)_ **Scala 3** logging library with **no runtime reflection**.
 
 ![](dog-svgrepo-com.svg)
 
@@ -59,6 +59,7 @@ val mainWithContext: IO[Unit] =
   for
     given Logger[IO]  <- Logger.makeIoLogger(consoleOutput)
     _                 <- program.withLogContext("trace-id", "4d334544-6462-43fa-b0b1-12846f871573")
+    _                 <- Logger[IO].info("Now the context is gone")
   yield ()
 ```
 

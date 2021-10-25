@@ -19,7 +19,7 @@ object Filter:
   val everything: Filter               = _ => true
 
   given Monoid[Filter] with
-    def empty: Filter                         = everything
+    def empty: Filter                         = nothing
     def combine(f: Filter, g: Filter): Filter = f or g
     
 end Filter
