@@ -17,6 +17,7 @@ import java.util.UUID
 
 import Logger.*
 import org.http4s.Header
+import cats.effect.kernel.Sync
 
 object CorrelationIdMiddleware:
 
@@ -24,6 +25,8 @@ object CorrelationIdMiddleware:
 
   trait UUIDGen[F[_]]:
     def gen: F[UUID]
+  given [F[_]: Sync]: UUIDGen[F] = new UUIDGen[F]:
+    def gen = Sync[F].delay(UUID.randomUUID)
 
   private def getOrGenerate[F[_]: Applicative: UUIDGen](headerName: Option[CIString], request: Request[F]): F[String] =
     val key = headerName.getOrElse(defaultTraceHeaderName)
@@ -45,8 +48,8 @@ object CorrelationIdMiddleware:
       }
 
   def middlewareWithHeader(
-      headerName: Option[CIString] = None,
+      headerName: CIString,
   ): [F[_]] => Logger[F] ?=> Monad[F] ?=> UUIDGen[F] ?=> HttpRoutes[F] => HttpRoutes[F] =
-    [F[_]] => (_: Logger[F]) ?=> (_: Monad[F]) ?=> (_: UUIDGen[F]) ?=> middleware[F](headerName)
+    [F[_]] => (_: Logger[F]) ?=> (_: Monad[F]) ?=> (_: UUIDGen[F]) ?=> middleware[F](headerName.some)
 
 end CorrelationIdMiddleware

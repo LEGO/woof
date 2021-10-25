@@ -35,8 +35,7 @@ class CorrelationIdMiddlewareSuite extends CatsEffectSuite:
   test("add trace id with middleware") {
 
     val myTraceHeaderName = CIString("My-Trace-Header")
-    val middleWare: [F[_$7]] => Logger[F] ?=> Monad[F] ?=> UUIDGen[F] ?=> HttpRoutes[F] => HttpRoutes[F] =
-      CorrelationIdMiddleware.middlewareWithHeader(myTraceHeaderName.some)
+    val middleWare        = CorrelationIdMiddleware.middlewareWithHeader(myTraceHeaderName)
 
     for
       output            <- newStringWriter
