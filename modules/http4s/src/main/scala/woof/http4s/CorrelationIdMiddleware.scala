@@ -37,11 +37,11 @@ object CorrelationIdMiddleware:
   def middleware[F[_]: Logger: Monad: UUIDGen](headerName: Option[CIString] = None): HttpRoutes[F] => HttpRoutes[F] =
     routes =>
       Kleisli[([T] =>> OptionT[F, T]), Request[F], Response[F]] { request =>
+        val key = headerName.getOrElse(defaultTraceHeaderName)
         for
           traceId <- OptionT.liftF(getOrGenerate(headerName, request))
-          _ = println(traceId)
-          result  <- OptionT(routes.run(request).value.withLogContext(defaultTraceHeaderName.toString, traceId))
-        yield result.putHeaders(Header.Raw(headerName.getOrElse(defaultTraceHeaderName), traceId))
+          result  <- OptionT(routes.run(request).value.withLogContext(key.toString, traceId))
+        yield result.putHeaders(Header.Raw(key, traceId))
       }
 
   def middlewareWithHeader(

@@ -25,12 +25,6 @@ class CorrelationIdMiddlewareSuite extends CatsEffectSuite:
     yield Response[F](),
   )
 
-  val startTime = 549459420.seconds
-  val constantClock: Clock[IO] = new Clock[IO]:
-    def applicative = Applicative[IO]
-    def monotonic   = startTime.pure
-    def realTime    = startTime.pure
-
   given Printer = NoColorPrinter(ZoneId.of("Europe/Copenhagen"))
   given Filter  = Filter.everything
 
@@ -41,18 +35,18 @@ class CorrelationIdMiddlewareSuite extends CatsEffectSuite:
   test("add trace id with middleware") {
 
     val myTraceHeaderName = CIString("My-Trace-Header")
-    val mw: [F[_$7]] => Logger[F] ?=> Monad[F] ?=> UUIDGen[F] ?=> HttpRoutes[F] => HttpRoutes[F] =
+    val middleWare: [F[_$7]] => Logger[F] ?=> Monad[F] ?=> UUIDGen[F] ?=> HttpRoutes[F] => HttpRoutes[F] =
       CorrelationIdMiddleware.middlewareWithHeader(myTraceHeaderName.some)
 
     for
       output            <- newStringWriter
-      given Logger[IO]  <- Logger.makeIoLogger(output)(using constantClock)
-      routesWithTraceId <- mw[IO](routes[IO]).pure[IO]
+      given Logger[IO]  <- Logger.makeIoLogger(output)
+      routesWithTraceId <- middleWare(routes).pure[IO]
       response          <- routesWithTraceId.run(Request[IO]()).value
       loggedString      <- output.get
     yield
       assertEquals(response.flatMap(_.headers.get(myTraceHeaderName)).map(_.head.value), testUuid.toString.some)
-      assert(loggedString.contains("X-Trace-Id=e20a27fe-5142-4e21-ba09-35bc6fb84591"))
+      assert(loggedString.contains(s"$myTraceHeaderName=$testUuid"))
     end for
   }
 
