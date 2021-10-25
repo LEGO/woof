@@ -10,8 +10,8 @@ A **pure** _(in both senses of the word!)_ **Scala 3** logging library with **no
 * Made with _Cats Effect_
 * Macro based (_no runtime reflection_)
   * Can be built for _scala.js_ in the future!
-* No logback
-  * Configured with plain Scala code
+* No slf4j
+* Configured with plain Scala code
 
 ## Example 
 

@@ -6,8 +6,8 @@ import Logger.LogLevel
 import java.time.ZoneId
 import ColorPrinter.Theme
 
-class NoColorPrinter(zoneId: ZoneId = ZoneId.systemDefault())
-    extends ColorPrinter(theme = NoColorPrinter.noColorTheme, zoneId = zoneId):
+class NoColorPrinter(formatTime: Instant => String = ColorPrinter.defaultDateTimeFormat)
+    extends ColorPrinter(theme = NoColorPrinter.noColorTheme, formatTime = formatTime):
 end NoColorPrinter
 
 object NoColorPrinter:

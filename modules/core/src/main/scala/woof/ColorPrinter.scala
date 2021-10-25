@@ -10,11 +10,10 @@ import ColorPrinter.Theme.Background
 import ColorPrinter.Theme.Formatting
 import ColorPrinter.Theme
 
-open class ColorPrinter(theme: Theme = Theme.defaultTheme, zoneId: ZoneId = ZoneId.systemDefault()) extends Printer:
-
-  private val dateTimeFormatter = DateTimeFormatter
-    .ofPattern("HH:mm:ss")
-    .withZone(zoneId);
+open class ColorPrinter(
+    theme: Theme = Theme.defaultTheme,
+    formatTime: Instant => String = ColorPrinter.defaultDateTimeFormat,
+) extends Printer:
 
   override def toPrint(
       instant: Instant,
@@ -28,7 +27,7 @@ open class ColorPrinter(theme: Theme = Theme.defaultTheme, zoneId: ZoneId = Zone
     val postfixColor = theme.postfixFormat
     val reset        = theme.reset
     val prefix       = level.productPrefix.toUpperCase.padTo(5, ' ')
-    val time         = dateTimeFormatter.format(instant)
+    val time         = formatTime(instant)
     val contextPart =
       if context.isEmpty then ""
       else
@@ -43,6 +42,11 @@ open class ColorPrinter(theme: Theme = Theme.defaultTheme, zoneId: ZoneId = Zone
 end ColorPrinter
 
 object ColorPrinter:
+  val defaultDateTimeFormat = (i: Instant) =>
+    DateTimeFormatter
+      .ofPattern("YYYY-MM-dd HH:mm:ss")
+      .withZone(ZoneId.systemDefault())
+      .format(i)
 
   object Theme:
     import scala.Console

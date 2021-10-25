@@ -41,7 +41,7 @@ class LoggerSuite extends CatsEffectSuite:
   test("log should make log line") {
 
     given Clock[IO] = constantClock
-    given Printer   = NoColorPrinter(zoneId = ZoneId.of("Europe/Copenhagen"))
+    given Printer   = NoColorPrinter(testFormatTime)
 
     val message  = "log message"
     val logInfo  = Logging.info(message)
@@ -57,7 +57,7 @@ class LoggerSuite extends CatsEffectSuite:
 
     given Clock[IO]   = constantClock
     val theme         = Theme.defaultTheme
-    given Printer     = ColorPrinter(theme = theme, zoneId = ZoneId.of("Europe/Copenhagen"))
+    given Printer     = ColorPrinter(theme = theme, formatTime = testFormatTime)
     val reset         = Theme.Style.Reset
     val postfixFormat = theme.postfixFormat
     // format: off
@@ -84,7 +84,7 @@ class LoggerSuite extends CatsEffectSuite:
       given Clock[IO] = clock
       given Logger[IO] =
         given Clock[IO] = clock
-        given Printer   = NoColorPrinter(zoneId = ZoneId.of("Europe/Copenhagen"))
+        given Printer   = NoColorPrinter(testFormatTime)
         new Logger[IO](StringWriter(ref))(using stringLocal)
       _ <- clockRef.get
         .iterateUntil(_ >= (startTime + 1.second))
@@ -101,7 +101,7 @@ class LoggerSuite extends CatsEffectSuite:
 
   test("Should use local context") {
     given Clock[IO] = constantClock
-    given Printer   = NoColorPrinter(zoneId = ZoneId.of("Europe/Copenhagen"))
+    given Printer   = NoColorPrinter(testFormatTime)
 
     val message = "log message"
     val logInfo = Logging.info(message)

@@ -12,9 +12,11 @@ import cats.syntax.all.*
 import Logger.*
 import Filter.given_Monoid_Filter
 import cats.kernel.Monoid
+import java.time.Instant
+import java.time.format.DateTimeFormatter
 class FilterSuite extends CatsEffectSuite:
 
-  given Printer = NoColorPrinter(ZoneId.of("Europe/Copenhagen"))
+  given Printer = NoColorPrinter(testFormatTime)
 
   val startTime = 549459420.seconds
 
@@ -32,8 +34,8 @@ class FilterSuite extends CatsEffectSuite:
     yield ()
 
   test("filter based on levels") {
-    val expected = """13:37:00 [WARN ] woof.FilterSuite: Warning message (FilterSuite.scala:30)
-13:37:00 [ERROR] woof.FilterSuite: Error message (FilterSuite.scala:31)
+    val expected = """13:37:00 [WARN ] woof.FilterSuite: Warning message (FilterSuite.scala:32)
+13:37:00 [ERROR] woof.FilterSuite: Error message (FilterSuite.scala:33)
 """
     given Filter = Filter.atLeastLevel(LogLevel.Warn)
     for
@@ -65,7 +67,7 @@ class FilterSuite extends CatsEffectSuite:
   }
 
   test("filter exact log levels") {
-    given Filter =  Filter.exactLevel(LogLevel.Info) or Filter.exactLevel(LogLevel.Warn)
+    given Filter = Filter.exactLevel(LogLevel.Info) or Filter.exactLevel(LogLevel.Warn)
     for
       stringWriter     <- newStringWriter
       given Logger[IO] <- Logger.makeIoLogger(stringWriter)(using constantClock)

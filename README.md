@@ -10,8 +10,8 @@ A **pure** _(in both senses of the word!)_ **Scala 3** logging library with **no
 * Made with _Cats Effect_
 * Macro based (_no runtime reflection_)
   * Can be built for _scala.js_ in the future!
-* No logback
-  * Configured with plain Scala code
+* No slf4j
+* Configured with plain Scala code
 
 ## Example 
 
@@ -48,10 +48,10 @@ and running it yields:
 ```scala
 import cats.effect.unsafe.implicits.global
 main.unsafeRunSync()
-// 10:52:59 [DEBUG] repl.MdocSession$.App: This is some debug (.:33)
-// 10:52:59 [INFO ] repl.MdocSession$.App: HEY! (.:34)
-// 10:52:59 [WARN ] repl.MdocSession$.App: I'm warning you (.:35)
-// 10:52:59 [ERROR] repl.MdocSession$.App: I give up (.:36)
+// 2021-10-25 14:08:51 [DEBUG] repl.MdocSession$.App: This is some debug (.:33)
+// 2021-10-25 14:08:52 [INFO ] repl.MdocSession$.App: HEY! (.:34)
+// 2021-10-25 14:08:52 [WARN ] repl.MdocSession$.App: I'm warning you (.:35)
+// 2021-10-25 14:08:52 [ERROR] repl.MdocSession$.App: I give up (.:36)
 ```
 
 
@@ -71,9 +71,9 @@ And running with context yields:
 
 ```scala
 mainWithContext.unsafeRunSync()
-// 10:52:59 [DEBUG] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: This is some debug (.:33)
-// 10:52:59 [INFO ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: HEY! (.:34)
-// 10:52:59 [WARN ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I'm warning you (.:35)
-// 10:52:59 [ERROR] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I give up (.:36)
-// 10:52:59 [INFO ] repl.MdocSession$.App: Now the context is gone (.:67)
+// 2021-10-25 14:08:52 [DEBUG] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: This is some debug (.:33)
+// 2021-10-25 14:08:52 [INFO ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: HEY! (.:34)
+// 2021-10-25 14:08:52 [WARN ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I'm warning you (.:35)
+// 2021-10-25 14:08:52 [ERROR] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I give up (.:36)
+// 2021-10-25 14:08:52 [INFO ] repl.MdocSession$.App: Now the context is gone (.:67)
 ```
