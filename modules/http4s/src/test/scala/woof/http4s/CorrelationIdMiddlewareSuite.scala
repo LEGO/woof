@@ -1,22 +1,24 @@
 package woof.http4s
 
-import org.http4s.HttpRoutes
-import cats.effect.IO
+import cats.Applicative
+import cats.Monad
 import cats.data.Kleisli
 import cats.data.OptionT
-import org.http4s.Response
-import cats.syntax.all.*
-import woof.*
-import cats.Monad
-import java.time.ZoneId
-import scala.concurrent.duration.*
 import cats.effect.Clock
-import cats.Applicative
-import java.util.UUID
-import org.typelevel.ci.CIString
-import CorrelationIdMiddleware.UUIDGen
-import org.http4s.Request
+import cats.effect.IO
+import cats.syntax.all.*
 import munit.CatsEffectSuite
+import org.http4s.HttpRoutes
+import org.http4s.Request
+import org.http4s.Response
+import org.typelevel.ci.CIString
+import woof.*
+
+import java.time.ZoneId
+import java.util.UUID
+import scala.concurrent.duration.*
+
+import CorrelationIdMiddleware.UUIDGen
 
 class CorrelationIdMiddlewareSuite extends CatsEffectSuite:
 

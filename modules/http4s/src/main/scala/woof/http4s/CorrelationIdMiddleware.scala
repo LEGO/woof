@@ -5,7 +5,9 @@ import cats.Monad
 import cats.data.Kleisli
 import cats.data.NonEmptyList
 import cats.data.OptionT
+import cats.effect.kernel.Sync
 import cats.syntax.all.*
+import org.http4s.Header
 import org.http4s.Header.Raw
 import org.http4s.HttpRoutes
 import org.http4s.Request
@@ -16,8 +18,6 @@ import woof.*
 import java.util.UUID
 
 import Logger.*
-import org.http4s.Header
-import cats.effect.kernel.Sync
 
 object CorrelationIdMiddleware:
 
