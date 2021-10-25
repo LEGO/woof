@@ -27,7 +27,7 @@ class CorrelationIdMiddlewareSuite extends CatsEffectSuite:
     yield Response[F](),
   )
 
-  given Printer = NoColorPrinter(ZoneId.of("Europe/Copenhagen"))
+  given Printer = NoColorPrinter()
   given Filter  = Filter.everything
 
   val testUuid = UUID.fromString("E20A27FE-5142-4E21-BA09-35BC6FB84591")
