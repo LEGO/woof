@@ -21,7 +21,7 @@ class Slf4jSuite extends munit.CatsEffectSuite:
     for
       stringOutput <- newStringWriter
       woofLogger   <- Logger.makeIoLogger(stringOutput)
-      _            <- IO.delay(WoofLogger.logger = Some(woofLogger))
+      _            <- woofLogger.registerSlf4j
       slf4jLogger  <- IO.delay(LoggerFactory.getLogger(this.getClass))
       _            <- IO.delay(slf4jLogger.info("HELLO, SLF4J!"))
       result       <- stringOutput.get
@@ -39,7 +39,7 @@ class Slf4jSuite extends munit.CatsEffectSuite:
     for
       stringOutput <- newStringWriter
       woofLogger   <- Logger.makeIoLogger(stringOutput)
-      _            <- IO.delay(WoofLogger.logger = Some(woofLogger))
+      _            <- woofLogger.registerSlf4j
       slf4jLogger  <- IO.delay(LoggerFactory.getLogger(this.getClass))
       _            <- IO.delay(slf4jLogger.info("HELLO, ARRAYS!", 1, Some(42), List(1337)))
       result       <- stringOutput.get
@@ -54,8 +54,8 @@ class Slf4jSuite extends munit.CatsEffectSuite:
     given Printer = ColorPrinter()
     given Filter  = Filter.exactLevel(LogLevel.Warn)
     for
-      logger      <- Logger.makeIoLogger(Output.fromConsole)
-      _           <- IO.delay(WoofLogger.logger = Some(logger))
+      woofLogger  <- Logger.makeIoLogger(Output.fromConsole)
+      _           <- woofLogger.registerSlf4j
       slf4jLogger <- IO.delay(LoggerFactory.getLogger(this.getClass))
       _           <- IO.delay(slf4jLogger.info("HELLO, SLF4J!"))
     yield

@@ -35,15 +35,17 @@ def woofProject(file: File): Project =
       scalacOptions ++= Seq("-source", "future"),
     )
 
+lazy val docs =
+  project
+    .in(file("docs-target"))
+    .settings(commonSettings,mdocIn := file("docs"), mdocOut := file("."))
+    .enablePlugins(MdocPlugin)
+    .dependsOn(core, http4s, slf4j)
+
 lazy val root =
   project
     .in(file("."))
-    .settings(
-      commonSettings,
-      mdocOut := file("."),
-    ) // we have to have a root project, otherwise we cannot override the TokenSource for `sbt-github-packages`
-    .enablePlugins(MdocPlugin)
-    .dependsOn(core)
+    .aggregate(core, http4s, slf4j)
 
 lazy val core =
   woofProject(file("./modules/core"))

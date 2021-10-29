@@ -82,7 +82,7 @@ class WoofLogger(name: String) extends Logger:
   def warn(msg: String, objs: Array[? <: Object]): Unit                          = warn(s"$msg ${objs.mkString(", ")}")
   def warn(msg: String, throwable: Throwable): Unit                              = warn(s"$msg ${throwable.getMessage}")
   def warn(x$0: org.slf4j.Marker, msg: String): Unit                             = warn(msg)
-  def warn(x$0: org.slf4j.Marker, msg: String, obj: Object): Unit               = warn(s"$msg, $obj")
+  def warn(x$0: org.slf4j.Marker, msg: String, obj: Object): Unit                = warn(s"$msg, $obj")
   def warn(x$0: org.slf4j.Marker, msg: String, obj1: Object, obj2: Object): Unit = warn(s"$msg, $obj1, $obj2")
   def warn(x$0: org.slf4j.Marker, msg: String, objs: Array[? <: Object]): Unit   = warn(s"$msg ${objs.mkString(", ")}")
   def warn(x$0: org.slf4j.Marker, msg: String, throwable: Throwable): Unit       = warn(s"$msg ${throwable.getMessage}")
@@ -112,3 +112,5 @@ object WoofLogger:
   private given IORuntime         = global
   var logger: Option[WLogger[IO]] = None
 end WoofLogger
+
+extension (w: WLogger[IO]) def registerSlf4j: IO[Unit] = IO.delay(WoofLogger.logger = Some(w))
