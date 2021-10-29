@@ -80,8 +80,8 @@ import org.slf4j.LoggerFactory
 def programWithSlf4j: IO[Unit] = 
   for
     slf4jLogger <- IO.delay(LoggerFactory.getLogger(this.getClass))
-    _ <- IO.delay(slf4jLogger.info("Hello from SLF4j!"))
-    _ <- IO.delay(slf4jLogger.warn("This is not the pure woof."))
+    _           <- IO.delay(slf4jLogger.info("Hello from SLF4j!"))
+    _           <- IO.delay(slf4jLogger.warn("This is not the pure woof."))
   yield ()
 ```
 

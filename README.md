@@ -48,10 +48,10 @@ and running it yields:
 ```scala
 import cats.effect.unsafe.implicits.global
 main.unsafeRunSync()
-// 2021-10-29 13:15:30 [DEBUG] repl.MdocSession$.App: This is some debug (.:33)
-// 2021-10-29 13:15:30 [INFO ] repl.MdocSession$.App: HEY! (.:34)
-// 2021-10-29 13:15:30 [WARN ] repl.MdocSession$.App: I'm warning you (.:35)
-// 2021-10-29 13:15:30 [ERROR] repl.MdocSession$.App: I give up (.:36)
+// 2021-10-29 13:21:25 [DEBUG] repl.MdocSession$.App: This is some debug (.:33)
+// 2021-10-29 13:21:25 [INFO ] repl.MdocSession$.App: HEY! (.:34)
+// 2021-10-29 13:21:25 [WARN ] repl.MdocSession$.App: I'm warning you (.:35)
+// 2021-10-29 13:21:25 [ERROR] repl.MdocSession$.App: I give up (.:36)
 ```
 
 
@@ -71,11 +71,11 @@ And running with context yields:
 
 ```scala
 mainWithContext.unsafeRunSync()
-// 2021-10-29 13:15:30 [DEBUG] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: This is some debug (.:33)
-// 2021-10-29 13:15:30 [INFO ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: HEY! (.:34)
-// 2021-10-29 13:15:30 [WARN ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I'm warning you (.:35)
-// 2021-10-29 13:15:30 [ERROR] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I give up (.:36)
-// 2021-10-29 13:15:30 [INFO ] repl.MdocSession$.App: Now the context is gone (.:67)
+// 2021-10-29 13:21:25 [DEBUG] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: This is some debug (.:33)
+// 2021-10-29 13:21:25 [INFO ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: HEY! (.:34)
+// 2021-10-29 13:21:25 [WARN ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I'm warning you (.:35)
+// 2021-10-29 13:21:25 [ERROR] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I give up (.:36)
+// 2021-10-29 13:21:25 [INFO ] repl.MdocSession$.App: Now the context is gone (.:67)
 ```
 
 # Can I use SLF4J?
@@ -89,8 +89,8 @@ import org.slf4j.LoggerFactory
 def programWithSlf4j: IO[Unit] = 
   for
     slf4jLogger <- IO.delay(LoggerFactory.getLogger(this.getClass))
-    _ <- IO.delay(slf4jLogger.info("Hello from SLF4j!"))
-    _ <- IO.delay(slf4jLogger.warn("This is not the pure woof."))
+    _           <- IO.delay(slf4jLogger.info("Hello from SLF4j!"))
+    _           <- IO.delay(slf4jLogger.warn("This is not the pure woof."))
   yield ()
 ```
 
@@ -116,8 +116,8 @@ and running it:
 
 ```scala
 mainSlf4j.unsafeRunSync()
-// 2021-10-29 13:15:30 [INFO ] repl.MdocSession$App: Hello from SLF4j! (MdocSession$App.scala:87)
-// 2021-10-29 13:15:30 [WARN ] repl.MdocSession$App: This is not the pure woof. (MdocSession$App.scala:88)
+// 2021-10-29 13:21:25 [INFO ] repl.MdocSession$App: Hello from SLF4j! (MdocSession$App.scala:87)
+// 2021-10-29 13:21:25 [WARN ] repl.MdocSession$App: This is not the pure woof. (MdocSession$App.scala:88)
 ```
 ## Limitations of SLF4J bindings
 
