@@ -15,10 +15,13 @@ import cats.Monad
 import woof.local.Local
 import cats.effect.IO
 import cats.kernel.Order
+import woof.Logging.LogInfo
 
 open class Logger[F[_]: StringLocal: Monad: Clock](output: Output[F], outputs: Output[F]*)(using Printer, Filter):
 
   private[woof] val stringLocal: StringLocal[F] = summon[StringLocal[F]]
+  val printer: Printer                          = summon[Printer]
+  val filter: Filter                            = summon[Filter]
 
   private[woof] def makeLogString(
       level: LogLevel,
@@ -28,20 +31,20 @@ open class Logger[F[_]: StringLocal: Monad: Clock](output: Output[F], outputs: O
   ): F[String] =
     Clock[F].realTimeInstant.map(now => summon[Printer].toPrint(now, level, info, message, context))
 
-  private def doOutputs(level: LogLevel, s: String) =
+  private def doOutputs(level: LogLevel, s: String): F[Unit] =
     val allOutputs = outputs.prepended(output)
     level match
       case LogLevel.Error => allOutputs.traverse_(_.outputError(s))
       case _              => allOutputs.traverse_(_.output(s))
 
-  inline def log(level: LogLevel, inline message: String): F[Unit] =
-    val info = Logging.info(message)
+  def doLog(level: LogLevel, message: String, logInfo: LogInfo): F[Unit] =
     for
       context <- summon[StringLocal[F]].ask
-      logLine <- makeLogString(level, info, message, context)
-      _       <- doOutputs(level, logLine).whenA(summon[Filter](LogLine(level, info, logLine, context)))
+      logLine <- makeLogString(level, logInfo, message, context)
+      _       <- doOutputs(level, logLine).whenA(summon[Filter](LogLine(level, logInfo, logLine, context)))
     yield ()
-  end log
+
+  inline def log(level: LogLevel, inline message: String): F[Unit] = doLog(level, message, Logging.info(message))
 
   inline def debug(inline message: String): F[Unit] = log(LogLevel.Debug, message)
   inline def info(inline message: String): F[Unit]  = log(LogLevel.Info, message)

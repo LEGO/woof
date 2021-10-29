@@ -49,7 +49,7 @@ class LoggerSuite extends CatsEffectSuite:
 
     for
       logger <- Logger.makeIoLogger(Output.fromConsole)
-      line   <- logger.makeLogLine(Logger.LogLevel.Warn, logInfo, message, Nil)
+      line   <- logger.makeLogString(Logger.LogLevel.Warn, logInfo, message, Nil)
     yield assertEquals(line, expected)
   }
 
