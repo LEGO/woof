@@ -72,7 +72,7 @@ object Logger:
     yield new Logger[IO](output, outputs*)
 
   enum LogLevel:
-    case Debug, Info, Trace, Warn, Error
+    case Trace, Debug, Info, Warn, Error
   given Order[LogLevel] = (x, y) => Order[Int].compare(x.ordinal, y.ordinal)
 
 end Logger

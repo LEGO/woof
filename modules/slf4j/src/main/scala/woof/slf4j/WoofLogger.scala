@@ -7,7 +7,6 @@ import cats.effect.IO
 import cats.effect.unsafe.IORuntime.global
 import cats.effect.unsafe.IORuntime
 import woof.Logging.LogInfo
-import javassist.ClassPool
 import java.io.File
 import woof.Logger.LogLevel
 import woof.LogLine

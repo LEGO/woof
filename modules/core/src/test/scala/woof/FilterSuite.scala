@@ -76,4 +76,10 @@ class FilterSuite extends CatsEffectSuite:
     yield assertEquals(str.count(_ == '\n'), 2)
   }
 
+  test("log levels have priorities") {
+    import LogLevel.*
+    import cats.Order.catsKernelOrderingForOrder
+    assertEquals(LogLevel.values.toList.sorted, List(Trace, Debug, Info, Warn, Error))
+  }
+
 end FilterSuite

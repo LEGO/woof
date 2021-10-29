@@ -21,7 +21,7 @@ val D = new {
 
 val commonSettings = Seq(
   scalaVersion     := V.scala,
-  version          := "0.1.3",
+  version          := "0.1.5",
   organization     := "woof",
   githubOwner      := "LEGO",
   githubRepository := "woof",
@@ -67,5 +67,5 @@ lazy val http4s = woofProject(file("./modules/http4s"))
   .dependsOn(core % "compile->compile;test->test") // we also want the test utils
 
 lazy val slf4j = woofProject(file("./modules/slf4j"))
-  .settings(libraryDependencies ++= Seq(D.slf4jApi, D.javassist))
+  .settings(libraryDependencies ++= Seq(D.slf4jApi))
   .dependsOn(core % "compile->compile;test->test")
