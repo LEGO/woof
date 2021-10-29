@@ -56,6 +56,7 @@ object ColorPrinter:
         level match
           case LogLevel.Debug => Foreground.Green
           case LogLevel.Warn  => Foreground.Yellow.withStyle(Style.Bold)
+          case LogLevel.Trace => Style.Underlined
           case LogLevel.Info  => Style.Underlined.withStyle(Style.Bold)
           case LogLevel.Error => Foreground.Red.withBackground(Background.White)
       ,

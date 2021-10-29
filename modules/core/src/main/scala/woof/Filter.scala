@@ -6,7 +6,7 @@ import cats.syntax.order.*
 import scala.util.matching.Regex
 import cats.kernel.Monoid
 
-case class LogLine(level: LogLevel, info: LogInfo, message: String)
+case class LogLine(level: LogLevel, info: LogInfo, message: String, context: List[(String, String)])
 
 type Filter = LogLine => Boolean
 
@@ -21,7 +21,7 @@ object Filter:
   given Monoid[Filter] with
     def empty: Filter                         = nothing
     def combine(f: Filter, g: Filter): Filter = f or g
-    
+
 end Filter
 
 extension (f: Filter)
