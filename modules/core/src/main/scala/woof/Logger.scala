@@ -20,7 +20,7 @@ open class Logger[F[_]: StringLocal: Monad: Clock](output: Output[F], outputs: O
 
   private[woof] val stringLocal: StringLocal[F] = summon[StringLocal[F]]
 
-  private[woof] def makeLogLine(
+  private[woof] def makeLogString(
       level: LogLevel,
       info: Logging.LogInfo,
       message: String,
@@ -28,22 +28,24 @@ open class Logger[F[_]: StringLocal: Monad: Clock](output: Output[F], outputs: O
   ): F[String] =
     Clock[F].realTimeInstant.map(now => summon[Printer].toPrint(now, level, info, message, context))
 
-  inline def log(level: LogLevel, inline message: String): F[Unit] =
-    val info       = Logging.info(message)
+  private def doOutputs(level: LogLevel, s: String) =
     val allOutputs = outputs.prepended(output)
-    val doOutputs: String => F[Unit] = (s: String) =>
-      level match
-        case LogLevel.Error => allOutputs.traverse_(_.outputError(s))
-        case _              => allOutputs.traverse_(_.output(s))
+    level match
+      case LogLevel.Error => allOutputs.traverse_(_.outputError(s))
+      case _              => allOutputs.traverse_(_.output(s))
+
+  inline def log(level: LogLevel, inline message: String): F[Unit] =
+    val info = Logging.info(message)
     for
       context <- summon[StringLocal[F]].ask
-      logLine <- makeLogLine(level, info, message, context)
-      _       <- doOutputs(logLine).whenA(summon[Filter](LogLine(level, info, logLine)))
+      logLine <- makeLogString(level, info, message, context)
+      _       <- doOutputs(level, logLine).whenA(summon[Filter](LogLine(level, info, logLine, context)))
     yield ()
   end log
 
   inline def debug(inline message: String): F[Unit] = log(LogLevel.Debug, message)
   inline def info(inline message: String): F[Unit]  = log(LogLevel.Info, message)
+  inline def trace(inline message: String): F[Unit] = log(LogLevel.Info, message)
   inline def warn(inline message: String): F[Unit]  = log(LogLevel.Warn, message)
   inline def error(inline message: String): F[Unit] = log(LogLevel.Error, message)
 
@@ -67,7 +69,7 @@ object Logger:
     yield new Logger[IO](output, outputs*)
 
   enum LogLevel:
-    case Debug, Info, Warn, Error
+    case Debug, Info, Trace, Warn, Error
   given Order[LogLevel] = (x, y) => Order[Int].compare(x.ordinal, y.ordinal)
 
 end Logger

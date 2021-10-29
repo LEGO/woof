@@ -5,6 +5,7 @@ val V = new {
   val http4s          = "0.23.6"
   val munit           = "0.7.29"
   val munitCatsEffect = "1.0.6"
+  val slf4j           = "1.7.32"
 }
 
 val D = new {
@@ -13,6 +14,7 @@ val D = new {
   val http4s          = "org.http4s"    %% "http4s-core"         % V.http4s
   val munit           = "org.scalameta" %% "munit"               % V.munit
   val munitCatsEffect = "org.typelevel" %% "munit-cats-effect-3" % V.munitCatsEffect
+  val slf4jApi        = "org.slf4j"      % "slf4j-api"           % V.slf4j  
 }
 
 val commonSettings = Seq(
@@ -56,8 +58,10 @@ lazy val http4s = woofProject(file("./modules/http4s"))
   .settings(
     libraryDependencies ++= Seq(
       D.http4s,
-      D.munit           % Test,
-      D.munitCatsEffect % Test,
     ),
   )
-  .dependsOn(core % "compile->compile;test->test")// we also want the test utils
+  .dependsOn(core % "compile->compile;test->test") // we also want the test utils
+
+lazy val slf4j = woofProject(file("./modules/slf4j"))
+  .settings(libraryDependencies += D.slf4jApi)
+  .dependsOn(core % "compile->compile;test->test")
