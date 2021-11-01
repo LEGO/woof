@@ -48,10 +48,10 @@ and running it yields:
 ```scala
 import cats.effect.unsafe.implicits.global
 main.unsafeRunSync()
-// 2021-10-29 13:21:25 [DEBUG] repl.MdocSession$.App: This is some debug (.:33)
-// 2021-10-29 13:21:25 [INFO ] repl.MdocSession$.App: HEY! (.:34)
-// 2021-10-29 13:21:25 [WARN ] repl.MdocSession$.App: I'm warning you (.:35)
-// 2021-10-29 13:21:25 [ERROR] repl.MdocSession$.App: I give up (.:36)
+// 2021-11-01 08:51:34 [DEBUG] repl.MdocSession$.App: This is some debug (.:33)
+// 2021-11-01 08:51:34 [INFO ] repl.MdocSession$.App: HEY! (.:34)
+// 2021-11-01 08:51:34 [WARN ] repl.MdocSession$.App: I'm warning you (.:35)
+// 2021-11-01 08:51:34 [ERROR] repl.MdocSession$.App: I give up (.:36)
 ```
 
 
@@ -71,11 +71,11 @@ And running with context yields:
 
 ```scala
 mainWithContext.unsafeRunSync()
-// 2021-10-29 13:21:25 [DEBUG] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: This is some debug (.:33)
-// 2021-10-29 13:21:25 [INFO ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: HEY! (.:34)
-// 2021-10-29 13:21:25 [WARN ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I'm warning you (.:35)
-// 2021-10-29 13:21:25 [ERROR] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I give up (.:36)
-// 2021-10-29 13:21:25 [INFO ] repl.MdocSession$.App: Now the context is gone (.:67)
+// 2021-11-01 08:51:34 [DEBUG] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: This is some debug (.:33)
+// 2021-11-01 08:51:34 [INFO ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: HEY! (.:34)
+// 2021-11-01 08:51:34 [WARN ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I'm warning you (.:35)
+// 2021-11-01 08:51:34 [ERROR] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I give up (.:36)
+// 2021-11-01 08:51:34 [INFO ] repl.MdocSession$.App: Now the context is gone (.:67)
 ```
 
 # Can I use SLF4J?
@@ -116,8 +116,8 @@ and running it:
 
 ```scala
 mainSlf4j.unsafeRunSync()
-// 2021-10-29 13:21:25 [INFO ] repl.MdocSession$App: Hello from SLF4j! (MdocSession$App.scala:87)
-// 2021-10-29 13:21:25 [WARN ] repl.MdocSession$App: This is not the pure woof. (MdocSession$App.scala:88)
+// 2021-11-01 08:51:34 [INFO ] repl.MdocSession$App: Hello from SLF4j! (MdocSession$App.scala:87)
+// 2021-11-01 08:51:34 [WARN ] repl.MdocSession$App: This is not the pure woof. (MdocSession$App.scala:88)
 ```
 ## Limitations of SLF4J bindings
 
@@ -125,4 +125,43 @@ Currently, markers do nothing. You can get the same behaviour easily with contex
 
 # Can I use __http4s__?
 
-> TODO: Add example
+```scala
+import org.http4s.{HttpRoutes, Response}
+import cats.data.{Kleisli, OptionT}
+import cats.syntax.functor.given
+
+def routes(using Logger[IO]): HttpRoutes[IO] =
+  Kleisli(request =>
+    OptionT
+      .liftF(Logger[IO].info("I got a request with trace id! :D"))
+      .as(Response[IO]()),
+  )
+```
+
+We create a tracing middleware from the above routes and call the resulting
+route with an empty request.
+
+```scala
+import org.http4s.Request
+import woof.http4s.CorrelationIdMiddleware
+import cats.syntax.option.given
+
+val mainHttp4s: IO[Unit] = 
+  for
+    given Logger[IO]  <- Logger.makeIoLogger(consoleOutput)
+    maybeResponse     <- CorrelationIdMiddleware.middleware[IO]()(routes).run(Request[IO]()).value
+    responseHeaders   =  maybeResponse.map(_.headers).orEmpty
+    _                 <- Logger[IO].info(s"Got response headers: $responseHeaders")
+  yield ()
+```
+
+Finally, running it, we see that the correlation ID is added to the log message inside the routes (transparently), and that 
+the correlation ID is also returned in the header of the response.
+
+> NOTE: The correlation ID is _not_ present outside the routes, i.e. we have scoped it only to the service part of our code.
+
+```scala
+mainHttp4s.unsafeRunSync()
+// 2021-11-01 08:51:35 [INFO ] X-Trace-Id=c66c2587-9d4d-44d7-9858-6f9be6e330ef repl.MdocSession$.App: I got a request with trace id! :D (.:127)
+// 2021-11-01 08:51:35 [INFO ] repl.MdocSession$.App: Got response headers: Headers(X-Trace-Id: c66c2587-9d4d-44d7-9858-6f9be6e330ef) (.:148)
+```

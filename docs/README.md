@@ -114,4 +114,41 @@ Currently, markers do nothing. You can get the same behaviour easily with contex
 
 # Can I use __http4s__?
 
-> TODO: Add example
+```scala mdoc
+import org.http4s.{HttpRoutes, Response}
+import cats.data.{Kleisli, OptionT}
+import cats.syntax.functor.given
+
+def routes(using Logger[IO]): HttpRoutes[IO] =
+  Kleisli(request =>
+    OptionT
+      .liftF(Logger[IO].info("I got a request with trace id! :D"))
+      .as(Response[IO]()),
+  )
+```
+
+We create a tracing middleware from the above routes and call the resulting
+route with an empty request.
+
+```scala mdoc:silent
+import org.http4s.Request
+import woof.http4s.CorrelationIdMiddleware
+import cats.syntax.option.given
+
+val mainHttp4s: IO[Unit] = 
+  for
+    given Logger[IO]  <- Logger.makeIoLogger(consoleOutput)
+    maybeResponse     <- CorrelationIdMiddleware.middleware[IO]()(routes).run(Request[IO]()).value
+    responseHeaders   =  maybeResponse.map(_.headers).orEmpty
+    _                 <- Logger[IO].info(s"Got response headers: $responseHeaders")
+  yield ()
+```
+
+Finally, running it, we see that the correlation ID is added to the log message inside the routes (transparently), and that 
+the correlation ID is also returned in the header of the response.
+
+> NOTE: The correlation ID is _not_ present outside the routes, i.e. we have scoped it only to the service part of our code.
+
+```scala mdoc
+mainHttp4s.unsafeRunSync()
+```
