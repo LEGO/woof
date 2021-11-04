@@ -108,12 +108,6 @@ class LoggerSuite extends CatsEffectSuite:
 
     def programLogic(using Logger[IO]) = Logger[IO].info("some info")
 
-    val context = List(
-      "correlation-id" -> "21c78595-ef21-4df0-987e-8af6aab6f346",
-      "locale"         -> "da-DK",
-    )
-
-
     // format: off
     val expected = """13:37:00 [INFO ] correlation-id=21c78595-ef21-4df0-987e-8af6aab6f346, locale=da-DK woof.LoggerSuite: some info (LoggerSuite.scala:109)
 13:37:00 [INFO ] woof.LoggerSuite: some info (LoggerSuite.scala:109)
@@ -124,8 +118,8 @@ class LoggerSuite extends CatsEffectSuite:
       strRef                <- Ref[IO].of("")
       given Logger[IO] = new Logger[IO](StringWriter(strRef))
       _ <- programLogic
-        .withLogContext("correlation-id", "21c78595-ef21-4df0-987e-8af6aab6f346")
         .withLogContext("locale", "da-DK")
+        .withLogContext("correlation-id", "21c78595-ef21-4df0-987e-8af6aab6f346")
       _      <- programLogic
       output <- strRef.get
     yield assertEquals(output, expected)

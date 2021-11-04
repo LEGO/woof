@@ -57,7 +57,8 @@ end Logger
 object Logger:
 
   extension [F[_]: Logger, A](fa: F[A])
-    def withLogContext(key: String, value: String): F[A] = Logger[F].stringLocal.local(fa)(ctx => (key, value) :: ctx)
+    def withLogContext(key: String, value: String): F[A] =
+      Logger[F].stringLocal.local(fa)(ctx => ctx.appended((key, value)))
 
   type Kvp               = (String, String)
   type StringLocal[F[_]] = Local[F, List[Kvp]]
