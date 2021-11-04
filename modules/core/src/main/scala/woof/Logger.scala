@@ -19,7 +19,7 @@ import woof.Logging.LogInfo
 
 open class Logger[F[_]: StringLocal: Monad: Clock](output: Output[F], outputs: Output[F]*)(using Printer, Filter):
 
-  private[woof] val stringLocal: StringLocal[F] = summon[StringLocal[F]]
+  val stringLocal: StringLocal[F] = summon[StringLocal[F]]
   val printer: Printer                          = summon[Printer]
   val filter: Filter                            = summon[Filter]
 
