@@ -21,7 +21,7 @@ val D = new {
 
 val commonSettings = Seq(
   scalaVersion     := V.scala,
-  version          := "0.1.5",
+  version          := "0.1.6",
   organization     := "woof",
   githubOwner      := "LEGO",
   githubRepository := "woof",
