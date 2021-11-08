@@ -18,7 +18,8 @@ class WoofLogger(name: String) extends Logger:
   private def getLogInfo() =
     val stacktraceElements = Thread.currentThread().getStackTrace()
     val callingMethodIndex =
-      stacktraceElements.size - stacktraceElements.reverse.indexWhere(s => s.getClassName == this.getClass.getName,
+      stacktraceElements.size - stacktraceElements.reverse.indexWhere(s =>
+        s.getClassName == this.getClass.getName,
       ) // after last mention of this class
     val callingMethod: StackTraceElement = stacktraceElements(callingMethodIndex)
     val className                        = callingMethod.getClassName

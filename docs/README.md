@@ -10,15 +10,12 @@ A **pure** _(in both senses of the word!)_ **Scala 3** logging library with **no
 * Made with _Cats Effect_
 * Macro based (_no runtime reflection_)
   * Can be built for _scala.js_ in the future!
-* No slf4j
 * Configured with plain Scala code
 
 ## Example 
 
 ```scala mdoc:silent
-import cats.effect.ExitCode
 import cats.effect.IO
-import cats.effect.IOApp
 import woof.*
 
 val consoleOutput: Output[IO] = new Output[IO]:
@@ -71,9 +68,12 @@ mainWithContext.unsafeRunSync()
 
 # Can I use SLF4J?
 
-Yes, you can. I don't think you should, but you can! Note, however, that not everything can be implemented perfectly against the
-slf4j-api, e.g. the filtering functionality in `woof` is much more flexible and thus does not map directly to `isDebugEnabled` since 
-woof-filters are not limited to log level.
+Yes, you can. I don't think you should (for new projects), but you can use it for interop with existing SLF4J programs! Note, however, that not everything can be implemented perfectly against the
+`SLF4J` API, e.g. the filtering functionality in `woof` is much more flexible and thus does not map directly to, e.g., `isDebugEnabled`.
+
+> NOTE: This is about implementing the `SLF4J` API for `woof`, **not** about sending `woof` logs INTO existing SLF4J implementations
+
+Consider this program which logs using the `SLF4J` API
 
 ```scala mdoc
 import org.slf4j.LoggerFactory
@@ -85,13 +85,13 @@ def programWithSlf4j: IO[Unit] =
   yield ()
 ```
 
-To run this program with woof
+To use this program with woof
 
 1. add `woof-slf4j` as a dependency to our program
 1. instantiate a `woof.Logger[F[_]]` as per usual
 1. register the _woof logger_ to the static log binder to allow the slf4j `LoggerFactory` to find it.
 
-> Note that any logs that happen before registering are lost!
+> Note that any logs that happen before registration are lost!
 
 ```scala mdoc:silent
 import woof.slf4j.*
@@ -110,9 +110,15 @@ mainSlf4j.unsafeRunSync()
 ```
 ## Limitations of SLF4J bindings
 
-Currently, markers do nothing. You can get the same behaviour easily with context when using the direct __Woof__ api with filters and printers.
+Currently, markers do nothing. You can get the same behaviour easily with context when using the direct `woof` api with filters and printers.
 
 # Can I use __http4s__?
+
+Yes you can. If you want to see internal logs from `http4s`, use the `SLF4J` module from above. If you want to use the context capabilities in `woof`, there's a module for adding correlation IDs to each request with a simple middleware.
+
+> NOTE: The correlation ID is also added to the response header when using this middleware
+
+Consider the following `http4s` route:
 
 ```scala mdoc
 import org.http4s.{HttpRoutes, Response}

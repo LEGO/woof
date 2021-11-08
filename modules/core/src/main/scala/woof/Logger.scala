@@ -17,11 +17,14 @@ import cats.effect.IO
 import cats.kernel.Order
 import woof.Logging.LogInfo
 
+/** This is the main interface for logging. Since we use macros for the methods, we cannot abstract this with an
+  * interface. We make the class open to compensate.
+  */
 open class Logger[F[_]: StringLocal: Monad: Clock](output: Output[F], outputs: Output[F]*)(using Printer, Filter):
 
   val stringLocal: StringLocal[F] = summon[StringLocal[F]]
-  val printer: Printer                          = summon[Printer]
-  val filter: Filter                            = summon[Filter]
+  val printer: Printer            = summon[Printer]
+  val filter: Filter              = summon[Filter]
 
   private[woof] def makeLogString(
       level: LogLevel,
@@ -31,7 +34,7 @@ open class Logger[F[_]: StringLocal: Monad: Clock](output: Output[F], outputs: O
   ): F[String] =
     Clock[F].realTimeInstant.map(now => summon[Printer].toPrint(now, level, info, message, context))
 
-  private def doOutputs(level: LogLevel, s: String): F[Unit] =
+  private[woof] def doOutputs(level: LogLevel, s: String): F[Unit] =
     val allOutputs = outputs.prepended(output)
     level match
       case LogLevel.Error => allOutputs.traverse_(_.outputError(s))
@@ -60,8 +63,7 @@ object Logger:
     def withLogContext(key: String, value: String): F[A] =
       Logger[F].stringLocal.local(fa)(ctx => ctx.appended((key, value)))
 
-  type Kvp               = (String, String)
-  type StringLocal[F[_]] = Local[F, List[Kvp]]
+  type StringLocal[F[_]] = Local[F, List[(String, String)]]
 
   def apply[F[_]](using l: Logger[F]): Logger[F] = l
 
