@@ -98,7 +98,7 @@ object ColorPrinter:
       override def toString = code
       case Black extends Foreground(Console.BLACK)
       case Green extends Foreground(Console.GREEN)
-      case Yellow extends Foreground(Console.GREEN)
+      case Yellow extends Foreground(Console.YELLOW)
       case Red extends Foreground(Console.RED)
       case Bold extends Foreground(Console.BOLD)
       case Blue extends Foreground(Console.BLUE)
