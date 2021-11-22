@@ -34,8 +34,8 @@ class FilterSuite extends CatsEffectSuite:
     yield ()
 
   test("filter based on levels") {
-    val expected = """13:37:00 [WARN ] woof.FilterSuite: Warning message (FilterSuite.scala:32)
-13:37:00 [ERROR] woof.FilterSuite: Error message (FilterSuite.scala:33)
+    val expected = """1987-05-31 13:37:00 [WARN ] woof.FilterSuite: Warning message (FilterSuite.scala:32)
+1987-05-31 13:37:00 [ERROR] woof.FilterSuite: Error message (FilterSuite.scala:33)
 """
     given Filter = Filter.atLeastLevel(LogLevel.Warn)
     for

@@ -45,7 +45,7 @@ class LoggerSuite extends CatsEffectSuite:
 
     val message  = "log message"
     val logInfo  = Logging.info(message)
-    val expected = "13:37:00 [WARN ] woof.LoggerSuite: log message (LoggerSuite.scala:47)"
+    val expected = "1987-05-31 13:37:00 [WARN ] woof.LoggerSuite: log message (LoggerSuite.scala:47)"
 
     for
       logger <- Logger.makeIoLogger(Output.fromConsole)
@@ -61,7 +61,7 @@ class LoggerSuite extends CatsEffectSuite:
     val reset         = Theme.Style.Reset
     val postfixFormat = theme.postfixFormat
     // format: off
-    val expected = s"""13:37:00 ${theme.levelFormat(LogLevel.Warn)}[WARN ]$reset ${postfixFormat}woof.LoggerSuite$reset: This is a warning $postfixFormat(LoggerSuite.scala:71)$reset
+    val expected = s"""1987-05-31 13:37:00 ${theme.levelFormat(LogLevel.Warn)}[WARN ]$reset ${postfixFormat}woof.LoggerSuite$reset: This is a warning $postfixFormat(LoggerSuite.scala:71)$reset
 """
     // format: on
     for
@@ -95,7 +95,7 @@ class LoggerSuite extends CatsEffectSuite:
       assert(times.count(_ == '\n') >= 5)
       assertEquals(
         times.split("\n")(2),
-        "13:37:00 [DEBUG] woof.LoggerSuite: 400 elapsed (LoggerSuite.scala:89)",
+        "1987-05-31 13:37:00 [DEBUG] woof.LoggerSuite: 400 elapsed (LoggerSuite.scala:89)",
       )
   }
 
@@ -109,8 +109,8 @@ class LoggerSuite extends CatsEffectSuite:
     def programLogic(using Logger[IO]) = Logger[IO].info("some info")
 
     // format: off
-    val expected = """13:37:00 [INFO ] correlation-id=21c78595-ef21-4df0-987e-8af6aab6f346, locale=da-DK woof.LoggerSuite: some info (LoggerSuite.scala:109)
-13:37:00 [INFO ] woof.LoggerSuite: some info (LoggerSuite.scala:109)
+    val expected = """1987-05-31 13:37:00 [INFO ] correlation-id=21c78595-ef21-4df0-987e-8af6aab6f346, locale=da-DK woof.LoggerSuite: some info (LoggerSuite.scala:109)
+1987-05-31 13:37:00 [INFO ] woof.LoggerSuite: some info (LoggerSuite.scala:109)
 """
     // format: on
     for

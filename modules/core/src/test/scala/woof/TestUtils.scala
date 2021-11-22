@@ -8,6 +8,8 @@ import scala.concurrent.duration.*
 import cats.effect.kernel.Clock
 import cats.Applicative
 import cats.syntax.all.*
+
+
 class StringWriter(val ref: Ref[IO, String]) extends Output[IO]:
   def output(str: String): IO[Unit]      = ref.update(log => s"$log$str\n")
   def outputError(str: String): IO[Unit] = output(str)
@@ -19,7 +21,7 @@ val newStringWriter: IO[StringWriter] =
 
 val testFormatTime = (i: Instant) =>
   DateTimeFormatter
-    .ofPattern("HH:mm:ss")
+    .ofPattern("YYYY-MM-dd HH:mm:ss")
     .withZone(ZoneId.of("Europe/Copenhagen"))
     .format(i)
 

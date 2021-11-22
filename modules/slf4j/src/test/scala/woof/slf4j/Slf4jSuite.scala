@@ -15,7 +15,7 @@ class Slf4jSuite extends munit.CatsEffectSuite:
   override def munitTimeout = 10.minutes
 
   test("should log stuff") {
-    given Printer   = NoColorPrinter()
+    given Printer   = NoColorPrinter(testFormatTime)
     given Filter    = Filter.everything
     given Clock[IO] = leetClock
     for
@@ -33,7 +33,7 @@ class Slf4jSuite extends munit.CatsEffectSuite:
   }
 
   test("should log arrays of objects") {
-    given Printer   = NoColorPrinter()
+    given Printer   = NoColorPrinter(testFormatTime)
     given Filter    = Filter.everything
     given Clock[IO] = leetClock
     for
