@@ -51,7 +51,7 @@ open class Logger[F[_]: StringLocal: Monad: Clock](output: Output[F], outputs: O
 
   inline def debug(inline message: String): F[Unit] = log(LogLevel.Debug, message)
   inline def info(inline message: String): F[Unit]  = log(LogLevel.Info, message)
-  inline def trace(inline message: String): F[Unit] = log(LogLevel.Info, message)
+  inline def trace(inline message: String): F[Unit] = log(LogLevel.Trace, message)
   inline def warn(inline message: String): F[Unit]  = log(LogLevel.Warn, message)
   inline def error(inline message: String): F[Unit] = log(LogLevel.Error, message)
 
