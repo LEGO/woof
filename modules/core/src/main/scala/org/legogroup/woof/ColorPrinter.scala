@@ -2,7 +2,6 @@ package org.legogroup.woof
 
 import org.legogroup.woof.ColorPrinter.Theme
 import org.legogroup.woof.ColorPrinter.Theme.{Background, Foreground, Formatting}
-import org.legogroup.woof.Logger.LogLevel
 
 import java.text.Format
 import java.time.format.DateTimeFormatter
@@ -16,7 +15,7 @@ open class ColorPrinter(
   override def toPrint(
       instant: Instant,
       level: LogLevel,
-      info: Logging.LogInfo,
+      info: LogInfo,
       message: String,
       context: List[(String, String)],
   ): String =

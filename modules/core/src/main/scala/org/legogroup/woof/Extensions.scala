@@ -4,7 +4,6 @@ import cats.effect.Concurrent
 import cats.effect.kernel.{Clock, Temporal}
 import cats.syntax.all.*
 import cats.{Applicative, FlatMap, Monad}
-import org.legogroup.woof.Logger.LogLevel
 
 import scala.concurrent.duration.FiniteDuration
 

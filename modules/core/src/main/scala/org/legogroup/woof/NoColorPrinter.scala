@@ -1,7 +1,6 @@
 package org.legogroup.woof
 
 import org.legogroup.woof.ColorPrinter.Theme
-import org.legogroup.woof.Logger.LogLevel
 
 import java.time.{Instant, ZoneId}
 import scala.util.chaining.scalaUtilChainingOps

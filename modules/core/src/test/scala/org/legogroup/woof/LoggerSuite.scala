@@ -11,7 +11,7 @@ import org.legogroup.woof.Logger.*
 import org.legogroup.woof.local.Local
 
 import java.time.ZoneId
-import scala.collection.JavaConverters.asScalaSetConverter
+import scala.jdk.CollectionConverters.*
 import scala.concurrent.duration.*
 class LoggerSuite extends CatsEffectSuite:
 
@@ -42,12 +42,12 @@ class LoggerSuite extends CatsEffectSuite:
     given Printer   = NoColorPrinter(testFormatTime)
 
     val message  = "log message"
-    val logInfo  = Logging.info(message)
+    val logInfo  = Macro.expressionInfo(message)
     val expected = "1987-05-31 13:37:00 [WARN ] org.legogroup.woof.LoggerSuite: log message (LoggerSuite.scala:45)"
 
     for
       logger <- Logger.makeIoLogger(Output.fromConsole)
-      line   <- logger.makeLogString(Logger.LogLevel.Warn, logInfo, message, Nil)
+      line   <- logger.makeLogString(LogLevel.Warn, logInfo, message, Nil)
     yield assertEquals(line, expected)
   }
 
@@ -102,7 +102,7 @@ class LoggerSuite extends CatsEffectSuite:
     given Printer   = NoColorPrinter(testFormatTime)
 
     val message = "log message"
-    val logInfo = Logging.info(message)
+    val logInfo = Macro.expressionInfo(message)
 
     def programLogic(using Logger[IO]) = Logger[IO].info("some info")
 

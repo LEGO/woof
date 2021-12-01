@@ -2,8 +2,6 @@ package org.legogroup.woof
 
 import cats.kernel.Monoid
 import cats.syntax.order.*
-import org.legogroup.woof.Logger.LogLevel
-import org.legogroup.woof.Logging.LogInfo
 
 import scala.util.matching.Regex
 

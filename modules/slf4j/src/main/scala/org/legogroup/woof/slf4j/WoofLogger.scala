@@ -4,9 +4,7 @@ import cats.Id
 import cats.effect.IO
 import cats.effect.unsafe.IORuntime
 import cats.effect.unsafe.IORuntime.global
-import org.legogroup.woof.Logger.LogLevel
-import org.legogroup.woof.Logging.LogInfo
-import org.legogroup.woof.{LogLine, Logger as WLogger}
+import org.legogroup.woof.{LogInfo, LogLevel, LogLine, Logger as WLogger}
 import org.slf4j.Logger
 
 import java.io.File
@@ -17,7 +15,8 @@ class WoofLogger(name: String) extends Logger:
   private def getLogInfo() =
     val stacktraceElements = Thread.currentThread().getStackTrace()
     val callingMethodIndex =
-      stacktraceElements.size - stacktraceElements.reverse.indexWhere(s => s.getClassName == this.getClass.getName,
+      stacktraceElements.size - stacktraceElements.reverse.indexWhere(s =>
+        s.getClassName == this.getClass.getName,
       ) // after last mention of this class
     val callingMethod: StackTraceElement = stacktraceElements(callingMethodIndex)
     val className                        = callingMethod.getClassName

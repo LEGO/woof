@@ -7,7 +7,6 @@ import cats.kernel.Order
 import cats.syntax.all.*
 import cats.{FlatMap, Monad}
 import org.legogroup.woof.Logger.*
-import org.legogroup.woof.Logging.LogInfo
 import org.legogroup.woof.local.Local
 
 import java.time.format.{DateTimeFormatter, FormatStyle}
@@ -26,7 +25,7 @@ open class Logger[F[_]: StringLocal: Monad: Clock](output: Output[F], outputs: O
 
   private[woof] def makeLogString(
       level: LogLevel,
-      info: Logging.LogInfo,
+      info: LogInfo,
       message: String,
       context: List[(String, String)],
   ): F[String] =
@@ -45,7 +44,8 @@ open class Logger[F[_]: StringLocal: Monad: Clock](output: Output[F], outputs: O
       _       <- doOutputs(level, logLine).whenA(summon[Filter](LogLine(level, logInfo, logLine, context)))
     yield ()
 
-  inline def log(level: LogLevel, inline message: String): F[Unit] = doLog(level, message, Logging.info(message))
+  inline def log(level: LogLevel, inline message: String): F[Unit] =
+    doLog(level, message, Macro.expressionInfo(message))
 
   inline def debug(inline message: String): F[Unit] = log(LogLevel.Debug, message)
   inline def info(inline message: String): F[Unit]  = log(LogLevel.Info, message)
@@ -71,9 +71,5 @@ object Logger:
   def makeIoLogger(output: Output[IO], outputs: Output[IO]*)(using Clock[IO], Printer, Filter): IO[Logger[IO]] =
     for given StringLocal[IO] <- ioStringLocal
     yield new Logger[IO](output, outputs*)
-
-  enum LogLevel:
-    case Trace, Debug, Info, Warn, Error
-  given Order[LogLevel] = (x, y) => Order[Int].compare(x.ordinal, y.ordinal)
 
 end Logger
