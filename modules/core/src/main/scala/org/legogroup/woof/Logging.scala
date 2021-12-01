@@ -1,9 +1,8 @@
 package org.legogroup.woof
 
 import java.io.File
-
-import scala.quoted.*
 import java.nio.file.Paths
+import scala.quoted.*
 
 object Logging:
 

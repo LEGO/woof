@@ -1,14 +1,12 @@
 package org.legogroup.woof
 
+import org.legogroup.woof.ColorPrinter.Theme
+import org.legogroup.woof.ColorPrinter.Theme.{Background, Foreground, Formatting}
+import org.legogroup.woof.Logger.LogLevel
+
 import java.text.Format
 import java.time.format.DateTimeFormatter
 import java.time.{Instant, ZoneId}
-
-import Logger.LogLevel
-import ColorPrinter.Theme.Foreground
-import ColorPrinter.Theme.Background
-import ColorPrinter.Theme.Formatting
-import ColorPrinter.Theme
 
 open class ColorPrinter(
     theme: Theme = Theme.defaultTheme,

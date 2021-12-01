@@ -1,7 +1,5 @@
 package org.legogroup.woof.slf4j
 
-import java.io.File
-
 import cats.Id
 import cats.effect.IO
 import cats.effect.unsafe.IORuntime
@@ -10,10 +8,11 @@ import org.legogroup.woof.Logger.LogLevel
 import org.legogroup.woof.Logging.LogInfo
 import org.legogroup.woof.{LogLine, Logger as WLogger}
 import org.slf4j.Logger
+
+import java.io.File
 class WoofLogger(name: String) extends Logger:
 
-  import WoofLogger.given_IORuntime
-  import WoofLogger.logger
+  import WoofLogger.{given_IORuntime, logger}
 
   private def getLogInfo() =
     val stacktraceElements = Thread.currentThread().getStackTrace()

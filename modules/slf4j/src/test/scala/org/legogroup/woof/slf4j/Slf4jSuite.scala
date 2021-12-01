@@ -4,11 +4,11 @@ import cats.Id
 import cats.effect.IO
 import cats.effect.kernel.Clock
 import org.legogroup.woof.*
+import org.legogroup.woof.Logger.LogLevel
 import org.slf4j.LoggerFactory
 import org.slf4j.impl.StaticLoggerBinder
-import scala.concurrent.duration.*
 
-import Logger.LogLevel
+import scala.concurrent.duration.*
 class Slf4jSuite extends munit.CatsEffectSuite:
 
   override def munitTimeout = 10.minutes

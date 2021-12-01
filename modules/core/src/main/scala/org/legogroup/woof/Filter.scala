@@ -2,10 +2,10 @@ package org.legogroup.woof
 
 import cats.kernel.Monoid
 import cats.syntax.order.*
-import scala.util.matching.Regex
+import org.legogroup.woof.Logger.LogLevel
+import org.legogroup.woof.Logging.LogInfo
 
-import Logging.LogInfo
-import Logger.LogLevel
+import scala.util.matching.Regex
 
 case class LogLine(level: LogLevel, info: LogInfo, message: String, context: List[(String, String)])
 

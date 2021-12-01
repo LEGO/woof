@@ -1,18 +1,17 @@
 package org.legogroup.woof
 
-import java.time.format.DateTimeFormatter
-import java.time.{Instant, ZoneId}
-
 import cats.Applicative
 import cats.effect.{Clock, IO}
 import cats.instances.string
 import cats.kernel.Monoid
 import cats.syntax.all.*
 import munit.{CatsEffectSuite, FunSuite}
-import scala.concurrent.duration.*
+import org.legogroup.woof.Filter.given_Monoid_Filter
+import org.legogroup.woof.Logger.*
 
-import Logger.*
-import Filter.given_Monoid_Filter
+import java.time.format.DateTimeFormatter
+import java.time.{Instant, ZoneId}
+import scala.concurrent.duration.*
 class FilterSuite extends CatsEffectSuite:
 
   given Printer = NoColorPrinter(testFormatTime)
@@ -33,8 +32,8 @@ class FilterSuite extends CatsEffectSuite:
     yield ()
 
   test("filter based on levels") {
-    val expected = """1987-05-31 13:37:00 [WARN ] org.legogroup.woof.FilterSuite: Warning message (FilterSuite.scala:31)
-1987-05-31 13:37:00 [ERROR] org.legogroup.woof.FilterSuite: Error message (FilterSuite.scala:32)
+    val expected = """1987-05-31 13:37:00 [WARN ] org.legogroup.woof.FilterSuite: Warning message (FilterSuite.scala:30)
+1987-05-31 13:37:00 [ERROR] org.legogroup.woof.FilterSuite: Error message (FilterSuite.scala:31)
 """
     given Filter = Filter.atLeastLevel(LogLevel.Warn)
     for

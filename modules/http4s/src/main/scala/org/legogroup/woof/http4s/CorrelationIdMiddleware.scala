@@ -1,7 +1,5 @@
 package org.legogroup.woof.http4s
 
-import java.util.UUID
-
 import cats.data.{Kleisli, NonEmptyList, OptionT}
 import cats.effect.kernel.Sync
 import cats.syntax.all.*
@@ -9,9 +7,10 @@ import cats.{Applicative, FlatMap, Monad}
 import org.http4s.Header.Raw
 import org.http4s.{Header, HttpRoutes, Request, Response}
 import org.legogroup.woof.*
+import org.legogroup.woof.Logger.*
 import org.typelevel.ci.CIString
 
-import Logger.*
+import java.util.UUID
 
 object CorrelationIdMiddleware:
 

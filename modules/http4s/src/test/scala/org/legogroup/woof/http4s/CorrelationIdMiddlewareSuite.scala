@@ -1,8 +1,5 @@
 package org.legogroup.woof.http4s
 
-import java.time.ZoneId
-import java.util.UUID
-
 import cats.data.{Kleisli, OptionT}
 import cats.effect.{Clock, IO}
 import cats.syntax.all.*
@@ -10,10 +7,12 @@ import cats.{Applicative, Monad}
 import munit.CatsEffectSuite
 import org.http4s.{HttpRoutes, Request, Response}
 import org.legogroup.woof.*
+import org.legogroup.woof.http4s.CorrelationIdMiddleware.UUIDGen
 import org.typelevel.ci.CIString
-import scala.concurrent.duration.*
 
-import CorrelationIdMiddleware.UUIDGen
+import java.time.ZoneId
+import java.util.UUID
+import scala.concurrent.duration.*
 
 class CorrelationIdMiddlewareSuite extends CatsEffectSuite:
 

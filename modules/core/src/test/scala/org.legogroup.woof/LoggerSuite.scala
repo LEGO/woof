@@ -1,19 +1,18 @@
 package org.legogroup.woof
 
-import java.time.ZoneId
-
 import cats.effect.kernel.{Clock, Ref}
 import cats.effect.std.Console
 import cats.effect.{IO, Temporal}
 import cats.syntax.all.*
 import cats.{Applicative, Show}
 import munit.CatsEffectSuite
+import org.legogroup.woof.ColorPrinter.Theme
+import org.legogroup.woof.Logger.*
 import org.legogroup.woof.local.Local
-import scala.concurrent.duration.*
 
-import collection.JavaConverters.asScalaSetConverter
-import ColorPrinter.Theme
-import Logger.*
+import java.time.ZoneId
+import scala.collection.JavaConverters.asScalaSetConverter
+import scala.concurrent.duration.*
 class LoggerSuite extends CatsEffectSuite:
 
   given Filter = Filter.everything
@@ -44,7 +43,7 @@ class LoggerSuite extends CatsEffectSuite:
 
     val message  = "log message"
     val logInfo  = Logging.info(message)
-    val expected = "1987-05-31 13:37:00 [WARN ] org.legogroup.woof.LoggerSuite: log message (LoggerSuite.scala:46)"
+    val expected = "1987-05-31 13:37:00 [WARN ] org.legogroup.woof.LoggerSuite: log message (LoggerSuite.scala:45)"
 
     for
       logger <- Logger.makeIoLogger(Output.fromConsole)
@@ -60,7 +59,7 @@ class LoggerSuite extends CatsEffectSuite:
     val reset         = Theme.Style.Reset
     val postfixFormat = theme.postfixFormat
     // format: off
-    val expected = s"""1987-05-31 13:37:00 ${theme.levelFormat(LogLevel.Warn)}[WARN ]$reset ${postfixFormat}org.legogroup.woof.LoggerSuite$reset: This is a warning $postfixFormat(LoggerSuite.scala:70)$reset
+    val expected = s"""1987-05-31 13:37:00 ${theme.levelFormat(LogLevel.Warn)}[WARN ]$reset ${postfixFormat}org.legogroup.woof.LoggerSuite$reset: This is a warning $postfixFormat(LoggerSuite.scala:69)$reset
 """
     // format: on
     for
@@ -94,7 +93,7 @@ class LoggerSuite extends CatsEffectSuite:
       assert(times.count(_ == '\n') >= 5)
       assertEquals(
         times.split("\n")(2),
-        "1987-05-31 13:37:00 [DEBUG] org.legogroup.woof.LoggerSuite: 400 elapsed (LoggerSuite.scala:88)",
+        "1987-05-31 13:37:00 [DEBUG] org.legogroup.woof.LoggerSuite: 400 elapsed (LoggerSuite.scala:87)",
       )
   }
 
@@ -108,8 +107,8 @@ class LoggerSuite extends CatsEffectSuite:
     def programLogic(using Logger[IO]) = Logger[IO].info("some info")
 
     // format: off
-    val expected = """1987-05-31 13:37:00 [INFO ] correlation-id=21c78595-ef21-4df0-987e-8af6aab6f346, locale=da-DK org.legogroup.woof.LoggerSuite: some info (LoggerSuite.scala:108)
-1987-05-31 13:37:00 [INFO ] org.legogroup.woof.LoggerSuite: some info (LoggerSuite.scala:108)
+    val expected = """1987-05-31 13:37:00 [INFO ] correlation-id=21c78595-ef21-4df0-987e-8af6aab6f346, locale=da-DK org.legogroup.woof.LoggerSuite: some info (LoggerSuite.scala:107)
+1987-05-31 13:37:00 [INFO ] org.legogroup.woof.LoggerSuite: some info (LoggerSuite.scala:107)
 """
     // format: on
     for

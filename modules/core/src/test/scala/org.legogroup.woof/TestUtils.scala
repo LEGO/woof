@@ -1,12 +1,12 @@
 package org.legogroup.woof
 
-import java.time.format.DateTimeFormatter
-import java.time.{Instant, ZoneId}
-
 import cats.Applicative
 import cats.effect.kernel.Clock
 import cats.effect.{IO, Ref}
 import cats.syntax.all.*
+
+import java.time.format.DateTimeFormatter
+import java.time.{Instant, ZoneId}
 import scala.concurrent.duration.*
 
 

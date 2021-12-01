@@ -1,20 +1,19 @@
 package org.legogroup.woof
 
-import java.time.format.{DateTimeFormatter, FormatStyle}
-import java.time.{Instant, ZoneId}
-import java.util.Locale
-
 import cats.effect.IO
 import cats.effect.kernel.Clock
 import cats.effect.std.Console
 import cats.kernel.Order
 import cats.syntax.all.*
 import cats.{FlatMap, Monad}
+import org.legogroup.woof.Logger.*
+import org.legogroup.woof.Logging.LogInfo
 import org.legogroup.woof.local.Local
 
-import Logger.*
-import util.chaining.scalaUtilChainingOps
-import Logging.LogInfo
+import java.time.format.{DateTimeFormatter, FormatStyle}
+import java.time.{Instant, ZoneId}
+import java.util.Locale
+import scala.util.chaining.scalaUtilChainingOps
 
 /** This is the main interface for logging. Since we use macros for the methods, we cannot abstract this with an
   * interface. We make the class open to compensate.

@@ -1,8 +1,8 @@
 package org.legogroup.woof
 
-import java.time.Instant
+import org.legogroup.woof.Logger.LogLevel
 
-import Logger.LogLevel
+import java.time.Instant
 
 trait Printer:
   def toPrint(
