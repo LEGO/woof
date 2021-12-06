@@ -14,6 +14,18 @@ A **pure** _(in both senses of the word!)_ **Scala 3** logging library with **no
   * Can be built for _scala.js_ in the future!
 * Configured with plain Scala code
 
+## Installation
+
+> build.sbt
+
+```scala
+libraryDependencies ++= Seq(
+  "org.legogroup" %% "woof-core"   % "$VERSION",
+  "org.legogroup" %% "woof-slf4j"  % "$VERSION", // only if you need to use Woof via slf4j
+  "org.legogroup" %% "woof-http4s" % "$VERSION", // only if you need to add correlation IDs in http4s 
+)
+```
+
 ## Example 
 
 ```scala mdoc:silent

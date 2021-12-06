@@ -14,6 +14,18 @@ A **pure** _(in both senses of the word!)_ **Scala 3** logging library with **no
   * Can be built for _scala.js_ in the future!
 * Configured with plain Scala code
 
+## Installation
+
+> build.sbt
+
+```scala
+libraryDependencies ++= Seq(
+  "org.legogroup" %% "woof-core"   % "$VERSION",
+  "org.legogroup" %% "woof-slf4j"  % "$VERSION", // only if you need to use Woof via slf4j
+  "org.legogroup" %% "woof-http4s" % "$VERSION", // only if you need to add correlation IDs in http4s 
+)
+```
+
 ## Example 
 
 ```scala
@@ -47,10 +59,10 @@ and running it yields:
 ```scala
 import cats.effect.unsafe.implicits.global
 main.unsafeRunSync()
-// 2021-11-29 14:03:46 [DEBUG] repl.MdocSession$.App: This is some debug (.:27)
-// 2021-11-29 14:03:46 [INFO ] repl.MdocSession$.App: HEY! (.:28)
-// 2021-11-29 14:03:46 [WARN ] repl.MdocSession$.App: I'm warning you (.:29)
-// 2021-11-29 14:03:46 [ERROR] repl.MdocSession$.App: I give up (.:30)
+// 2021-12-06 13:46:33 [DEBUG] repl.MdocSession$.App: This is some debug (.:27)
+// 2021-12-06 13:46:33 [INFO ] repl.MdocSession$.App: HEY! (.:28)
+// 2021-12-06 13:46:33 [WARN ] repl.MdocSession$.App: I'm warning you (.:29)
+// 2021-12-06 13:46:33 [ERROR] repl.MdocSession$.App: I give up (.:30)
 ```
 
 
@@ -70,11 +82,11 @@ And running with context yields:
 
 ```scala
 mainWithContext.unsafeRunSync()
-// 2021-11-29 14:03:46 [DEBUG] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: This is some debug (.:27)
-// 2021-11-29 14:03:46 [INFO ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: HEY! (.:28)
-// 2021-11-29 14:03:46 [WARN ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I'm warning you (.:29)
-// 2021-11-29 14:03:46 [ERROR] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I give up (.:30)
-// 2021-11-29 14:03:46 [INFO ] repl.MdocSession$.App: Now the context is gone (.:61)
+// 2021-12-06 13:46:33 [DEBUG] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: This is some debug (.:27)
+// 2021-12-06 13:46:33 [INFO ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: HEY! (.:28)
+// 2021-12-06 13:46:33 [WARN ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I'm warning you (.:29)
+// 2021-12-06 13:46:33 [ERROR] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I give up (.:30)
+// 2021-12-06 13:46:33 [INFO ] repl.MdocSession$.App: Now the context is gone (.:61)
 ```
 
 # Can I use SLF4J?
@@ -118,8 +130,8 @@ and running it:
 
 ```scala
 mainSlf4j.unsafeRunSync()
-// 2021-11-29 14:03:46 [INFO ] repl.MdocSession$App: Hello from SLF4j! (MdocSession$App.scala:81)
-// 2021-11-29 14:03:46 [WARN ] repl.MdocSession$App: This is not the pure woof. (MdocSession$App.scala:82)
+// 2021-12-06 13:46:33 [INFO ] repl.MdocSession$App: Hello from SLF4j! (MdocSession$App.scala:81)
+// 2021-12-06 13:46:33 [WARN ] repl.MdocSession$App: This is not the pure woof. (MdocSession$App.scala:82)
 ```
 ## Limitations of SLF4J bindings
 
@@ -170,6 +182,6 @@ the correlation ID is also returned in the header of the response.
 
 ```scala
 mainHttp4s.unsafeRunSync()
-// 2021-11-29 14:03:46 [INFO ] X-Trace-Id=14fb3ae1-edab-4820-952b-00379685525c repl.MdocSession$.App: I got a request with trace id! :D (.:121)
-// 2021-11-29 14:03:46 [INFO ] repl.MdocSession$.App: Got response headers: Headers(X-Trace-Id: 14fb3ae1-edab-4820-952b-00379685525c) (.:142)
+// 2021-12-06 13:46:33 [INFO ] X-Trace-Id=3030d1d2-b7c8-40a0-926e-a5e55283d15a repl.MdocSession$.App: I got a request with trace id! :D (.:121)
+// 2021-12-06 13:46:33 [INFO ] repl.MdocSession$.App: Got response headers: Headers(X-Trace-Id: 3030d1d2-b7c8-40a0-926e-a5e55283d15a) (.:142)
 ```
