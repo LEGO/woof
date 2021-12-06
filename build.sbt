@@ -37,6 +37,8 @@ inThisBuild(
     ),
   ),
 )
+
+ThisBuild / versionScheme := Some("early-semver")
 /*
   CI RELEASE SECTION: END
  */
