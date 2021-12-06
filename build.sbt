@@ -47,7 +47,7 @@ ThisBuild / versionScheme := Some("early-semver")
 
 val commonSettings = Seq(
   scalaVersion := V.scala,
-  organization := "woof",
+  organization := "org.legogroup",
 )
 
 def woofProject(file: File): Project =
