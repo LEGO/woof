@@ -69,6 +69,9 @@ lazy val root =
   project
     .in(file("."))
     .aggregate(core, http4s, slf4j)
+    .settings(
+      publish / skip := true
+    )
 
 lazy val core =
   woofProject(file("./modules/core"))
