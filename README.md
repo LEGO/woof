@@ -1,5 +1,6 @@
 # Woof
 
+![Maven Central](https://img.shields.io/maven-central/v/org.legogroup/woof-core_3?color=green)
 [![Scala CI](https://github.com/LEGO/woof/actions/workflows/scala.yml/badge.svg?branch=main)](https://github.com/LEGO/woof/actions/workflows/scala.yml)
 
 A **pure** _(in both senses of the word!)_ **Scala 3** logging library with **no runtime reflection**.
