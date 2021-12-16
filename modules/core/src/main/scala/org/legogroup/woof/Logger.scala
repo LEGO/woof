@@ -29,7 +29,9 @@ open class Logger[F[_]: StringLocal: Monad: Clock](output: Output[F], outputs: O
       message: String,
       context: List[(String, String)],
   ): F[String] =
-    Clock[F].realTimeInstant.map(now => summon[Printer].toPrint(now, level, info, message, context))
+    Clock[F].realTime
+      .map(d => Instant.ofEpochMilli(d.toMillis))
+      .map(now => summon[Printer].toPrint(now, level, info, message, context))
 
   private[woof] def doOutputs(level: LogLevel, s: String): F[Unit] =
     val allOutputs = outputs.prepended(output)

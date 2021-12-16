@@ -7,11 +7,6 @@ import scala.quoted.*
 
 object Macro:
 
-  private given ToExpr[File] with
-    def apply(f: File)(using Quotes): Expr[File] =
-      val path = Expr(f.getAbsolutePath)
-      '{ new java.io.File($path) }
-
   @tailrec
   private def enclosingClass(using q: Quotes)(symb: quotes.reflect.Symbol): quotes.reflect.Symbol =
     if symb.isClassDef then symb else enclosingClass(symb.owner)
@@ -26,7 +21,7 @@ object Macro:
     val position   = Position.ofMacroExpansion
     val filePath   = if position.sourceFile.jpath != null then position.sourceFile.jpath else Paths.get(".")
     val lineNumber = Expr(position.startLine)
-    val file       = Expr(File(filePath.toString))
+    val file       = Expr(File(filePath.toString).getName)
 
     '{ LogInfo($nameExpr, $file, $lineNumber) }
   end logInfo

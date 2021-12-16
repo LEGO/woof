@@ -15,14 +15,13 @@ class WoofLogger(name: String) extends Logger:
   private def getLogInfo() =
     val stacktraceElements = Thread.currentThread().getStackTrace()
     val callingMethodIndex =
-      stacktraceElements.size - stacktraceElements.reverse.indexWhere(s =>
-        s.getClassName == this.getClass.getName,
+      stacktraceElements.size - stacktraceElements.reverse.indexWhere(s => s.getClassName == this.getClass.getName,
       ) // after last mention of this class
     val callingMethod: StackTraceElement = stacktraceElements(callingMethodIndex)
     val className                        = callingMethod.getClassName
-    val fileName                         = className.replace('.', '/') + ".scala"
+    val fileName                         = className.split('.').last + ".scala"
     val lineNumber                       = callingMethod.getLineNumber - 1
-    LogInfo(className, new File(fileName), lineNumber)
+    LogInfo(className, fileName, lineNumber)
   end getLogInfo
 
   def getName(): String = name
@@ -88,7 +87,7 @@ class WoofLogger(name: String) extends Logger:
     * and arbitrary values in the rest of the log line.
     */
   private def testLevel(logLevel: LogLevel): Boolean =
-    val mockLogLine = LogLine(logLevel, LogInfo("", new File("."), -1), "", Nil)
+    val mockLogLine = LogLine(logLevel, LogInfo("", new File(".").getName, -1), "", Nil)
     logger.exists(_.filter(mockLogLine))
 
   def isDebugEnabled(): Boolean = testLevel(LogLevel.Debug)

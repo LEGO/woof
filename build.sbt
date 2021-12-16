@@ -6,17 +6,20 @@ val V = new {
   val munit           = "0.7.29"
   val munitCatsEffect = "1.0.6"
   val scala           = "3.0.2"
+  val scalaJavaTime   = "2.3.0"
   val slf4j           = "1.7.32"
 }
 
 val D = new {
-  val cats            = "org.typelevel" %% "cats-core"           % V.cats
-  val catsEffect      = "org.typelevel" %% "cats-effect"         % V.catsEffect
-  val http4s          = "org.http4s"    %% "http4s-core"         % V.http4s
-  val javassist       = "org.javassist"  % "javassist"           % V.javassist
-  val munit           = "org.scalameta" %% "munit"               % V.munit
-  val munitCatsEffect = "org.typelevel" %% "munit-cats-effect-3" % V.munitCatsEffect
-  val slf4jApi        = "org.slf4j"      % "slf4j-api"           % V.slf4j
+  val cats              = Def.setting("org.typelevel" %%% "cats-core" % V.cats)
+  val catsEffect        = Def.setting("org.typelevel" %%% "cats-effect" % V.catsEffect)
+  val http4s            = Def.setting("org.http4s" %%% "http4s-core" % V.http4s)
+  val javassist         = "org.javassist" % "javassist" % V.javassist
+  val munit             = Def.setting("org.scalameta" %%% "munit" % V.munit)
+  val munitCatsEffect   = Def.setting("org.typelevel" %%% "munit-cats-effect-3" % V.munitCatsEffect)
+  val scalaJavaTime     = Def.setting("io.github.cquiroz" %%% "scala-java-time" % V.scalaJavaTime)
+  val scalaJavaTimeTzDb = Def.setting("io.github.cquiroz" %%% "scala-java-time-tzdb" % V.scalaJavaTime)
+  val slf4jApi          = "org.slf4j"     % "slf4j-api" % V.slf4j
 }
 
 /*
@@ -58,40 +61,56 @@ def woofProject(file: File): Project =
       scalacOptions ++= Seq("-source", "future"),
     )
 
+def woofCrossProject(file: File, crossType: CrossType = CrossType.Pure): sbtcrossproject.CrossProject =
+  sbtcrossproject
+    .CrossProject(s"woof-${file.getName()}", file)(JVMPlatform, JSPlatform)
+    .crossType(crossType)
+    .settings(
+      commonSettings,
+      name := s"woof-${file.getName()}",
+      scalacOptions ++= Seq("-source", "future"),
+    )
+
 lazy val docs =
   project
     .in(file("docs-target"))
     .settings(commonSettings, mdocIn := file("docs"), mdocOut := file("."), publish / skip := true)
     .enablePlugins(MdocPlugin)
-    .dependsOn(core, http4s, slf4j)
+    .dependsOn(core.jvm, http4s.jvm, slf4j)
 
 lazy val root =
   project
     .in(file("."))
-    .aggregate(core, http4s, slf4j)
+    .aggregate(core.jvm, core.js, http4s.jvm, http4s.js, slf4j)
     .settings(
-      publish / skip := true
+      publish / skip := true,
     )
 
 lazy val core =
-  woofProject(file("./modules/core"))
+  woofCrossProject(file("./modules/core"))
     .settings(
       libraryDependencies ++= Seq(
-        D.cats,
-        D.catsEffect,
-        D.munit           % Test,
-        D.munitCatsEffect % Test,
+        D.cats.value,
+        D.catsEffect.value,
+        D.munit.value           % Test,
+        D.munitCatsEffect.value % Test,
+      ),
+    )
+    .jsSettings(
+      libraryDependencies ++= Seq(
+        D.scalaJavaTime.value,
+        D.scalaJavaTimeTzDb.value % Test,
       ),
     )
 
-lazy val http4s = woofProject(file("./modules/http4s"))
+lazy val http4s = woofCrossProject(file("./modules/http4s"))
   .settings(
     libraryDependencies ++= Seq(
-      D.http4s,
+      D.http4s.value,
     ),
   )
   .dependsOn(core % "compile->compile;test->test") // we also want the test utils
 
 lazy val slf4j = woofProject(file("./modules/slf4j"))
   .settings(libraryDependencies ++= Seq(D.slf4jApi))
-  .dependsOn(core % "compile->compile;test->test")
+  .dependsOn(core.jvm % "compile->compile;test->test")
