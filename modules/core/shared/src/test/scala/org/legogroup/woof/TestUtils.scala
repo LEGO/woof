@@ -5,10 +5,11 @@ import cats.effect.kernel.Clock
 import cats.effect.{IO, Ref}
 import cats.syntax.all.*
 
+import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.time.{Instant, ZoneId}
+import java.util.TimeZone
 import scala.concurrent.duration.*
-
 
 class StringWriter(val ref: Ref[IO, String]) extends Output[IO]:
   def output(str: String): IO[Unit]      = ref.update(log => s"$log$str\n")
@@ -19,11 +20,6 @@ val newStringWriter: IO[StringWriter] =
   for ref <- Ref[IO].of("")
   yield StringWriter(ref)
 
-val testFormatTime = (i: Instant) =>
-  DateTimeFormatter
-    .ofPattern("YYYY-MM-dd HH:mm:ss")
-    .withZone(ZoneId.of("Europe/Copenhagen"))
-    .format(i)
 
 val startTime = 549459420.seconds
 val leetClock: Clock[IO] = new Clock[IO]:

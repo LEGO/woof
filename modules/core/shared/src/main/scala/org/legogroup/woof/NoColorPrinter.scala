@@ -2,10 +2,10 @@ package org.legogroup.woof
 
 import org.legogroup.woof.ColorPrinter.Theme
 
-import java.time.{Instant, ZoneId}
+import scala.concurrent.duration.FiniteDuration
 import scala.util.chaining.scalaUtilChainingOps
 
-class NoColorPrinter(formatTime: Instant => String = ColorPrinter.defaultDateTimeFormat)
+class NoColorPrinter(formatTime: EpochMillis => String = defaultTimeFormat)
     extends ColorPrinter(theme = NoColorPrinter.noColorTheme, formatTime = formatTime):
 end NoColorPrinter
 

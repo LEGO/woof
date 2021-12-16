@@ -11,8 +11,8 @@ import org.legogroup.woof.Logger.*
 import org.legogroup.woof.local.Local
 
 import java.time.ZoneId
-import scala.jdk.CollectionConverters.*
 import scala.concurrent.duration.*
+import scala.jdk.CollectionConverters.*
 class LoggerSuite extends CatsEffectSuite:
 
   given Filter = Filter.everything
