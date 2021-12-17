@@ -1,10 +1,11 @@
 package org.legogroup.woof
 
 import java.time.Instant
+import scala.concurrent.duration.FiniteDuration
 
 trait Printer:
   def toPrint(
-      instant: Instant,
+      epochMillis: EpochMillis,
       level: LogLevel,
       info: LogInfo,
       message: String,

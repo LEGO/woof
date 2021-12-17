@@ -1,20 +1,21 @@
 val V = new {
-  val cats            = "2.6.1"
+  val cats            = "2.7.0"
   val catsEffect      = "3.2.9"
   val http4s          = "0.23.6"
   val munit           = "0.7.29"
   val munitCatsEffect = "1.0.6"
-  val scala           = "3.0.2"
+  val scala           = "3.1.0"
   val slf4j           = "1.7.32"
 }
 
 val D = new {
-  val cats            = "org.typelevel" %% "cats-core"           % V.cats
-  val catsEffect      = "org.typelevel" %% "cats-effect"         % V.catsEffect
-  val http4s          = "org.http4s"    %% "http4s-core"         % V.http4s
-  val munit           = "org.scalameta" %% "munit"               % V.munit
-  val munitCatsEffect = "org.typelevel" %% "munit-cats-effect-3" % V.munitCatsEffect
-  val slf4jApi        = "org.slf4j"      % "slf4j-api"           % V.slf4j
+  val slf4jApi = "org.slf4j" % "slf4j-api" % V.slf4j
+
+  val catsCore        = Def.setting("org.typelevel" %%% "cats-core" % V.cats)
+  val catsEffect      = Def.setting("org.typelevel" %%% "cats-effect" % V.catsEffect)
+  val http4s          = Def.setting("org.http4s" %% "http4s-core" % V.http4s)
+  val munit           = Def.setting("org.scalameta" %%% "munit" % V.munit)
+  val munitCatsEffect = Def.setting("org.typelevel" %%% "munit-cats-effect-3" % V.munitCatsEffect)
 }
 
 /*
@@ -46,50 +47,49 @@ ThisBuild / versionScheme := Some("early-semver")
 val commonSettings = Seq(
   scalaVersion := V.scala,
   organization := "org.legogroup",
+  scalacOptions ++= Seq("-source", "future"),
 )
 
+def nameForFile(file: File): String = s"woof-${file.getName()}"
+
 def woofProject(file: File): Project =
-  Project(s"woof-${file.getName()}", file)
-    .settings(
-      commonSettings,
-      name := s"woof-${file.getName()}",
-      scalacOptions ++= Seq("-source", "future"),
-    )
+  Project(nameForFile(file), file)
+    .settings(commonSettings)
+    .settings(name := nameForFile(file))
 
 lazy val docs =
   project
     .in(file("docs-target"))
     .settings(commonSettings, mdocIn := file("docs"), mdocOut := file("."), publish / skip := true)
     .enablePlugins(MdocPlugin)
-    .dependsOn(core, http4s, slf4j)
+    .dependsOn(core.jvm, http4s, slf4j)
 
 lazy val root =
   project
     .in(file("."))
-    .aggregate(core, http4s, slf4j)
+    .aggregate(core.jvm, core.js, http4s, slf4j)
     .settings(
-      publish / skip := true
+      publish / skip := true,
     )
 
-lazy val core =
-  woofProject(file("./modules/core"))
-    .settings(
-      libraryDependencies ++= Seq(
-        D.cats,
-        D.catsEffect,
-        D.munit           % Test,
-        D.munitCatsEffect % Test,
-      ),
-    )
-
-lazy val http4s = woofProject(file("./modules/http4s"))
+val coreFolder = file("./modules/core")
+lazy val core = crossProject(JSPlatform, JVMPlatform)
+  .in(coreFolder)
+  .settings(commonSettings)
   .settings(
+    name := nameForFile(coreFolder),
     libraryDependencies ++= Seq(
-      D.http4s,
+      D.catsCore.value,
+      D.catsEffect.value,
+      D.munit.value           % Test,
+      D.munitCatsEffect.value % Test,
     ),
   )
-  .dependsOn(core % "compile->compile;test->test") // we also want the test utils
+
+lazy val http4s = woofProject(file("./modules/http4s"))
+  .settings(libraryDependencies += D.http4s.value)
+  .dependsOn(core.jvm % "compile->compile;test->test") // we also want the test utils
 
 lazy val slf4j = woofProject(file("./modules/slf4j"))
-  .settings(libraryDependencies ++= Seq(D.slf4jApi))
-  .dependsOn(core % "compile->compile;test->test")
+  .settings(libraryDependencies += D.slf4jApi)
+  .dependsOn(core.jvm % "compile->compile;test->test")

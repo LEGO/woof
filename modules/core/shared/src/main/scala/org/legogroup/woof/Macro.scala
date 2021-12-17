@@ -26,7 +26,7 @@ object Macro:
     val position   = Position.ofMacroExpansion
     val filePath   = if position.sourceFile.jpath != null then position.sourceFile.jpath else Paths.get(".")
     val lineNumber = Expr(position.startLine)
-    val file       = Expr(File(filePath.toString))
+    val file       = Expr(filePath.getFileName.toString.split("/").takeRight(1).mkString)
 
     '{ LogInfo($nameExpr, $file, $lineNumber) }
   end logInfo

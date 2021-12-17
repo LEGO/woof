@@ -3,17 +3,19 @@ package org.legogroup.woof
 import org.legogroup.woof.ColorPrinter.Theme
 import org.legogroup.woof.ColorPrinter.Theme.{Background, Foreground, Formatting}
 
-import java.text.Format
+import java.text.{DateFormat, Format, SimpleDateFormat}
 import java.time.format.DateTimeFormatter
 import java.time.{Instant, ZoneId}
+import java.util.Date
+import scala.concurrent.duration.FiniteDuration
 
 open class ColorPrinter(
     theme: Theme = Theme.defaultTheme,
-    formatTime: Instant => String = ColorPrinter.defaultDateTimeFormat,
+    formatTime: EpochMillis => String = defaultTimeFormat,
 ) extends Printer:
 
   override def toPrint(
-      instant: Instant,
+      epochMillis: EpochMillis,
       level: LogLevel,
       info: LogInfo,
       message: String,
@@ -24,7 +26,7 @@ open class ColorPrinter(
     val postfixColor = theme.postfixFormat
     val reset        = theme.reset
     val prefix       = level.productPrefix.toUpperCase.padTo(5, ' ')
-    val time         = formatTime(instant)
+    val time         = formatTime(epochMillis)
     val contextPart =
       if context.isEmpty then ""
       else
@@ -39,11 +41,6 @@ open class ColorPrinter(
 end ColorPrinter
 
 object ColorPrinter:
-  val defaultDateTimeFormat = (i: Instant) =>
-    DateTimeFormatter
-      .ofPattern("YYYY-MM-dd HH:mm:ss")
-      .withZone(ZoneId.systemDefault())
-      .format(i)
 
   object Theme:
     import scala.Console
