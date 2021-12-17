@@ -9,8 +9,13 @@ val V = new {
 }
 
 val D = new {
-  val http4s   = "org.http4s" %% "http4s-core" % V.http4s
-  val slf4jApi = "org.slf4j"   % "slf4j-api"   % V.slf4j
+  val slf4jApi = "org.slf4j" % "slf4j-api" % V.slf4j
+
+  val catsCore        = Def.setting("org.typelevel" %%% "cats-core" % V.cats)
+  val catsEffect      = Def.setting("org.typelevel" %%% "cats-effect" % V.catsEffect)
+  val http4s          = Def.setting("org.http4s" %% "http4s-core" % V.http4s)
+  val munit           = Def.setting("org.scalameta" %%% "munit" % V.munit)
+  val munitCatsEffect = Def.setting("org.typelevel" %%% "munit-cats-effect-3" % V.munitCatsEffect)
 }
 
 /*
@@ -74,21 +79,17 @@ lazy val core = crossProject(JSPlatform, JVMPlatform)
   .settings(
     name := nameForFile(coreFolder),
     libraryDependencies ++= Seq(
-      "org.typelevel" %%% "cats-core"           % V.cats,
-      "org.typelevel" %%% "cats-effect"         % V.catsEffect,
-      "org.scalameta" %%% "munit"               % V.munit           % Test,
-      "org.typelevel" %%% "munit-cats-effect-3" % V.munitCatsEffect % Test,
+      D.catsCore.value,
+      D.catsEffect.value,
+      D.munit.value           % Test,
+      D.munitCatsEffect.value % Test,
     ),
   )
 
 lazy val http4s = woofProject(file("./modules/http4s"))
-  .settings(
-    libraryDependencies ++= Seq(
-      D.http4s,
-    ),
-  )
+  .settings(libraryDependencies += D.http4s.value)
   .dependsOn(core.jvm % "compile->compile;test->test") // we also want the test utils
 
 lazy val slf4j = woofProject(file("./modules/slf4j"))
-  .settings(libraryDependencies ++= Seq(D.slf4jApi))
+  .settings(libraryDependencies += D.slf4jApi)
   .dependsOn(core.jvm % "compile->compile;test->test")
