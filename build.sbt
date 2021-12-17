@@ -13,7 +13,7 @@ val D = new {
 
   val catsCore        = Def.setting("org.typelevel" %%% "cats-core" % V.cats)
   val catsEffect      = Def.setting("org.typelevel" %%% "cats-effect" % V.catsEffect)
-  val http4s          = Def.setting("org.http4s" %% "http4s-core" % V.http4s)
+  val http4s          = Def.setting("org.http4s" %%% "http4s-core" % V.http4s)
   val munit           = Def.setting("org.scalameta" %%% "munit" % V.munit)
   val munitCatsEffect = Def.setting("org.typelevel" %%% "munit-cats-effect-3" % V.munitCatsEffect)
 }
@@ -62,12 +62,12 @@ lazy val docs =
     .in(file("docs-target"))
     .settings(commonSettings, mdocIn := file("docs"), mdocOut := file("."), publish / skip := true)
     .enablePlugins(MdocPlugin)
-    .dependsOn(core.jvm, http4s, slf4j)
+    .dependsOn(core.jvm, http4s.jvm, slf4j)
 
 lazy val root =
   project
     .in(file("."))
-    .aggregate(core.jvm, core.js, http4s, slf4j)
+    .aggregate(core.jvm, core.js, http4s.jvm, http4s.js, slf4j)
     .settings(
       publish / skip := true,
     )
@@ -86,9 +86,16 @@ lazy val core = crossProject(JSPlatform, JVMPlatform)
     ),
   )
 
-lazy val http4s = woofProject(file("./modules/http4s"))
-  .settings(libraryDependencies += D.http4s.value)
-  .dependsOn(core.jvm % "compile->compile;test->test") // we also want the test utils
+val http4sFolder = file("./modules/http4s")
+lazy val http4s = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
+  .in(http4sFolder)
+  .settings(
+    name := nameForFile(http4sFolder),
+    libraryDependencies += D.http4s.value,
+  )
+  .settings(commonSettings)
+  .dependsOn(core % "compile->compile;test->test") // we also want the test utils
 
 lazy val slf4j = woofProject(file("./modules/slf4j"))
   .settings(libraryDependencies += D.slf4jApi)
