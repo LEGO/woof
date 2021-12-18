@@ -20,7 +20,6 @@ val newStringWriter: IO[StringWriter] =
   for ref <- Ref[IO].of("")
   yield StringWriter(ref)
 
-
 val startTime = 549459420.seconds
 val leetClock: Clock[IO] = new Clock[IO]:
   def applicative = Applicative[IO]
