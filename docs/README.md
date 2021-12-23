@@ -12,7 +12,8 @@ A **pure** _(in both senses of the word!)_ **Scala 3** logging library with **no
 * Pure **Scala 3** library
 * Made with _Cats Effect_
 * Macro based (_no runtime reflection_)
-  * Can be built for _scala.js_ in the future!
+  * ~~Can be built for _scala.js_ in the future!~~
+  * Cross-built for `Scala.js`
 * Configured with plain Scala code
 
 ## Installation
@@ -31,7 +32,7 @@ libraryDependencies ++= Seq(
 
 ```scala mdoc:silent
 import cats.effect.IO
-import org.legogroup.woof.*
+import org.legogroup.woof.{given, *}
 
 val consoleOutput: Output[IO] = new Output[IO]:
   def output(str: String)      = IO.delay(println(str))
