@@ -19,7 +19,7 @@ class Slf4jSuite extends munit.CatsEffectSuite:
     given Clock[IO] = leetClock
     for
       stringOutput <- newStringWriter
-      woofLogger   <- Logger.makeIoLogger(stringOutput)
+      woofLogger   <- DefaultLogger.makeIo(stringOutput)
       _            <- woofLogger.registerSlf4j
       slf4jLogger  <- IO.delay(LoggerFactory.getLogger(this.getClass))
       _            <- IO.delay(slf4jLogger.info("HELLO, SLF4J!"))
@@ -37,7 +37,7 @@ class Slf4jSuite extends munit.CatsEffectSuite:
     given Clock[IO] = leetClock
     for
       stringOutput <- newStringWriter
-      woofLogger   <- Logger.makeIoLogger(stringOutput)
+      woofLogger   <- DefaultLogger.makeIo(stringOutput)
       _            <- woofLogger.registerSlf4j
       slf4jLogger  <- IO.delay(LoggerFactory.getLogger(this.getClass))
       _            <- IO.delay(slf4jLogger.info("HELLO, ARRAYS!", 1, Some(42), List(1337)))
@@ -55,7 +55,7 @@ class Slf4jSuite extends munit.CatsEffectSuite:
     given Clock[IO] = leetClock
     for
       stringWriter <- newStringWriter
-      woofLogger   <- Logger.makeIoLogger(stringWriter)
+      woofLogger   <- DefaultLogger.makeIo(stringWriter)
       _            <- woofLogger.registerSlf4j
       slf4jLogger  <- IO.delay(LoggerFactory.getLogger(this.getClass))
       _            <- IO.delay(slf4jLogger.info("INFO, SLF4J!"))

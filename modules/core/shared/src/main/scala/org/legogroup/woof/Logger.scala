@@ -59,6 +59,12 @@ class DefaultLogger[F[_]: StringLocal: Monad: Clock](output: Output[F], outputs:
 
 end DefaultLogger
 
+object DefaultLogger:
+  def makeIo(output: Output[IO], outputs: Output[IO]*)(using Clock[IO], Printer, Filter): IO[DefaultLogger[IO]] =
+    for given StringLocal[IO] <- ioStringLocal
+    yield new DefaultLogger[IO](output, outputs*)
+end DefaultLogger
+
 object Logger:
 
   extension [F[_]: Logger, A](fa: F[A])
@@ -72,7 +78,12 @@ object Logger:
   given Printer = ColorPrinter()
 
   val ioStringLocal = Local.makeIoLocal[List[(String, String)]]
-  def makeIoLogger(output: Output[IO], outputs: Output[IO]*)(using Clock[IO], Printer, Filter): IO[Logger[IO]] =
+
+  @deprecated(s"Use `DefaultLogger.makeIo`") def makeIoLogger(output: Output[IO], outputs: Output[IO]*)(using
+      Clock[IO],
+      Printer,
+      Filter,
+  ): IO[Logger[IO]] =
     for given StringLocal[IO] <- ioStringLocal
     yield new DefaultLogger[IO](output, outputs*)
 

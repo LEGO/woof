@@ -35,7 +35,7 @@ class CorrelationIdMiddlewareSuite extends CatsEffectSuite:
 
     for
       output            <- newStringWriter
-      given Logger[IO]  <- Logger.makeIoLogger(output)
+      given Logger[IO]  <- DefaultLogger.makeIo(output)
       routesWithTraceId <- middleWare(routes).pure[IO]
       response          <- routesWithTraceId.run(Request[IO]()).value
       loggedString      <- output.get

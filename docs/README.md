@@ -51,7 +51,7 @@ def program(using Logger[IO]): IO[Unit] =
 
 val main: IO[Unit] = 
   for
-    given Logger[IO]  <- Logger.makeIoLogger(consoleOutput)
+    given Logger[IO]  <- DefaultLogger.makeIo(consoleOutput)
     _                 <- program
   yield ()
 ```
@@ -70,7 +70,7 @@ We can also re-use the program and add context to our logger:
 import Logger.*
 val mainWithContext: IO[Unit] = 
   for
-    given Logger[IO]  <- Logger.makeIoLogger(consoleOutput)
+    given Logger[IO]  <- DefaultLogger.makeIo(consoleOutput)
     _                 <- program.withLogContext("trace-id", "4d334544-6462-43fa-b0b1-12846f871573")
     _                 <- Logger[IO].info("Now the context is gone")
   yield ()
@@ -113,7 +113,7 @@ To use this program with woof
 import org.legogroup.woof.slf4j.*
 val mainSlf4j: IO[Unit] = 
   for
-    woofLogger  <- Logger.makeIoLogger(consoleOutput)
+    woofLogger  <- DefaultLogger.makeIo(consoleOutput)
     _           <- woofLogger.registerSlf4j
     _           <- programWithSlf4j
   yield ()
@@ -159,7 +159,7 @@ import cats.syntax.option.given
 
 val mainHttp4s: IO[Unit] = 
   for
-    given Logger[IO]  <- Logger.makeIoLogger(consoleOutput)
+    given Logger[IO]  <- DefaultLogger.makeIo(consoleOutput)
     maybeResponse     <- CorrelationIdMiddleware.middleware[IO]()(routes).run(Request[IO]()).value
     responseHeaders   =  maybeResponse.map(_.headers).orEmpty
     _                 <- Logger[IO].info(s"Got response headers: $responseHeaders")
