@@ -50,7 +50,7 @@ class Slf4jSuite extends munit.CatsEffectSuite:
   }
 
   test("should respect log levels") {
-    given Printer   = NoColorPrinter()
+    given Printer   = NoColorPrinter(testFormatTime)
     given Filter    = Filter.exactLevel(LogLevel.Warn)
     given Clock[IO] = leetClock
     for

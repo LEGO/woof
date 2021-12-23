@@ -18,12 +18,12 @@ trait Logger[F[_]]:
 
   val stringLocal: StringLocal[F]
 
-  def doLog(level: LogLevel, message: String)(using logInfo: LogInfo): F[Unit]
-  def debug(message: String)(using logInfo: LogInfo): F[Unit] = doLog(LogLevel.Debug, message)
-  def info(message: String)(using logInfo: LogInfo): F[Unit]  = doLog(LogLevel.Info, message)
-  def trace(message: String)(using logInfo: LogInfo): F[Unit] = doLog(LogLevel.Trace, message)
-  def warn(message: String)(using logInfo: LogInfo): F[Unit]  = doLog(LogLevel.Warn, message)
-  def error(message: String)(using logInfo: LogInfo): F[Unit] = doLog(LogLevel.Error, message)
+  def doLog(level: LogLevel, message: String)(using LogInfo): F[Unit]
+  def debug(message: String)(using LogInfo): F[Unit] = doLog(LogLevel.Debug, message)
+  def info(message: String)(using LogInfo): F[Unit]  = doLog(LogLevel.Info, message)
+  def trace(message: String)(using LogInfo): F[Unit] = doLog(LogLevel.Trace, message)
+  def warn(message: String)(using LogInfo): F[Unit]  = doLog(LogLevel.Warn, message)
+  def error(message: String)(using LogInfo): F[Unit] = doLog(LogLevel.Error, message)
 
 end Logger
 
