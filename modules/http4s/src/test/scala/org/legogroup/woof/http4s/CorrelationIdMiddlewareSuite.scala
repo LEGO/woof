@@ -6,7 +6,7 @@ import cats.syntax.all.*
 import cats.{Applicative, Monad}
 import munit.CatsEffectSuite
 import org.http4s.{HttpRoutes, Request, Response}
-import org.legogroup.woof.*
+import org.legogroup.woof.{given, *}
 import org.legogroup.woof.http4s.CorrelationIdMiddleware.UUIDGen
 import org.typelevel.ci.CIString
 
@@ -35,7 +35,7 @@ class CorrelationIdMiddlewareSuite extends CatsEffectSuite:
 
     for
       output            <- newStringWriter
-      given Logger[IO]  <- Logger.makeIoLogger(output)
+      given Logger[IO]  <- DefaultLogger.makeIo(output)
       routesWithTraceId <- middleWare(routes).pure[IO]
       response          <- routesWithTraceId.run(Request[IO]()).value
       loggedString      <- output.get

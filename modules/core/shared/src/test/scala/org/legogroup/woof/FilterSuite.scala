@@ -38,7 +38,7 @@ class FilterSuite extends CatsEffectSuite:
     given Filter = Filter.atLeastLevel(LogLevel.Warn)
     for
       stringWriter     <- newStringWriter
-      given Logger[IO] <- Logger.makeIoLogger(stringWriter)(using constantClock)
+      given Logger[IO] <- DefaultLogger.makeIo(stringWriter)(using constantClock)
       _                <- testProgram
       str              <- stringWriter.get
     yield assertEquals(str, expected)
@@ -48,7 +48,7 @@ class FilterSuite extends CatsEffectSuite:
     given Filter = Filter.regexFilter("org\\.legogroup\\.woof\\.Filter.*".r)
     for
       stringWriter     <- newStringWriter
-      given Logger[IO] <- Logger.makeIoLogger(stringWriter)(using constantClock)
+      given Logger[IO] <- DefaultLogger.makeIo(stringWriter)(using constantClock)
       _                <- testProgram
       str              <- stringWriter.get
     yield assertEquals(str.count(_ == '\n'), 4)
@@ -58,7 +58,7 @@ class FilterSuite extends CatsEffectSuite:
     given Filter = Filter.regexFilter("org.legogroup.woof\\.NotFilter.*".r)
     for
       stringWriter     <- newStringWriter
-      given Logger[IO] <- Logger.makeIoLogger(stringWriter)(using constantClock)
+      given Logger[IO] <- DefaultLogger.makeIo(stringWriter)(using constantClock)
       _                <- testProgram
       str              <- stringWriter.get
     yield assertEquals(str.count(_ == '\n'), 0)
@@ -68,7 +68,7 @@ class FilterSuite extends CatsEffectSuite:
     given Filter = Filter.exactLevel(LogLevel.Info) or Filter.exactLevel(LogLevel.Warn)
     for
       stringWriter     <- newStringWriter
-      given Logger[IO] <- Logger.makeIoLogger(stringWriter)(using constantClock)
+      given Logger[IO] <- DefaultLogger.makeIo(stringWriter)(using constantClock)
       _                <- testProgram
       str              <- stringWriter.get
     yield assertEquals(str.count(_ == '\n'), 2)

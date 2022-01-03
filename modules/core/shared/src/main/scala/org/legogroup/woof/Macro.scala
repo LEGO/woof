@@ -16,7 +16,7 @@ object Macro:
   private def enclosingClass(using q: Quotes)(symb: quotes.reflect.Symbol): quotes.reflect.Symbol =
     if symb.isClassDef then symb else enclosingClass(symb.owner)
 
-  private def logInfo(s: Expr[Any])(using Quotes): Expr[LogInfo] =
+  private def logInfo(using Quotes): Expr[LogInfo] =
     import quotes.reflect.*
 
     val cls      = enclosingClass(Symbol.spliceOwner)
@@ -31,6 +31,8 @@ object Macro:
     '{ LogInfo($nameExpr, $file, $lineNumber) }
   end logInfo
 
-  inline def expressionInfo(x: Any): LogInfo = ${ logInfo('x) }
+  inline given LogInfo = ${ logInfo }
 
 end Macro
+
+export Macro.given_LogInfo

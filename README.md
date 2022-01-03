@@ -32,7 +32,7 @@ libraryDependencies ++= Seq(
 
 ```scala
 import cats.effect.IO
-import org.legogroup.woof.*
+import org.legogroup.woof.{given, *}
 
 val consoleOutput: Output[IO] = new Output[IO]:
   def output(str: String)      = IO.delay(println(str))
@@ -51,7 +51,7 @@ def program(using Logger[IO]): IO[Unit] =
 
 val main: IO[Unit] = 
   for
-    given Logger[IO]  <- Logger.makeIoLogger(consoleOutput)
+    given Logger[IO]  <- DefaultLogger.makeIo(consoleOutput)
     _                 <- program
   yield ()
 ```
@@ -61,10 +61,10 @@ and running it yields:
 ```scala
 import cats.effect.unsafe.implicits.global
 main.unsafeRunSync()
-// 2021-12-16 14:42:44 [DEBUG] repl.MdocSession$.App: This is some debug (.:27)
-// 2021-12-16 14:42:44 [INFO ] repl.MdocSession$.App: HEY! (.:28)
-// 2021-12-16 14:42:44 [WARN ] repl.MdocSession$.App: I'm warning you (.:29)
-// 2021-12-16 14:42:44 [ERROR] repl.MdocSession$.App: I give up (.:30)
+// 2021-12-23 11:00:00 [DEBUG] repl.MdocSession$.App: This is some debug (.:27)
+// 2021-12-23 11:00:00 [INFO ] repl.MdocSession$.App: HEY! (.:28)
+// 2021-12-23 11:00:00 [WARN ] repl.MdocSession$.App: I'm warning you (.:29)
+// 2021-12-23 11:00:00 [ERROR] repl.MdocSession$.App: I give up (.:30)
 ```
 
 
@@ -74,7 +74,7 @@ We can also re-use the program and add context to our logger:
 import Logger.*
 val mainWithContext: IO[Unit] = 
   for
-    given Logger[IO]  <- Logger.makeIoLogger(consoleOutput)
+    given Logger[IO]  <- DefaultLogger.makeIo(consoleOutput)
     _                 <- program.withLogContext("trace-id", "4d334544-6462-43fa-b0b1-12846f871573")
     _                 <- Logger[IO].info("Now the context is gone")
   yield ()
@@ -84,11 +84,11 @@ And running with context yields:
 
 ```scala
 mainWithContext.unsafeRunSync()
-// 2021-12-16 14:42:44 [DEBUG] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: This is some debug (.:27)
-// 2021-12-16 14:42:44 [INFO ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: HEY! (.:28)
-// 2021-12-16 14:42:44 [WARN ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I'm warning you (.:29)
-// 2021-12-16 14:42:44 [ERROR] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I give up (.:30)
-// 2021-12-16 14:42:44 [INFO ] repl.MdocSession$.App: Now the context is gone (.:61)
+// 2021-12-23 11:00:00 [DEBUG] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: This is some debug (.:27)
+// 2021-12-23 11:00:00 [INFO ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: HEY! (.:28)
+// 2021-12-23 11:00:00 [WARN ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I'm warning you (.:29)
+// 2021-12-23 11:00:00 [ERROR] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I give up (.:30)
+// 2021-12-23 11:00:00 [INFO ] repl.MdocSession$.App: Now the context is gone (.:61)
 ```
 
 # Can I use SLF4J?
@@ -122,7 +122,7 @@ To use this program with woof
 import org.legogroup.woof.slf4j.*
 val mainSlf4j: IO[Unit] = 
   for
-    woofLogger  <- Logger.makeIoLogger(consoleOutput)
+    woofLogger  <- DefaultLogger.makeIo(consoleOutput)
     _           <- woofLogger.registerSlf4j
     _           <- programWithSlf4j
   yield ()
@@ -132,8 +132,8 @@ and running it:
 
 ```scala
 mainSlf4j.unsafeRunSync()
-// 2021-12-16 14:42:44 [INFO ] repl.MdocSession$App: Hello from SLF4j! (MdocSession$App.scala:81)
-// 2021-12-16 14:42:44 [WARN ] repl.MdocSession$App: This is not the pure woof. (MdocSession$App.scala:82)
+// 2021-12-23 11:00:00 [INFO ] repl.MdocSession$App: Hello from SLF4j! (MdocSession$App.scala:81)
+// 2021-12-23 11:00:00 [WARN ] repl.MdocSession$App: This is not the pure woof. (MdocSession$App.scala:82)
 ```
 ## Limitations of SLF4J bindings
 
@@ -170,7 +170,7 @@ import cats.syntax.option.given
 
 val mainHttp4s: IO[Unit] = 
   for
-    given Logger[IO]  <- Logger.makeIoLogger(consoleOutput)
+    given Logger[IO]  <- DefaultLogger.makeIo(consoleOutput)
     maybeResponse     <- CorrelationIdMiddleware.middleware[IO]()(routes).run(Request[IO]()).value
     responseHeaders   =  maybeResponse.map(_.headers).orEmpty
     _                 <- Logger[IO].info(s"Got response headers: $responseHeaders")
@@ -184,6 +184,6 @@ the correlation ID is also returned in the header of the response.
 
 ```scala
 mainHttp4s.unsafeRunSync()
-// 2021-12-16 14:42:44 [INFO ] X-Trace-Id=a5e5846e-9de6-41c0-b29a-2050aabb8f66 repl.MdocSession$.App: I got a request with trace id! :D (.:121)
-// 2021-12-16 14:42:44 [INFO ] repl.MdocSession$.App: Got response headers: Headers(X-Trace-Id: a5e5846e-9de6-41c0-b29a-2050aabb8f66) (.:142)
+// 2021-12-23 11:00:00 [INFO ] X-Trace-Id=13af5dfc-72df-48e2-aae2-aff1563d09e6 repl.MdocSession$.App: I got a request with trace id! :D (.:121)
+// 2021-12-23 11:00:00 [INFO ] repl.MdocSession$.App: Got response headers: Headers(X-Trace-Id: 13af5dfc-72df-48e2-aae2-aff1563d09e6) (.:142)
 ```

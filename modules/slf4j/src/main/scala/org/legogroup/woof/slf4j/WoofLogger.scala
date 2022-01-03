@@ -26,7 +26,7 @@ class WoofLogger(name: String) extends Logger:
 
   def getName(): String = name
 
-  private def log(level: LogLevel, msg: String) = logger.foreach(_.doLog(level, msg, getLogInfo()).unsafeRunSync())
+  private def log(level: LogLevel, msg: String) = logger.foreach(_.doLog(level, msg)(using getLogInfo()).unsafeRunSync())
   def info(msg: String): Unit                   = log(LogLevel.Info, msg)
   def debug(msg: String): Unit                  = log(LogLevel.Debug, msg)
   def error(msg: String): Unit                  = log(LogLevel.Error, msg)
@@ -83,12 +83,7 @@ class WoofLogger(name: String) extends Logger:
   def warn(x$0: org.slf4j.Marker, msg: String, objs: Array[? <: Object]): Unit   = warn(s"$msg ${objs.mkString(", ")}")
   def warn(x$0: org.slf4j.Marker, msg: String, throwable: Throwable): Unit       = warn(s"$msg ${throwable.getMessage}")
 
-  /** Since woof allows much more complex filters, the best we can do is probe the filter with the requested log level
-    * and arbitrary values in the rest of the log line.
-    */
-  private def testLevel(logLevel: LogLevel): Boolean =
-    val mockLogLine = LogLine(logLevel, LogInfo("", "", -1), "", Nil)
-    logger.exists(_.filter(mockLogLine))
+  private def testLevel(logLevel: LogLevel): Boolean = true
 
   def isDebugEnabled(): Boolean = testLevel(LogLevel.Debug)
   def isErrorEnabled(): Boolean = testLevel(LogLevel.Error)

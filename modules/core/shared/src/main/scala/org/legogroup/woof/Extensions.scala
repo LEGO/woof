@@ -16,8 +16,8 @@ object Sleep:
 extension [F[_]: Concurrent: Clock: Sleep: Logger: Monad, T](f: F[T])
   inline def logConcurrently(
       every: FiniteDuration,
-  )(inline log: FiniteDuration => String, level: LogLevel = LogLevel.Debug): F[T] =
-    val doLog = repeat[F](every, log.andThen(Logger[F].log(level, _)))
+  )(inline log: FiniteDuration => String, level: LogLevel = LogLevel.Debug)(using LogInfo): F[T] =
+    val doLog = repeat[F](every, log.andThen(Logger[F].doLog(level, _)))
     Concurrent[F]
       .race(doLog, f)
       .flatMap(
