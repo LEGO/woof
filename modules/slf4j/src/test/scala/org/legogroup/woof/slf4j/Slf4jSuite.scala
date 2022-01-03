@@ -19,7 +19,7 @@ class Slf4jSuite extends munit.CatsEffectSuite:
     given Clock[IO] = leetClock
     for
       stringOutput <- newStringWriter
-      woofLogger   <- Logger.makeIoLogger(stringOutput)
+      woofLogger   <- DefaultLogger.makeIo(stringOutput)
       _            <- woofLogger.registerSlf4j
       slf4jLogger  <- IO.delay(LoggerFactory.getLogger(this.getClass))
       _            <- IO.delay(slf4jLogger.info("HELLO, SLF4J!"))
@@ -37,7 +37,7 @@ class Slf4jSuite extends munit.CatsEffectSuite:
     given Clock[IO] = leetClock
     for
       stringOutput <- newStringWriter
-      woofLogger   <- Logger.makeIoLogger(stringOutput)
+      woofLogger   <- DefaultLogger.makeIo(stringOutput)
       _            <- woofLogger.registerSlf4j
       slf4jLogger  <- IO.delay(LoggerFactory.getLogger(this.getClass))
       _            <- IO.delay(slf4jLogger.info("HELLO, ARRAYS!", 1, Some(42), List(1337)))
@@ -49,20 +49,24 @@ class Slf4jSuite extends munit.CatsEffectSuite:
     end for
   }
 
-  test("should check log levels") {
-    given Printer = ColorPrinter()
-    given Filter  = Filter.exactLevel(LogLevel.Warn)
+  test("should respect log levels") {
+    given Printer   = NoColorPrinter(testFormatTime)
+    given Filter    = Filter.exactLevel(LogLevel.Warn)
+    given Clock[IO] = leetClock
     for
-      woofLogger  <- Logger.makeIoLogger(Output.fromConsole)
-      _           <- woofLogger.registerSlf4j
-      slf4jLogger <- IO.delay(LoggerFactory.getLogger(this.getClass))
-      _           <- IO.delay(slf4jLogger.info("HELLO, SLF4J!"))
-    yield
-      assert(slf4jLogger.isWarnEnabled)
-      assert(!slf4jLogger.isDebugEnabled)
-      assert(!slf4jLogger.isInfoEnabled)
-      assert(!slf4jLogger.isDebugEnabled)
-      assert(!slf4jLogger.isTraceEnabled)
+      stringWriter <- newStringWriter
+      woofLogger   <- DefaultLogger.makeIo(stringWriter)
+      _            <- woofLogger.registerSlf4j
+      slf4jLogger  <- IO.delay(LoggerFactory.getLogger(this.getClass))
+      _            <- IO.delay(slf4jLogger.info("INFO, SLF4J!"))
+      _            <- IO.delay(slf4jLogger.debug("DEBUG, SLF4J!"))
+      _            <- IO.delay(slf4jLogger.warn("WARN, SLF4J!"))
+      _            <- IO.delay(slf4jLogger.error("ERROR, SLF4J!"))
+      result       <- stringWriter.get
+    yield assertEquals(
+      result,
+      "1987-05-31 13:37:00 [WARN ] org.legogroup.woof.slf4j.Slf4jSuite: WARN, SLF4J! (Slf4jSuite.scala:63)\n",
+    )
     end for
   }
 

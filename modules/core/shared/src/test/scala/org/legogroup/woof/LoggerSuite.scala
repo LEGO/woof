@@ -42,12 +42,13 @@ class LoggerSuite extends CatsEffectSuite:
     given Printer   = NoColorPrinter(testFormatTime)
 
     val message  = "log message"
-    val logInfo  = Macro.expressionInfo(message)
+    val logInfo  = summon[LogInfo]
     val expected = "1987-05-31 13:37:00 [WARN ] org.legogroup.woof.LoggerSuite: log message (LoggerSuite.scala:45)"
 
     for
-      logger <- Logger.makeIoLogger(Output.fromConsole)
-      line   <- logger.makeLogString(LogLevel.Warn, logInfo, message, Nil)
+      given StringLocal[IO] <- ioStringLocal
+      logger                <- new DefaultLogger[IO](Output.fromConsole).pure[IO]
+      line                  <- logger.makeLogString(LogLevel.Warn, logInfo, message, Nil)
     yield assertEquals(line, expected)
   }
 
@@ -59,13 +60,13 @@ class LoggerSuite extends CatsEffectSuite:
     val reset         = Theme.Style.Reset
     val postfixFormat = theme.postfixFormat
     // format: off
-    val expected = s"""1987-05-31 13:37:00 ${theme.levelFormat(LogLevel.Warn)}[WARN ]$reset ${postfixFormat}org.legogroup.woof.LoggerSuite$reset: This is a warning $postfixFormat(LoggerSuite.scala:69)$reset
+    val expected = s"""1987-05-31 13:37:00 ${theme.levelFormat(LogLevel.Warn)}[WARN ]$reset ${postfixFormat}org.legogroup.woof.LoggerSuite$reset: This is a warning $postfixFormat(LoggerSuite.scala:70)$reset
 """
     // format: on
     for
       strRef      <- Ref[IO].of("")
       stringLocal <- Local.makeIoLocal[List[(String, String)]]
-      logger = new Logger[IO](StringWriter(strRef))(using stringLocal)
+      logger = new DefaultLogger[IO](StringWriter(strRef))(using stringLocal)
       _      <- logger.warn("This is a warning")
       output <- strRef.get
     yield assertEquals(output.toList, expected.toList)
@@ -83,7 +84,7 @@ class LoggerSuite extends CatsEffectSuite:
       given Logger[IO] =
         given Clock[IO] = clock
         given Printer   = NoColorPrinter(testFormatTime)
-        new Logger[IO](StringWriter(ref))(using stringLocal)
+        new DefaultLogger[IO](StringWriter(ref))(using stringLocal)
       _ <- clockRef.get
         .iterateUntil(_ >= (startTime + 1.second))
         .logConcurrently(200.milliseconds)(d => s"${d.toMillis} elapsed")
@@ -93,7 +94,7 @@ class LoggerSuite extends CatsEffectSuite:
       assert(times.count(_ == '\n') >= 5)
       assertEquals(
         times.split("\n")(2),
-        "1987-05-31 13:37:00 [DEBUG] org.legogroup.woof.LoggerSuite: 400 elapsed (LoggerSuite.scala:87)",
+        "1987-05-31 13:37:00 [DEBUG] org.legogroup.woof.LoggerSuite: 400 elapsed (LoggerSuite.scala:90)",
       )
   }
 
@@ -102,19 +103,19 @@ class LoggerSuite extends CatsEffectSuite:
     given Printer   = NoColorPrinter(testFormatTime)
 
     val message = "log message"
-    val logInfo = Macro.expressionInfo(message)
+    val logInfo = summon[LogInfo]
 
     def programLogic(using Logger[IO]) = Logger[IO].info("some info")
 
     // format: off
-    val expected = """1987-05-31 13:37:00 [INFO ] correlation-id=21c78595-ef21-4df0-987e-8af6aab6f346, locale=da-DK org.legogroup.woof.LoggerSuite: some info (LoggerSuite.scala:107)
-1987-05-31 13:37:00 [INFO ] org.legogroup.woof.LoggerSuite: some info (LoggerSuite.scala:107)
+    val expected = """1987-05-31 13:37:00 [INFO ] correlation-id=21c78595-ef21-4df0-987e-8af6aab6f346, locale=da-DK org.legogroup.woof.LoggerSuite: some info (LoggerSuite.scala:108)
+1987-05-31 13:37:00 [INFO ] org.legogroup.woof.LoggerSuite: some info (LoggerSuite.scala:108)
 """
     // format: on
     for
       given StringLocal[IO] <- Local.makeIoLocal[List[(String, String)]]
       strRef                <- Ref[IO].of("")
-      given Logger[IO] = new Logger[IO](StringWriter(strRef))
+      given Logger[IO] = new DefaultLogger[IO](StringWriter(strRef))
       _ <- programLogic
         .withLogContext("locale", "da-DK")
         .withLogContext("correlation-id", "21c78595-ef21-4df0-987e-8af6aab6f346")

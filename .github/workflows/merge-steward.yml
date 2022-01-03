@@ -1,0 +1,21 @@
+name: Merge Scala Steward
+
+on:
+  workflow_run:
+    types:
+      - completed
+    workflows:
+      - 'Scala CI'
+
+jobs:
+  merge-me:
+    name: Merge Scala Steward
+    runs-on: ubuntu-latest
+    steps:
+      - if: ${{ github.event.workflow_run.conclusion == 'success' }}
+        name: Merge Scala Steward
+        uses: ridedott/merge-me-action@v2
+        with:
+          MERGE_METHOD: REBASE
+          GITHUB_LOGIN: scala-steward
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
