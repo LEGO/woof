@@ -13,5 +13,6 @@ jobs:
       - name: Merge me!
         uses: ridedott/merge-me-action@v2
         with:
+          MERGE_METHOD: REBASE
           GITHUB_LOGIN: scala-steward
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
