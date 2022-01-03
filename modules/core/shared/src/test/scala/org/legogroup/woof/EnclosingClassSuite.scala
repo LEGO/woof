@@ -15,12 +15,6 @@ import scala.concurrent.duration.*
 class EnclosingClassSuite extends CatsEffectSuite:
 
   class ThisClassNameIsReallyLongAndWillTriggerParentPackageAbbreviation:
-    val startTime = 549459420.seconds
-
-    val constantClock: Clock[IO] = new Clock[IO]:
-      def applicative = Applicative[IO]
-      def monotonic   = startTime.pure
-      def realTime    = startTime.pure
 
     def testProgram(using Logger[IO]): IO[Unit] =
       for
@@ -39,7 +33,7 @@ class EnclosingClassSuite extends CatsEffectSuite:
     val testClass = new ThisClassNameIsReallyLongAndWillTriggerParentPackageAbbreviation
     for
       stringWriter     <- newStringWriter
-      given Logger[IO] <- DefaultLogger.makeIo(stringWriter)(using testClass.constantClock)
+      given Logger[IO] <- DefaultLogger.makeIo(stringWriter)(using leetClock)
       _                <- testClass.testProgram
       str              <- stringWriter.get
     yield assert(str.contains(expected))
