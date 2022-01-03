@@ -39,7 +39,7 @@ class EnclosingClassSuite extends CatsEffectSuite:
     val testClass = new ThisClassNameIsReallyLongAndWillTriggerParentPackageAbbreviation
     for
       stringWriter     <- newStringWriter
-      given Logger[IO] <- Logger.makeIoLogger(stringWriter)(using testClass.constantClock)
+      given Logger[IO] <- DefaultLogger.makeIo(stringWriter)(using testClass.constantClock)
       _                <- testClass.testProgram
       str              <- stringWriter.get
     yield assert(str.contains(expected))
