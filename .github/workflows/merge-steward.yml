@@ -1,0 +1,17 @@
+name: Merge Scala Steward
+
+on:
+  check_suite:
+    types:
+      - completed
+
+jobs:
+  merge-me:
+    name: Merge Scala Steward
+    runs-on: ubuntu-latest
+    steps:
+      - name: Merge me!
+        uses: ridedott/merge-me-action@v2
+        with:
+          GITHUB_LOGIN: scala-steward
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
