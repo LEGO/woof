@@ -12,6 +12,11 @@ object Macro:
       val path = Expr(f.getAbsolutePath)
       '{ new java.io.File($path) }
 
+  private given ToExpr[EnclosingClass] with
+    def apply(name: EnclosingClass)(using Quotes): Expr[EnclosingClass] =
+      val exp = Expr(name.fullName)
+      '{ EnclosingClass($exp) }
+
   @tailrec
   private def enclosingClass(using q: Quotes)(symb: quotes.reflect.Symbol): quotes.reflect.Symbol =
     if symb.isClassDef then symb else enclosingClass(symb.owner)
@@ -21,7 +26,7 @@ object Macro:
 
     val cls      = enclosingClass(Symbol.spliceOwner)
     val name     = cls.fullName
-    val nameExpr = Expr(name)
+    val nameExpr = Expr(EnclosingClass(name))
 
     val position   = Position.ofMacroExpansion
     val filePath   = if position.sourceFile.jpath != null then position.sourceFile.jpath else Paths.get(".")

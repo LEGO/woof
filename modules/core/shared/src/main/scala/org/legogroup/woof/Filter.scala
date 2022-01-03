@@ -13,7 +13,7 @@ object Filter:
 
   val atLeastLevel: LogLevel => Filter = level => line => line.level >= level
   val exactLevel: LogLevel => Filter   = level => line => line.level == level
-  val regexFilter: Regex => Filter     = regex => line => regex.matches(line.info.enclosingClass)
+  val regexFilter: Regex => Filter     = regex => line => regex.matches(line.info.enclosingClass.fullName)
   val nothing: Filter                  = _ => false
   val everything: Filter               = _ => true
 

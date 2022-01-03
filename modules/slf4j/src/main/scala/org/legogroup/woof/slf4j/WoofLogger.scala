@@ -4,7 +4,7 @@ import cats.Id
 import cats.effect.IO
 import cats.effect.unsafe.IORuntime
 import cats.effect.unsafe.IORuntime.global
-import org.legogroup.woof.{LogInfo, LogLevel, LogLine, Logger as WLogger}
+import org.legogroup.woof.{EnclosingClass, LogInfo, LogLevel, LogLine, Logger as WLogger}
 import org.slf4j.Logger
 
 import java.io.File
@@ -18,10 +18,10 @@ class WoofLogger(name: String) extends Logger:
       stacktraceElements.size - stacktraceElements.reverse.indexWhere(s => s.getClassName == this.getClass.getName,
       ) // after last mention of this class
     val callingMethod: StackTraceElement = stacktraceElements(callingMethodIndex)
-    val className                        = callingMethod.getClassName
-    val fileName                         = (className.replace('.', '/') + ".scala").split("\\/").takeRight(1).mkString
+    val enclosingClassName               = EnclosingClass(callingMethod.getClassName)
+    val fileName                         = (enclosingClassName.fullName.replace('.', '/') + ".scala").split("\\/").takeRight(1).mkString
     val lineNumber                       = callingMethod.getLineNumber - 1
-    LogInfo(className, fileName, lineNumber)
+    LogInfo(enclosingClassName, fileName, lineNumber)
   end getLogInfo
 
   def getName(): String = name
@@ -87,7 +87,7 @@ class WoofLogger(name: String) extends Logger:
     * and arbitrary values in the rest of the log line.
     */
   private def testLevel(logLevel: LogLevel): Boolean =
-    val mockLogLine = LogLine(logLevel, LogInfo("", "", -1), "", Nil)
+    val mockLogLine = LogLine(logLevel, LogInfo(EnclosingClass(""), "", -1), "", Nil)
     logger.exists(_.filter(mockLogLine))
 
   def isDebugEnabled(): Boolean = testLevel(LogLevel.Debug)
