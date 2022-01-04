@@ -3,7 +3,7 @@ package org.legogroup.woof
 import scala.annotation.tailrec
 
 case class EnclosingClass(fullName: String, lineLength: Int = 80):
-  def printableName: String = reduceNameLength(fullName)
+  lazy val printableName: String = reduceNameLength(fullName)
 
   @tailrec
   private def reduceNameLength(name: String): String =
