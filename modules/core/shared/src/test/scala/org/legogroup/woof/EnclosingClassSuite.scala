@@ -39,7 +39,7 @@ class EnclosingClassSuite extends CatsEffectSuite:
     yield assert(str.contains(expected))
   }
 
-  test("terminates when package depth is really deep") {
+  test("does not abbreviate last term if depth is really deep") {
     assertEquals(EnclosingClass("never.gonna.give.you.up", 1).printableName, "n.g.g.y.up")
   }
 
