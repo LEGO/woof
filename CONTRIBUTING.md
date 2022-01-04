@@ -1,0 +1,1 @@
+sbt scalafmt test -mem 2048
