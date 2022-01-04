@@ -48,7 +48,7 @@ class EnclosingClassSuite extends CatsEffectSuite:
   }
 
   test("partially chomped") {
-    assertEquals(EnclosingClass("never.gonna.give.you.up", 10).printableName, "n.g.give.you.up")
+    assertEquals(EnclosingClass("never.gonna.give.you.up", 15).printableName, "n.g.give.you.up")
   }
 
 end EnclosingClassSuite
