@@ -15,24 +15,24 @@ class WoofLogger(name: String) extends Logger:
   private def getLogInfo() =
     val stacktraceElements = Thread.currentThread().getStackTrace()
     val callingMethodIndex =
-      stacktraceElements.size - stacktraceElements.reverse.indexWhere(s =>
-        s.getClassName == this.getClass.getName,
+      stacktraceElements.size - stacktraceElements.reverse.indexWhere(s => s.getClassName == this.getClass.getName,
       ) // after last mention of this class
     val callingMethod: StackTraceElement = stacktraceElements(callingMethodIndex)
     val enclosingClassName               = EnclosingClass(callingMethod.getClassName)
-    val fileName                         = (enclosingClassName.fullName.replace('.', '/') + ".scala").split("\\/").takeRight(1).mkString
-    val lineNumber                       = callingMethod.getLineNumber - 1
+    val fileName   = (enclosingClassName.fullName.replace('.', '/') + ".scala").split("\\/").takeRight(1).mkString
+    val lineNumber = callingMethod.getLineNumber - 1
     LogInfo(enclosingClassName, fileName, lineNumber)
   end getLogInfo
 
   def getName(): String = name
 
-  private def log(level: LogLevel, msg: String) = logger.foreach(_.doLog(level, msg)(using getLogInfo()).unsafeRunSync())
-  def info(msg: String): Unit                   = log(LogLevel.Info, msg)
-  def debug(msg: String): Unit                  = log(LogLevel.Debug, msg)
-  def error(msg: String): Unit                  = log(LogLevel.Error, msg)
-  def trace(msg: String): Unit                  = log(LogLevel.Trace, msg)
-  def warn(msg: String): Unit                   = log(LogLevel.Warn, msg)
+  private def log(level: LogLevel, msg: String) =
+    logger.foreach(_.doLog(level, msg)(using getLogInfo()).unsafeRunSync())
+  def info(msg: String): Unit  = log(LogLevel.Info, msg)
+  def debug(msg: String): Unit = log(LogLevel.Debug, msg)
+  def error(msg: String): Unit = log(LogLevel.Error, msg)
+  def trace(msg: String): Unit = log(LogLevel.Trace, msg)
+  def warn(msg: String): Unit  = log(LogLevel.Warn, msg)
 
   def debug(msg: String, obj: Object): Unit                        = debug(s"$msg $obj")
   def debug(msg: String, obj1: Object, obj2: Object): Unit         = debug(s"$msg $obj1, $obj2")
