@@ -46,8 +46,10 @@ class EnclosingClassSuite extends CatsEffectSuite:
   test("does not abbreviate package if too short") {
     assertEquals(EnclosingClass("Too.$hort", 10).printableName, "Too.$hort")
   }
+
   test("partially chomped") {
     assertEquals(EnclosingClass("never.gonna.give.you.up", 10).printableName, "n.g.give.you.up")
   }
+
 end EnclosingClassSuite
 
