@@ -18,4 +18,4 @@ jobs:
         with:
           MERGE_METHOD: REBASE
           GITHUB_LOGIN: scala-steward
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.SCALA_STEWARD_MERGE_TOKEN }}
