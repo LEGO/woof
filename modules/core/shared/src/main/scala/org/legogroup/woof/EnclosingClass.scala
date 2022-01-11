@@ -3,13 +3,26 @@ package org.legogroup.woof
 case class EnclosingClass(fullName: String, lineLength: Int = 80):
   lazy val printableName: String = reduceNameLength(fullName)
 
+  import cats.syntax.option.*
+  
+  private def chop(xs: List[String]): List[String] = xs.map(_.take(1))
+
   private def reduceNameLength(name: String): String =
-    List
-      .unfold(name.split('.').toList) {
-        case Nil                                                        => None
-        case last :: Nil                                                => Some(last, Nil)
-        case parts @ x :: xs if parts.mkString(".").length > lineLength => Some(x.take(1), xs)
-        case x :: xs                                                    => Some(x, xs)
-      }
-      .mkString(".")
+    val parts = name.split('.').toList
+
+    val packagePrefix   = parts.dropRight(1)
+    val suffixClassName = parts.lastOption.orEmpty
+
+    val possibilities =
+      packagePrefix.indices
+        .map(packagePrefix.splitAt)
+        .map((prefix, suffix) => (chop(prefix) ++ suffix :+ suffixClassName).mkString("."))
+        .filter(_.length <= lineLength)
+
+    val maxChoppedFallback = (chop(packagePrefix) :+ suffixClassName).mkString(".")
+
+    possibilities
+      .maxByOption(_.length)
+      .getOrElse(maxChoppedFallback)
+  end reduceNameLength
 end EnclosingClass
