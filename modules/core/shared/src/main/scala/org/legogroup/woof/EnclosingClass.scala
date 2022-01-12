@@ -4,7 +4,7 @@ case class EnclosingClass(fullName: String, lineLength: Int = 80):
   lazy val printableName: String = reduceNameLength(fullName)
 
   import cats.syntax.option.*
-  
+
   private def chop(xs: List[String]): List[String] = xs.map(_.take(1))
 
   private def reduceNameLength(name: String): String =
