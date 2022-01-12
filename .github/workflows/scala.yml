@@ -20,17 +20,3 @@ jobs:
         distribution: 'adopt'
     - name: Run tests
       run: sbt test docs/mdoc
-
-  merge:
-    name: Merge dependency update
-    if: github.actor == 'scala-steward'
-    needs:
-      - build
-    runs-on: ubuntu-latest
-    steps:
-      - name: merge PR
-        uses: desbo/merge-pr-action@v0
-        with:
-          GITHUB_TOKEN: ${{ secrets.SCALA_STEWARD_MERGE_TOKEN }}
-          ALLOWED_UPDATE: minor
-          MERGE_METHOD: rebase
