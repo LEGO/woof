@@ -18,5 +18,11 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
+    - name: Check sources formatting
+      run: sbt scalafmtCheck
+    - name: Check sbt and project dir formatting
+      run: sbt scalafmtSbtCheck
     - name: Run tests
-      run: sbt test docs/mdoc
+      run: sbt test
+    - name: Build docs
+      run: sbt docs/mdoc
