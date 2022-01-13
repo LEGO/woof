@@ -25,11 +25,11 @@ class EnclosingClassSuite extends CatsEffectSuite:
       yield ()
   end ThisClassNameIsReallyLongAndWillTriggerParentPackageAbbreviation
 
-  given Filter = Filter.everything
+  given Filter  = Filter.everything
   given Printer = NoColorPrinter(testFormatTime)
 
   test("class names abbreviated when too long") {
-    val expected = "o.l.w.E.ThisClassNameIsReallyLongAndWillTriggerParentPackageAbbreviation"
+    val expected  = "o.l.w.E.ThisClassNameIsReallyLongAndWillTriggerParentPackageAbbreviation"
     val testClass = new ThisClassNameIsReallyLongAndWillTriggerParentPackageAbbreviation
     for
       stringWriter     <- newStringWriter
@@ -52,4 +52,3 @@ class EnclosingClassSuite extends CatsEffectSuite:
   }
 
 end EnclosingClassSuite
-
