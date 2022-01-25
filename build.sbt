@@ -5,7 +5,7 @@ val V = new {
   val munit           = "0.7.29"
   val munitCatsEffect = "1.0.7"
   val scala           = "3.1.0"
-  val slf4j           = "1.7.33"
+  val slf4j           = "1.7.34"
 }
 
 val D = new {
