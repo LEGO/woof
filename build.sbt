@@ -4,7 +4,7 @@ val V = new {
   val http4s          = "0.23.8"
   val munit           = "0.7.29"
   val munitCatsEffect = "1.0.7"
-  val scala           = "3.1.0"
+  val scala           = "3.1.1"
   val slf4j           = "1.7.35"
 }
 
