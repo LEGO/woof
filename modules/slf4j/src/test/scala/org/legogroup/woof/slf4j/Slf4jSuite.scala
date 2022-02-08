@@ -80,11 +80,11 @@ class Slf4jSuite extends munit.CatsEffectSuite:
       woofLogger   <- DefaultLogger.makeIo(stringWriter)
       _            <- woofLogger.registerSlf4j
       slf4jLogger  <- IO.delay(LoggerFactory.getLogger(this.getClass))
-      _            <- IO.delay(slf4jLogger.debug("null cause in exception", null))
+      _            <- IO.delay(slf4jLogger.debug("null exception", null))
       result       <- stringWriter.get
     yield assertEquals(
       result,
-      "1987-05-31 13:37:00 [DEBUG] org.legogroup.woof.slf4j.Slf4jSuite: null cause in exception  (Slf4jSuite.scala:83)\n",
+      "1987-05-31 13:37:00 [DEBUG] org.legogroup.woof.slf4j.Slf4jSuite: null exception  (Slf4jSuite.scala:83)\n",
     )
     end for
   }
