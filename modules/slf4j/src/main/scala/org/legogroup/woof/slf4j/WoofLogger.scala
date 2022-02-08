@@ -8,6 +8,7 @@ import org.legogroup.woof.{EnclosingClass, LogInfo, LogLevel, LogLine, Logger as
 import org.slf4j.Logger
 
 import java.io.File
+import scala.util.Try
 class WoofLogger(name: String) extends Logger:
 
   import WoofLogger.{given_IORuntime, logger}
@@ -35,55 +36,57 @@ class WoofLogger(name: String) extends Logger:
   def trace(msg: String): Unit = log(LogLevel.Trace, msg)
   def warn(msg: String): Unit  = log(LogLevel.Warn, msg)
 
+  private def throwableMessage(msg: String, throwable: Throwable) = s"$msg " + Try(throwable.getMessage).getOrElse("")
+
   def debug(msg: String, obj: Object): Unit                        = debug(s"$msg $obj")
   def debug(msg: String, obj1: Object, obj2: Object): Unit         = debug(s"$msg $obj1, $obj2")
   def debug(msg: String, objs: Array[? <: Object]): Unit           = debug(s"$msg ${objs.mkString(", ")}")
-  def debug(msg: String, throwable: Throwable): Unit               = debug(s"$msg ${throwable.getMessage}")
+  def debug(msg: String, throwable: Throwable): Unit               = debug(throwableMessage(msg, throwable))
   def debug(x$0: org.slf4j.Marker, msg: String): Unit              = debug(msg)
   def debug(x$0: org.slf4j.Marker, msg: String, obj: Object): Unit = debug(s"$msg, $obj")
   def debug(x$0: org.slf4j.Marker, msg: String, obj1: Object, obj2: Object): Unit = debug(s"$msg, $obj1, $obj2")
   def debug(x$0: org.slf4j.Marker, msg: String, objs: Array[? <: Object]): Unit = debug(s"$msg ${objs.mkString(", ")}")
-  def debug(x$0: org.slf4j.Marker, msg: String, throwable: Throwable): Unit     = debug(s"$msg ${throwable.getMessage}")
+  def debug(x$0: org.slf4j.Marker, msg: String, throwable: Throwable): Unit = debug(throwableMessage(msg, throwable))
 
   def error(msg: String, obj: Object): Unit                        = error(s"$msg $obj")
   def error(msg: String, obj1: Object, obj2: Object): Unit         = error(s"$msg $obj1, $obj2")
   def error(msg: String, objs: Array[? <: Object]): Unit           = error(s"$msg ${objs.mkString(", ")}")
-  def error(msg: String, throwable: Throwable): Unit               = error(s"$msg ${throwable.getMessage}")
+  def error(msg: String, throwable: Throwable): Unit               = error(throwableMessage(msg, throwable))
   def error(x$0: org.slf4j.Marker, msg: String): Unit              = error(msg)
   def error(x$0: org.slf4j.Marker, msg: String, obj: Object): Unit = error(s"$msg $obj")
   def error(x$0: org.slf4j.Marker, msg: String, obj1: Object, obj2: Object): Unit = error(s"$msg $obj1, $obj2")
   def error(x$0: org.slf4j.Marker, msg: String, objs: Array[? <: Object]): Unit = error(s"$msg ${objs.mkString(", ")}")
-  def error(x$0: org.slf4j.Marker, msg: String, throwable: Throwable): Unit     = error(s"$msg ${throwable.getMessage}")
+  def error(x$0: org.slf4j.Marker, msg: String, throwable: Throwable): Unit = error(throwableMessage(msg, throwable))
 
-  def info(msg: String, obj: Object): Unit                                       = info(s"$msg, $obj")
-  def info(msg: String, obj1: Object, obj2: Object): Unit                        = info(s"$msg, $obj1, $obj2")
-  def info(msg: String, objs: Array[? <: Object]): Unit                          = info(s"$msg ${objs.mkString(", ")}")
-  def info(msg: String, throwable: Throwable): Unit                              = info(s"$msg ${throwable.getMessage}")
-  def info(x$0: org.slf4j.Marker, msg: String): Unit                             = info(msg)
-  def info(x$0: org.slf4j.Marker, msg: String, obj: Object): Unit                = info(s"$msg, $obj")
+  def info(msg: String, obj: Object): Unit                        = info(s"$msg, $obj")
+  def info(msg: String, obj1: Object, obj2: Object): Unit         = info(s"$msg, $obj1, $obj2")
+  def info(msg: String, objs: Array[? <: Object]): Unit           = info(s"$msg ${objs.mkString(", ")}")
+  def info(msg: String, throwable: Throwable): Unit               = info(throwableMessage(msg, throwable))
+  def info(x$0: org.slf4j.Marker, msg: String): Unit              = info(msg)
+  def info(x$0: org.slf4j.Marker, msg: String, obj: Object): Unit = info(s"$msg, $obj")
   def info(x$0: org.slf4j.Marker, msg: String, obj1: Object, obj2: Object): Unit = info(s"$msg, $obj1, $obj2")
   def info(x$0: org.slf4j.Marker, msg: String, objs: Array[? <: Object]): Unit   = info(s"$msg ${objs.mkString(", ")}")
-  def info(x$0: org.slf4j.Marker, msg: String, throwable: Throwable): Unit       = info(s"$msg ${throwable.getMessage}")
+  def info(x$0: org.slf4j.Marker, msg: String, throwable: Throwable): Unit = info(throwableMessage(msg, throwable))
 
   def trace(msg: String, obj: Object): Unit                        = trace(s"$msg, $obj")
   def trace(msg: String, obj1: Object, obj2: Object): Unit         = trace(s"$msg, $obj1, $obj2")
   def trace(msg: String, objs: Array[? <: Object]): Unit           = trace(s"$msg ${objs.mkString(", ")}")
-  def trace(msg: String, throwable: Throwable): Unit               = trace(s"$msg ${throwable.getMessage}")
+  def trace(msg: String, throwable: Throwable): Unit               = trace(throwableMessage(msg, throwable))
   def trace(x$0: org.slf4j.Marker, msg: String): Unit              = trace(msg)
   def trace(x$0: org.slf4j.Marker, msg: String, obj: Object): Unit = trace(s"$msg, $obj")
   def trace(x$0: org.slf4j.Marker, msg: String, obj1: Object, obj2: Object): Unit = trace(s"$msg, $obj1, $obj2")
   def trace(x$0: org.slf4j.Marker, msg: String, objs: Array[? <: Object]): Unit = trace(s"$msg ${objs.mkString(", ")}")
-  def trace(x$0: org.slf4j.Marker, msg: String, throwable: Throwable): Unit     = trace(s"$msg ${throwable.getMessage}")
+  def trace(x$0: org.slf4j.Marker, msg: String, throwable: Throwable): Unit = trace(throwableMessage(msg, throwable))
 
-  def warn(msg: String, obj: Object): Unit                                       = warn(s"$msg, $obj")
-  def warn(msg: String, obj1: Object, obj2: Object): Unit                        = warn(s"$msg, $obj1, $obj2")
-  def warn(msg: String, objs: Array[? <: Object]): Unit                          = warn(s"$msg ${objs.mkString(", ")}")
-  def warn(msg: String, throwable: Throwable): Unit                              = warn(s"$msg ${throwable.getMessage}")
-  def warn(x$0: org.slf4j.Marker, msg: String): Unit                             = warn(msg)
-  def warn(x$0: org.slf4j.Marker, msg: String, obj: Object): Unit                = warn(s"$msg, $obj")
+  def warn(msg: String, obj: Object): Unit                        = warn(s"$msg, $obj")
+  def warn(msg: String, obj1: Object, obj2: Object): Unit         = warn(s"$msg, $obj1, $obj2")
+  def warn(msg: String, objs: Array[? <: Object]): Unit           = warn(s"$msg ${objs.mkString(", ")}")
+  def warn(msg: String, throwable: Throwable): Unit               = warn(throwableMessage(msg, throwable))
+  def warn(x$0: org.slf4j.Marker, msg: String): Unit              = warn(msg)
+  def warn(x$0: org.slf4j.Marker, msg: String, obj: Object): Unit = warn(s"$msg, $obj")
   def warn(x$0: org.slf4j.Marker, msg: String, obj1: Object, obj2: Object): Unit = warn(s"$msg, $obj1, $obj2")
   def warn(x$0: org.slf4j.Marker, msg: String, objs: Array[? <: Object]): Unit   = warn(s"$msg ${objs.mkString(", ")}")
-  def warn(x$0: org.slf4j.Marker, msg: String, throwable: Throwable): Unit       = warn(s"$msg ${throwable.getMessage}")
+  def warn(x$0: org.slf4j.Marker, msg: String, throwable: Throwable): Unit = warn(throwableMessage(msg, throwable))
 
   private def testLevel(logLevel: LogLevel): Boolean = true
 

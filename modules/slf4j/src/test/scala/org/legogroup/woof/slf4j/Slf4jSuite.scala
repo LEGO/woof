@@ -70,4 +70,23 @@ class Slf4jSuite extends munit.CatsEffectSuite:
     end for
   }
 
+  test("should not fail on null throwable") {
+    given Printer   = NoColorPrinter(testFormatTime)
+    given Filter    = Filter.everything
+    given Clock[IO] = leetClock
+
+    for
+      stringWriter <- newStringWriter
+      woofLogger   <- DefaultLogger.makeIo(stringWriter)
+      _            <- woofLogger.registerSlf4j
+      slf4jLogger  <- IO.delay(LoggerFactory.getLogger(this.getClass))
+      _            <- IO.delay(slf4jLogger.debug("null cause in exception", null))
+      result       <- stringWriter.get
+    yield assertEquals(
+      result,
+      "1987-05-31 13:37:00 [DEBUG] org.legogroup.woof.slf4j.Slf4jSuite: null cause in exception  (Slf4jSuite.scala:83)\n",
+    )
+    end for
+  }
+
 end Slf4jSuite
