@@ -72,7 +72,7 @@ lazy val docs =
 lazy val root =
   project
     .in(file("."))
-    .aggregate(core.jvm, core.js, http4s.jvm, http4s.js, slf4j)
+    .aggregate(core.jvm, core.js, http4s.jvm, http4s.js, slf4j, incubator.js, incubator.jvm)
     .settings(
       publish / skip := true,
     )
@@ -108,3 +108,13 @@ lazy val http4s = crossProject(JSPlatform, JVMPlatform)
 lazy val slf4j = woofProject(file("./modules/slf4j"))
   .settings(libraryDependencies += D.slf4jApi)
   .dependsOn(core.jvm % "compile->compile;test->test")
+
+val incubatorFolder = file("./modules/incubator")
+lazy val incubator = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
+  .in(incubatorFolder)
+  .settings(
+    name := nameForFile(incubatorFolder)
+  )
+  .settings(commonSettings)
+  .dependsOn(core % "compile->compile;test->test")

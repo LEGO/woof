@@ -17,20 +17,14 @@ import scala.jdk.CollectionConverters.*
 class LoggerSuite extends CatsEffectSuite:
 
   given Filter = Filter.everything
-
   def clockOf(ref: Ref[IO, FiniteDuration]): Clock[IO] = new Clock[IO]:
     def applicative = Applicative[IO]
     def monotonic   = ref.get
     def realTime    = ref.get
 
-  val constantClock: Clock[IO] = new Clock[IO]:
-    def applicative = Applicative[IO]
-    def monotonic   = startTime.pure
-    def realTime    = startTime.pure
-
   test("log should make log line") {
 
-    given Clock[IO] = constantClock
+    given Clock[IO] = leetClock
     given Printer   = NoColorPrinter(testFormatTime)
 
     val message  = "log message"
@@ -46,7 +40,7 @@ class LoggerSuite extends CatsEffectSuite:
 
   test("log should log in colors") {
 
-    given Clock[IO]   = constantClock
+    given Clock[IO]   = leetClock
     val theme         = Theme.defaultTheme
     given Printer     = ColorPrinter(theme = theme, formatTime = testFormatTime)
     val reset         = Theme.Style.Reset
@@ -88,7 +82,7 @@ class LoggerSuite extends CatsEffectSuite:
   }
 
   test("Should use local context") {
-    given Clock[IO] = constantClock
+    given Clock[IO] = leetClock
     given Printer   = NoColorPrinter(testFormatTime)
 
     val message = "log message"
