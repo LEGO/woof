@@ -29,7 +29,7 @@ class LoggerSuite extends CatsEffectSuite:
 
     val message  = "log message"
     val logInfo  = summon[LogInfo]
-    val expected = "1987-05-31 13:37:00 [WARN ] org.legogroup.woof.LoggerSuite: log message (LoggerSuite.scala:37)"
+    val expected = "1987-05-31 13:37:00 [WARN ] org.legogroup.woof.LoggerSuite: log message (LoggerSuite.scala:31)"
 
     for
       given StringLocal[IO] <- ioStringLocal
@@ -46,7 +46,7 @@ class LoggerSuite extends CatsEffectSuite:
     val reset         = Theme.Style.Reset
     val postfixFormat = theme.postfixFormat
     // format: off
-    val expected = s"""1987-05-31 13:37:00 ${theme.levelFormat(LogLevel.Warn)}[WARN ]$reset ${postfixFormat}org.legogroup.woof.LoggerSuite$reset: This is a warning $postfixFormat(LoggerSuite.scala:62)$reset
+    val expected = s"""1987-05-31 13:37:00 ${theme.levelFormat(LogLevel.Warn)}[WARN ]$reset ${postfixFormat}org.legogroup.woof.LoggerSuite$reset: This is a warning $postfixFormat(LoggerSuite.scala:56)$reset
 """
     // format: on
     for
@@ -75,7 +75,7 @@ class LoggerSuite extends CatsEffectSuite:
     yield assertEquals(
       logs.split("\n").toList,
       List(0, 200, 400, 600, 800)
-        .map(t => s"1987-05-31 13:37:00 [DEBUG] org.legogroup.woof.LoggerSuite: $t elapsed (LoggerSuite.scala:79)")
+        .map(t => s"1987-05-31 13:37:00 [DEBUG] org.legogroup.woof.LoggerSuite: $t elapsed (LoggerSuite.scala:73)")
     )
 
     executeWithStartTime(program)
@@ -91,8 +91,8 @@ class LoggerSuite extends CatsEffectSuite:
     def programLogic(using Logger[IO]) = Logger[IO].info("some info")
 
     // format: off
-    val expected = """1987-05-31 13:37:00 [INFO ] correlation-id=21c78595-ef21-4df0-987e-8af6aab6f346, locale=da-DK org.legogroup.woof.LoggerSuite: some info (LoggerSuite.scala:97)
-1987-05-31 13:37:00 [INFO ] org.legogroup.woof.LoggerSuite: some info (LoggerSuite.scala:97)
+    val expected = """1987-05-31 13:37:00 [INFO ] correlation-id=21c78595-ef21-4df0-987e-8af6aab6f346, locale=da-DK org.legogroup.woof.LoggerSuite: some info (LoggerSuite.scala:91)
+1987-05-31 13:37:00 [INFO ] org.legogroup.woof.LoggerSuite: some info (LoggerSuite.scala:91)
 """
     // format: on
     for
