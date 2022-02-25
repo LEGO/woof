@@ -10,7 +10,7 @@ import scala.concurrent.duration.*
 class ExtensionsSuite extends CatsEffectSuite:
 
   given Filter  = Filter.everything
-  given Printer = NoColorPrinter()
+  given Printer = NoColorPrinter(testFormatTime)
 
   test("log methods directly on F") {
 
@@ -23,7 +23,10 @@ class ExtensionsSuite extends CatsEffectSuite:
       given Logger[IO] <- DefaultLogger.makeIo(stringWriter)
       _                <- ioValue.infoShow
       logs             <- stringWriter.get
-    yield assertEquals(logs, "1987-05-31 13:37:00 [INFO ] org.legogroup.woof.incubator.extensions.ExtensionsSuite: foo (ExtensionsSuite.scala:24)\n")
+    yield assertEquals(
+      logs,
+      "1987-05-31 13:37:00 [INFO ] org.legogroup.woof.incubator.extensions.ExtensionsSuite: foo (ExtensionsSuite.scala:24)\n"
+    )
 
   }
 
@@ -36,7 +39,7 @@ class ExtensionsSuite extends CatsEffectSuite:
       "100.00%"
     ).zip(items)
       .map((p, n) =>
-        s"1987-05-31 13:37:00 [DEBUG] org.legogroup.woof.incubator.extensions.ExtensionsSuite: Item $n, $p (ExtensionsSuite.scala:47)"
+        s"1987-05-31 13:37:00 [DEBUG] org.legogroup.woof.incubator.extensions.ExtensionsSuite: Item $n, $p (ExtensionsSuite.scala:50)"
       )
       .mkString("", "\n", "\n")
 
@@ -76,7 +79,7 @@ class ExtensionsSuite extends CatsEffectSuite:
       ("33.33%", "09"),
       ("66.67%", "14")
     ).map((p, s) =>
-      s"1987-05-31 13:37:$s [DEBUG] org.legogroup.woof.incubator.extensions.ExtensionsSuite: Progress is now at: $p (ExtensionsSuite.scala:86)"
+      s"1987-05-31 13:37:$s [DEBUG] org.legogroup.woof.incubator.extensions.ExtensionsSuite: Progress is now at: $p (ExtensionsSuite.scala:89)"
     ).mkString("", "\n", "\n")
 
     given Sleep[IO] = IO.sleep
