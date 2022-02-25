@@ -65,17 +65,17 @@ class LoggerSuite extends CatsEffectSuite:
     end for
   }
 
+
   test("log concurrently") {
 
-    given Printer   = NoColorPrinter()
-    given Sleep[IO] = Temporal[IO].sleep
+    given Printer   = NoColorPrinter(testFormatTime)
+    given Sleep[IO] = IO.sleep
     val program = for
       ref         <- Ref[IO].of("")
       stringLocal <- Local.makeIoLocal[List[(String, String)]]
       given Logger[IO] = new DefaultLogger[IO](StringWriter(ref))(using stringLocal)
       _ <- Sleep[IO]
         .sleep(999.millis)
-        .iterateUntil(_ >= (startTime + 1.second))
         .logConcurrently(200.milliseconds)(d => s"${d.toMillis} elapsed")
       logs <- ref.get
     yield assertEquals(
