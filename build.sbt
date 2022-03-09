@@ -1,6 +1,6 @@
 val V = new {
   val cats            = "2.7.0"
-  val catsEffect      = "3.3.5"
+  val catsEffect      = "3.3.7"
   val http4s          = "0.23.10"
   val munit           = "0.7.29"
   val munitCatsEffect = "1.0.7"
@@ -11,11 +11,12 @@ val V = new {
 val D = new {
   val slf4jApi = "org.slf4j" % "slf4j-api" % V.slf4j
 
-  val catsCore        = Def.setting("org.typelevel" %%% "cats-core" % V.cats)
-  val catsEffect      = Def.setting("org.typelevel" %%% "cats-effect" % V.catsEffect)
-  val http4s          = Def.setting("org.http4s" %%% "http4s-core" % V.http4s)
-  val munit           = Def.setting("org.scalameta" %%% "munit" % V.munit)
-  val munitCatsEffect = Def.setting("org.typelevel" %%% "munit-cats-effect-3" % V.munitCatsEffect)
+  val catsCore          = Def.setting("org.typelevel" %%% "cats-core" % V.cats)
+  val catsEffect        = Def.setting("org.typelevel" %%% "cats-effect" % V.catsEffect)
+  val catsEffectTestKit = Def.setting("org.typelevel" %%% "cats-effect-testkit" % V.catsEffect)
+  val http4s            = Def.setting("org.http4s" %%% "http4s-core" % V.http4s)
+  val munit             = Def.setting("org.scalameta" %%% "munit" % V.munit)
+  val munitCatsEffect   = Def.setting("org.typelevel" %%% "munit-cats-effect-3" % V.munitCatsEffect)
 }
 
 /*
@@ -81,8 +82,9 @@ lazy val core = crossProject(JSPlatform, JVMPlatform)
     libraryDependencies ++= Seq(
       D.catsCore.value,
       D.catsEffect.value,
-      D.munit.value           % Test,
-      D.munitCatsEffect.value % Test,
+      D.munit.value             % Test,
+      D.munitCatsEffect.value   % Test,
+      D.catsEffectTestKit.value % Test,
     ),
   )
 

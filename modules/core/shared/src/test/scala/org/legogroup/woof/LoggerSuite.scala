@@ -13,18 +13,10 @@ import org.legogroup.woof.local.Local
 import java.time.ZoneId
 import scala.concurrent.duration.*
 import scala.jdk.CollectionConverters.*
+
 class LoggerSuite extends CatsEffectSuite:
 
   given Filter = Filter.everything
-
-  val startTime = 549459420.seconds
-
-  def testTime(start: FiniteDuration): IO[(Clock[IO], Sleep[IO], Ref[IO, FiniteDuration])] =
-    for finitedur <- Ref[IO].of(start)
-    yield (clockOf(finitedur), sleepOf(finitedur), finitedur)
-
-  def sleepOf(ref: Ref[IO, FiniteDuration]): Sleep[IO] = new Sleep[IO]:
-    def sleep(dur: FiniteDuration): IO[Unit] = ref.update(_ + dur)
 
   def clockOf(ref: Ref[IO, FiniteDuration]): Clock[IO] = new Clock[IO]:
     def applicative = Applicative[IO]
@@ -43,7 +35,7 @@ class LoggerSuite extends CatsEffectSuite:
 
     val message  = "log message"
     val logInfo  = summon[LogInfo]
-    val expected = "1987-05-31 13:37:00 [WARN ] org.legogroup.woof.LoggerSuite: log message (LoggerSuite.scala:45)"
+    val expected = "1987-05-31 13:37:00 [WARN ] org.legogroup.woof.LoggerSuite: log message (LoggerSuite.scala:37)"
 
     for
       given StringLocal[IO] <- ioStringLocal
@@ -60,7 +52,7 @@ class LoggerSuite extends CatsEffectSuite:
     val reset         = Theme.Style.Reset
     val postfixFormat = theme.postfixFormat
     // format: off
-    val expected = s"""1987-05-31 13:37:00 ${theme.levelFormat(LogLevel.Warn)}[WARN ]$reset ${postfixFormat}org.legogroup.woof.LoggerSuite$reset: This is a warning $postfixFormat(LoggerSuite.scala:70)$reset
+    val expected = s"""1987-05-31 13:37:00 ${theme.levelFormat(LogLevel.Warn)}[WARN ]$reset ${postfixFormat}org.legogroup.woof.LoggerSuite$reset: This is a warning $postfixFormat(LoggerSuite.scala:62)$reset
 """
     // format: on
     for
@@ -69,33 +61,30 @@ class LoggerSuite extends CatsEffectSuite:
       logger = new DefaultLogger[IO](StringWriter(strRef))(using stringLocal)
       _      <- logger.warn("This is a warning")
       output <- strRef.get
-    yield assertEquals(output.toList, expected.toList)
+    yield assertEquals(output, expected)
     end for
   }
 
+
   test("log concurrently") {
 
-    for
-      ref                      <- Ref[IO].of("")
-      (clock, sleep, clockRef) <- testTime(startTime)
-      stringLocal              <- Local.makeIoLocal[List[(String, String)]]
-      given Sleep[IO] = sleep
-      given Clock[IO] = clock
-      given Logger[IO] =
-        given Clock[IO] = clock
-        given Printer   = NoColorPrinter(testFormatTime)
-        new DefaultLogger[IO](StringWriter(ref))(using stringLocal)
-      _ <- clockRef.get
-        .iterateUntil(_ >= (startTime + 1.second))
+    given Printer   = NoColorPrinter(testFormatTime)
+    given Sleep[IO] = IO.sleep
+    val program = for
+      ref         <- Ref[IO].of("")
+      stringLocal <- Local.makeIoLocal[List[(String, String)]]
+      given Logger[IO] = new DefaultLogger[IO](StringWriter(ref))(using stringLocal)
+      _ <- Sleep[IO]
+        .sleep(999.millis)
         .logConcurrently(200.milliseconds)(d => s"${d.toMillis} elapsed")
       logs <- ref.get
-    yield
-      val times = logs
-      assert(times.count(_ == '\n') >= 5)
-      assertEquals(
-        times.split("\n")(2),
-        "1987-05-31 13:37:00 [DEBUG] org.legogroup.woof.LoggerSuite: 400 elapsed (LoggerSuite.scala:90)",
-      )
+    yield assertEquals(
+      logs.split("\n").toList,
+      List(0, 200, 400, 600, 800)
+        .map(t => s"1987-05-31 13:37:00 [DEBUG] org.legogroup.woof.LoggerSuite: $t elapsed (LoggerSuite.scala:79)")
+    )
+
+    executeWithStartTime(program)
   }
 
   test("Should use local context") {
@@ -108,8 +97,8 @@ class LoggerSuite extends CatsEffectSuite:
     def programLogic(using Logger[IO]) = Logger[IO].info("some info")
 
     // format: off
-    val expected = """1987-05-31 13:37:00 [INFO ] correlation-id=21c78595-ef21-4df0-987e-8af6aab6f346, locale=da-DK org.legogroup.woof.LoggerSuite: some info (LoggerSuite.scala:108)
-1987-05-31 13:37:00 [INFO ] org.legogroup.woof.LoggerSuite: some info (LoggerSuite.scala:108)
+    val expected = """1987-05-31 13:37:00 [INFO ] correlation-id=21c78595-ef21-4df0-987e-8af6aab6f346, locale=da-DK org.legogroup.woof.LoggerSuite: some info (LoggerSuite.scala:97)
+1987-05-31 13:37:00 [INFO ] org.legogroup.woof.LoggerSuite: some info (LoggerSuite.scala:97)
 """
     // format: on
     for
