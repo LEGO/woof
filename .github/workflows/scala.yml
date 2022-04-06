@@ -24,12 +24,3 @@ jobs:
         run: sbt test
       - name: Build docs
         run: sbt docs/mdoc
-  auto-approve:
-    runs-on: ubuntu-latest
-    needs:
-      - build
-    steps:
-      - uses: hmarr/auto-approve-action@v2
-        if: github.actor == 'scala-steward'
-        with:
-          github-token: "${{ secrets.SCALA_STEWARD_MERGE_TOKEN }}"
