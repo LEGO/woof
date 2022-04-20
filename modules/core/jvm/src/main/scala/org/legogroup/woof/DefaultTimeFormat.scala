@@ -8,3 +8,5 @@ val defaultTimeFormat: EpochMillis => String = e =>
     .ofPattern("YYYY-MM-dd HH:mm:ss")
     .withZone(ZoneId.systemDefault())
     .format(Instant.ofEpochMilli(e.millis))
+
+val isoTimeFormat: EpochMillis => String = e => Instant.ofEpochMilli(e.millis).toString
