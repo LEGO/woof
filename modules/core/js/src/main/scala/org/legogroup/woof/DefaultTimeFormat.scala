@@ -14,5 +14,4 @@ val defaultTimeFormat: EpochMillis => String = e =>
   val seconds = date.getSeconds().prepad(2)
   s"$yr-$month-$day $hour:$minutes:$seconds"
 
-val isoTimeFormat: EpochMillis => String = e => 
-  new Date(e.millis.toDouble).toISOString.split("\\.")(0)+"Z"
+val isoTimeFormat: EpochMillis => String = e => new Date(e.millis.toDouble).toISOString.split("\\.")(0) + "Z"
