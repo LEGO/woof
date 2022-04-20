@@ -27,7 +27,7 @@ class JsonSupportFunSuite extends munit.FunSuite:
       context
     )
 
-    val js     = JsonSupport()
+    val js     = JsonSupport
     val actual = js.toJsonString(logLine, epochMillis)
     val expected =
       """{"level":"Debug","epochMillis":549459420000,"timeStamp":"1987-05-31T11:37:00Z","enclosingClass":"my.enclosing.Class","message":"my message","context":{"hey":"dude","foo":"bar"}}"""
@@ -70,7 +70,7 @@ class JsonSupportSuite extends munit.ScalaCheckSuite:
   property("render arbitrary log lines") {
     forAll(JsonSupportSuite.logLineGen, JsonSupportSuite.epochMillisGen) { (logLine, epochMillis) =>
 
-      val encoded = JsonSupport().toJsonString(logLine, epochMillis)
+      val encoded = JsonSupport.toJsonString(logLine, epochMillis)
       val parsed  = io.circe.parser.parse(encoded)
 
       if parsed.isLeft then println(s"Failed rendering $encoded, $parsed")

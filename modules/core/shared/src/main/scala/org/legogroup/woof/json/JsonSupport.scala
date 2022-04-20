@@ -4,9 +4,8 @@ import org.legogroup.woof.{EpochMillis, LogLine}
 import org.legogroup.woof.json.JsonSupport.Json.JsonString
 import java.nio.charset.StandardCharsets
 
-class JsonSupport:
+object JsonSupport:
 
-  import JsonSupport.Json
   def toJson(logLine: LogLine, epochMillis: EpochMillis): Json =
     val context       = logLine.context.map((key, value) => key -> Json.fromString(value))
     val contextJson   = Json.fromMap(context)
@@ -25,10 +24,6 @@ class JsonSupport:
 
   def toJsonString(logLine: LogLine, epochMillis: EpochMillis): String =
     Json.toStringNoSpaces(toJson(logLine, epochMillis))
-
-end JsonSupport
-
-object JsonSupport:
 
   enum Json:
     case JsonObject(kvps: List[(JsonString, Json)])
@@ -58,6 +53,7 @@ object JsonSupport:
   end Json
 
   def toHex(nibble: Int): Char = (nibble + (if nibble >= 10 then 87 else 48)).toChar
+
   def escapedCharToHex(c: Char): String =
     new String(
       Array('u', toHex((c >> 12) & 15), toHex((c >> 8) & 15), toHex((c >> 4) & 15), toHex(c & 15)),
