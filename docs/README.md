@@ -174,3 +174,30 @@ the correlation ID is also returned in the header of the response.
 ```scala mdoc
 mainHttp4s.unsafeRunSync()
 ```
+
+## Structured Logging
+
+Structured logging is useful when your logs are collected and inspected by a monitoring system. Having a well structured log output can save you 
+hours of reg-ex'ing your way towards the root cause of a burning issue.
+
+`Woof` supports printing as `Json`:
+
+```scala mdoc:silent
+import Logger.*
+val contextAsJson: IO[Unit] = 
+  given Printer = JsonPrinter()
+  for
+    given Logger[IO]  <- DefaultLogger.makeIo(consoleOutput)
+    _                 <- program.withLogContext("foo", "42").withLogContext("bar", "1337")
+    _                 <- Logger[IO].info("Now the context is gone")
+  yield ()
+```
+
+And running with context yields:
+
+```scala mdoc
+contextAsJson.unsafeRunSync()
+```
+
+
+> We are considering if we should support matching different printers with different outputs: Maybe you want human readable logs for standard out and structured logging for your monitoring tools. However, this will be a breaking change.
