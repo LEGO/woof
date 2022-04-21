@@ -9,4 +9,7 @@ val defaultTimeFormat: EpochMillis => String = e =>
     .withZone(ZoneId.systemDefault())
     .format(Instant.ofEpochMilli(e.millis))
 
-val isoTimeFormat: EpochMillis => String = e => Instant.ofEpochMilli(e.millis).toString
+val isoTimeFormat: EpochMillis => String = e => 
+  val split = Instant.ofEpochMilli(e.millis).toString.split("\\.") 
+  if split.length == 1 then split(0) else split(0) + "Z"
+
