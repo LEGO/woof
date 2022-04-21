@@ -32,8 +32,6 @@ object JsonSupport:
     case JsonBool(bool: Boolean)
 
   private[json] object Json:
-    def combineObjects(a: Json.JsonObject, b: Json.JsonObject): Json =
-      Json.JsonObject(a.kvps ++ b.kvps)
 
     def fromLong(l: Long): Json.JsonNumber     = Json.JsonNumber(l)
     def fromString(s: String): Json.JsonString = JsonString(s)
