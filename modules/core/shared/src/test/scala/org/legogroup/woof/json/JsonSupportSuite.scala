@@ -1,7 +1,7 @@
 package org.legogroup.woof.json
 
 import org.scalacheck.{Arbitrary, Gen}
-import _root_.org.legogroup.woof.json.JsonSupport
+import org.legogroup.woof.json.JsonSupport
 import munit.CatsEffectSuite
 import org.legogroup.woof.*
 import org.legogroup.woof.json.JsonSupportSuite.epochMillisGen
