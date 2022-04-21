@@ -35,32 +35,6 @@ class JsonSupportFunSuite extends munit.FunSuite:
     assertEquals(actual, expected)
   }
 
-  test("escape ") {
-    import JsonSupport.Json
-    val r             = JsonSupport.escape("")
-    val circeRendered = io.circe.Json.fromString("").noSpaces
-    val expected      = Json.toStringNoSpaces(Json.fromString(""))
-    assertEquals(expected, circeRendered)
-  }
-  test("escape symbols") {
-
-    val symbols = List("\u0000", "\ue676", "\u000e")
-
-    import JsonSupport.Json
-
-    for s <- symbols
-    do
-      val circeRendered = io.circe.Json.fromString(s).noSpaces
-      val json = Json.fromString(s)
-      val rendered      = Json.toStringNoSpaces(json)
-      assertEquals(rendered, circeRendered)
-
-  }
-
-  test("circve null"){
-    assert(io.circe.parser.parse("\"\\u0000\"").isRight)
-  }
-
 end JsonSupportFunSuite
 
 class JsonSupportSuite extends munit.ScalaCheckSuite:
