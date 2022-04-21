@@ -50,6 +50,9 @@ object JsonSupport:
 
   end Json
 
+  /**
+   * Credit to Circe for this https://github.com/circe/circe/blob/3c4580219c4bbbb8ba6245fb7e4bce548bd07121/modules/core/shared/src/main/scala/io/circe/Printer.scala#L295
+   */
   private[json] def toHex(nibble: Int): Char = (nibble + (if nibble >= 10 then 87 else 48)).toChar
 
   private[json] def escapedCharToHex(c: Char): String =
