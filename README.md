@@ -61,10 +61,10 @@ and running it yields:
 ```scala
 import cats.effect.unsafe.implicits.global
 main.unsafeRunSync()
-// 2021-12-23 11:00:00 [DEBUG] repl.MdocSession$.App: This is some debug (.:27)
-// 2021-12-23 11:00:00 [INFO ] repl.MdocSession$.App: HEY! (.:28)
-// 2021-12-23 11:00:00 [WARN ] repl.MdocSession$.App: I'm warning you (.:29)
-// 2021-12-23 11:00:00 [ERROR] repl.MdocSession$.App: I give up (.:30)
+// 2022-04-21 08:47:11 [DEBUG] repl.MdocSession$.App: This is some debug (.:27)
+// 2022-04-21 08:47:11 [INFO ] repl.MdocSession$.App: HEY! (.:28)
+// 2022-04-21 08:47:11 [WARN ] repl.MdocSession$.App: I'm warning you (.:29)
+// 2022-04-21 08:47:11 [ERROR] repl.MdocSession$.App: I give up (.:30)
 ```
 
 
@@ -84,11 +84,11 @@ And running with context yields:
 
 ```scala
 mainWithContext.unsafeRunSync()
-// 2021-12-23 11:00:00 [DEBUG] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: This is some debug (.:27)
-// 2021-12-23 11:00:00 [INFO ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: HEY! (.:28)
-// 2021-12-23 11:00:00 [WARN ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I'm warning you (.:29)
-// 2021-12-23 11:00:00 [ERROR] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I give up (.:30)
-// 2021-12-23 11:00:00 [INFO ] repl.MdocSession$.App: Now the context is gone (.:61)
+// 2022-04-21 08:47:11 [DEBUG] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: This is some debug (.:27)
+// 2022-04-21 08:47:11 [INFO ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: HEY! (.:28)
+// 2022-04-21 08:47:11 [WARN ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I'm warning you (.:29)
+// 2022-04-21 08:47:11 [ERROR] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I give up (.:30)
+// 2022-04-21 08:47:11 [INFO ] repl.MdocSession$.App: Now the context is gone (.:61)
 ```
 
 # Can I use SLF4J?
@@ -132,8 +132,8 @@ and running it:
 
 ```scala
 mainSlf4j.unsafeRunSync()
-// 2021-12-23 11:00:00 [INFO ] repl.MdocSession$App: Hello from SLF4j! (MdocSession$App.scala:81)
-// 2021-12-23 11:00:00 [WARN ] repl.MdocSession$App: This is not the pure woof. (MdocSession$App.scala:82)
+// 2022-04-21 08:47:11 [INFO ] repl.MdocSession$App: Hello from SLF4j! (MdocSession$App.scala:81)
+// 2022-04-21 08:47:11 [WARN ] repl.MdocSession$App: This is not the pure woof. (MdocSession$App.scala:82)
 ```
 ## Limitations of SLF4J bindings
 
@@ -184,6 +184,38 @@ the correlation ID is also returned in the header of the response.
 
 ```scala
 mainHttp4s.unsafeRunSync()
-// 2021-12-23 11:00:00 [INFO ] X-Trace-Id=13af5dfc-72df-48e2-aae2-aff1563d09e6 repl.MdocSession$.App: I got a request with trace id! :D (.:121)
-// 2021-12-23 11:00:00 [INFO ] repl.MdocSession$.App: Got response headers: Headers(X-Trace-Id: 13af5dfc-72df-48e2-aae2-aff1563d09e6) (.:142)
+// 2022-04-21 08:47:12 [INFO ] X-Trace-Id=f9780ca5-2e41-445e-96c7-335822d2143b repl.MdocSession$.App: I got a request with trace id! :D (.:121)
+// 2022-04-21 08:47:12 [INFO ] repl.MdocSession$.App: Got response headers: Headers(X-Trace-Id: f9780ca5-2e41-445e-96c7-335822d2143b) (.:142)
 ```
+
+## Structured Logging
+
+Structured logging is useful when your logs are collected and inspected by a monitoring system. Having a well structured log output can save you 
+hours of reg-ex'ing your way towards the root cause of a burning issue.
+
+`Woof` supports printing as `Json`:
+
+```scala
+import Logger.*
+val contextAsJson: IO[Unit] = 
+  given Printer = JsonPrinter()
+  for
+    given Logger[IO]  <- DefaultLogger.makeIo(consoleOutput)
+    _                 <- program.withLogContext("foo", "42").withLogContext("bar", "1337")
+    _                 <- Logger[IO].info("Now the context is gone")
+  yield ()
+```
+
+And running with context yields:
+
+```scala
+contextAsJson.unsafeRunSync()
+// {"level":"Debug","epochMillis":1650523632092,"timeStamp":"2022-04-21T06:47:12Z","enclosingClass":"repl.MdocSession$.App","message":"This is some debug","context":{"bar":"1337","foo":"42"}}
+// {"level":"Info","epochMillis":1650523632096,"timeStamp":"2022-04-21T06:47:12Z","enclosingClass":"repl.MdocSession$.App","message":"HEY!","context":{"bar":"1337","foo":"42"}}
+// {"level":"Warn","epochMillis":1650523632096,"timeStamp":"2022-04-21T06:47:12Z","enclosingClass":"repl.MdocSession$.App","message":"I'm warning you","context":{"bar":"1337","foo":"42"}}
+// {"level":"Error","epochMillis":1650523632096,"timeStamp":"2022-04-21T06:47:12Z","enclosingClass":"repl.MdocSession$.App","message":"I give up","context":{"bar":"1337","foo":"42"}}
+// {"level":"Info","epochMillis":1650523632097,"timeStamp":"2022-04-21T06:47:12Z","enclosingClass":"repl.MdocSession$.App","message":"Now the context is gone","context":{}}
+```
+
+
+> We are considering if we should support matching different printers with different outputs: Maybe you want human readable logs for standard out and structured logging for your monitoring tools. However, this will be a breaking change.

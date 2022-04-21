@@ -10,6 +10,8 @@ import java.time.format.DateTimeFormatter
 import java.time.{Instant, ZoneId}
 import java.util.TimeZone
 import scala.concurrent.duration.*
+import cats.effect.testkit.TestControl
+import cats.effect.kernel.Outcome
 
 class StringWriter(val ref: Ref[IO, String]) extends Output[IO]:
   def output(str: String): IO[Unit]      = ref.update(log => s"$log$str\n")
@@ -25,3 +27,17 @@ val leetClock: Clock[IO] = new Clock[IO]:
   def applicative = Applicative[IO]
   def monotonic   = startTime.pure
   def realTime    = startTime.pure
+
+def executeWithStartTime[T](f: IO[T]): IO[Unit] =
+  TestControl
+    .execute(f)
+    .flatMap(control =>
+      for
+        _       <- control.advance(startTime)
+        _       <- control.tickAll
+        results <- control.results
+        _ <- results match
+          case Some(Outcome.Errored(e)) => IO.raiseError(e)
+          case x                        => IO.unit
+      yield ()
+    )
