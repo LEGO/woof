@@ -6,7 +6,7 @@ import java.nio.charset.StandardCharsets
 
 object JsonSupport:
 
-  def toJson(logLine: LogLine, epochMillis: EpochMillis): Json =
+  private[json] def toJson(logLine: LogLine, epochMillis: EpochMillis): Json =
     val context       = logLine.context.map((key, value) => key -> Json.fromString(value))
     val contextJson   = Json.fromMap(context)
     val formattedTime = org.legogroup.woof.isoTimeFormat(epochMillis)
@@ -25,13 +25,13 @@ object JsonSupport:
   def toJsonString(logLine: LogLine, epochMillis: EpochMillis): String =
     Json.toStringNoSpaces(toJson(logLine, epochMillis))
 
-  enum Json:
+  private[json] enum Json:
     case JsonObject(kvps: List[(JsonString, Json)])
     case JsonString(str: String)
     case JsonNumber(long: Long)
     case JsonBool(bool: Boolean)
 
-  object Json:
+  private[json] object Json:
     def combineObjects(a: Json.JsonObject, b: Json.JsonObject): Json =
       Json.JsonObject(a.kvps ++ b.kvps)
 
@@ -52,14 +52,14 @@ object JsonSupport:
 
   end Json
 
-  def toHex(nibble: Int): Char = (nibble + (if nibble >= 10 then 87 else 48)).toChar
+  private[json] def toHex(nibble: Int): Char = (nibble + (if nibble >= 10 then 87 else 48)).toChar
 
-  def escapedCharToHex(c: Char): String =
+  private[json] def escapedCharToHex(c: Char): String =
     new String(
       Array('u', toHex((c >> 12) & 15), toHex((c >> 8) & 15), toHex((c >> 4) & 15), toHex(c & 15)),
     )
 
-  def escapedChar(ch: Char): String = ch match
+  private[json] def escapedChar(ch: Char): String = ch match
     case '\b' => "\\b"
     case '\t' => "\\t"
     case '\n' => "\\n"
@@ -71,6 +71,6 @@ object JsonSupport:
       if ch.isControl then "\\" + escapedCharToHex(ch)
       else String.valueOf(ch)
 
-  def escape(str: String): String = str.flatMap(escapedChar)
+  private[json] def escape(str: String): String = str.flatMap(escapedChar)
 
 end JsonSupport
