@@ -61,10 +61,10 @@ and running it yields:
 ```scala
 import cats.effect.unsafe.implicits.global
 main.unsafeRunSync()
-// 2022-04-20 15:03:27 [DEBUG] repl.MdocSession$.App: This is some debug (.:27)
-// 2022-04-20 15:03:27 [INFO ] repl.MdocSession$.App: HEY! (.:28)
-// 2022-04-20 15:03:27 [WARN ] repl.MdocSession$.App: I'm warning you (.:29)
-// 2022-04-20 15:03:27 [ERROR] repl.MdocSession$.App: I give up (.:30)
+// 2022-04-21 08:47:11 [DEBUG] repl.MdocSession$.App: This is some debug (.:27)
+// 2022-04-21 08:47:11 [INFO ] repl.MdocSession$.App: HEY! (.:28)
+// 2022-04-21 08:47:11 [WARN ] repl.MdocSession$.App: I'm warning you (.:29)
+// 2022-04-21 08:47:11 [ERROR] repl.MdocSession$.App: I give up (.:30)
 ```
 
 
@@ -84,11 +84,11 @@ And running with context yields:
 
 ```scala
 mainWithContext.unsafeRunSync()
-// 2022-04-20 15:03:27 [DEBUG] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: This is some debug (.:27)
-// 2022-04-20 15:03:27 [INFO ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: HEY! (.:28)
-// 2022-04-20 15:03:27 [WARN ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I'm warning you (.:29)
-// 2022-04-20 15:03:27 [ERROR] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I give up (.:30)
-// 2022-04-20 15:03:27 [INFO ] repl.MdocSession$.App: Now the context is gone (.:61)
+// 2022-04-21 08:47:11 [DEBUG] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: This is some debug (.:27)
+// 2022-04-21 08:47:11 [INFO ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: HEY! (.:28)
+// 2022-04-21 08:47:11 [WARN ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I'm warning you (.:29)
+// 2022-04-21 08:47:11 [ERROR] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I give up (.:30)
+// 2022-04-21 08:47:11 [INFO ] repl.MdocSession$.App: Now the context is gone (.:61)
 ```
 
 # Can I use SLF4J?
@@ -132,8 +132,8 @@ and running it:
 
 ```scala
 mainSlf4j.unsafeRunSync()
-// 2022-04-20 15:03:27 [INFO ] repl.MdocSession$App: Hello from SLF4j! (MdocSession$App.scala:81)
-// 2022-04-20 15:03:27 [WARN ] repl.MdocSession$App: This is not the pure woof. (MdocSession$App.scala:82)
+// 2022-04-21 08:47:11 [INFO ] repl.MdocSession$App: Hello from SLF4j! (MdocSession$App.scala:81)
+// 2022-04-21 08:47:11 [WARN ] repl.MdocSession$App: This is not the pure woof. (MdocSession$App.scala:82)
 ```
 ## Limitations of SLF4J bindings
 
@@ -184,8 +184,8 @@ the correlation ID is also returned in the header of the response.
 
 ```scala
 mainHttp4s.unsafeRunSync()
-// 2022-04-20 15:03:27 [INFO ] X-Trace-Id=c49967b5-b725-461f-92f0-20275257ab06 repl.MdocSession$.App: I got a request with trace id! :D (.:121)
-// 2022-04-20 15:03:27 [INFO ] repl.MdocSession$.App: Got response headers: Headers(X-Trace-Id: c49967b5-b725-461f-92f0-20275257ab06) (.:142)
+// 2022-04-21 08:47:12 [INFO ] X-Trace-Id=f9780ca5-2e41-445e-96c7-335822d2143b repl.MdocSession$.App: I got a request with trace id! :D (.:121)
+// 2022-04-21 08:47:12 [INFO ] repl.MdocSession$.App: Got response headers: Headers(X-Trace-Id: f9780ca5-2e41-445e-96c7-335822d2143b) (.:142)
 ```
 
 ## Structured Logging
@@ -210,11 +210,11 @@ And running with context yields:
 
 ```scala
 contextAsJson.unsafeRunSync()
-// {"level":"Debug","epochMillis":1650459807538,"timeStamp":"2022-04-20T13:03:27.538Z","enclosingClass":"repl.MdocSession$.App","message":"This is some debug","context":{"bar":"1337","foo":"42"}}
-// {"level":"Info","epochMillis":1650459807540,"timeStamp":"2022-04-20T13:03:27.540Z","enclosingClass":"repl.MdocSession$.App","message":"HEY!","context":{"bar":"1337","foo":"42"}}
-// {"level":"Warn","epochMillis":1650459807540,"timeStamp":"2022-04-20T13:03:27.540Z","enclosingClass":"repl.MdocSession$.App","message":"I'm warning you","context":{"bar":"1337","foo":"42"}}
-// {"level":"Error","epochMillis":1650459807541,"timeStamp":"2022-04-20T13:03:27.541Z","enclosingClass":"repl.MdocSession$.App","message":"I give up","context":{"bar":"1337","foo":"42"}}
-// {"level":"Info","epochMillis":1650459807541,"timeStamp":"2022-04-20T13:03:27.541Z","enclosingClass":"repl.MdocSession$.App","message":"Now the context is gone","context":{}}
+// {"level":"Debug","epochMillis":1650523632092,"timeStamp":"2022-04-21T06:47:12Z","enclosingClass":"repl.MdocSession$.App","message":"This is some debug","context":{"bar":"1337","foo":"42"}}
+// {"level":"Info","epochMillis":1650523632096,"timeStamp":"2022-04-21T06:47:12Z","enclosingClass":"repl.MdocSession$.App","message":"HEY!","context":{"bar":"1337","foo":"42"}}
+// {"level":"Warn","epochMillis":1650523632096,"timeStamp":"2022-04-21T06:47:12Z","enclosingClass":"repl.MdocSession$.App","message":"I'm warning you","context":{"bar":"1337","foo":"42"}}
+// {"level":"Error","epochMillis":1650523632096,"timeStamp":"2022-04-21T06:47:12Z","enclosingClass":"repl.MdocSession$.App","message":"I give up","context":{"bar":"1337","foo":"42"}}
+// {"level":"Info","epochMillis":1650523632097,"timeStamp":"2022-04-21T06:47:12Z","enclosingClass":"repl.MdocSession$.App","message":"Now the context is gone","context":{}}
 ```
 
 
