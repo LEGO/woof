@@ -16,6 +16,7 @@ object JsonSupport:
         "epochMillis"    -> Json.fromLong(epochMillis.millis),
         "timeStamp"      -> Json.fromString(formattedTime),
         "enclosingClass" -> Json.fromString(logLine.info.enclosingClass.fullName),
+        "lineNumber"     -> Json.fromLong(logLine.info.lineNumber),
         "message"        -> Json.fromString(logLine.message),
         "context"        -> contextJson
       )

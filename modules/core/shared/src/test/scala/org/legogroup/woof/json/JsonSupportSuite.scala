@@ -30,7 +30,7 @@ class JsonSupportFunSuite extends munit.FunSuite:
     val js     = JsonSupport
     val actual = js.toJsonString(logLine, epochMillis)
     val expected =
-      """{"level":"Debug","epochMillis":549459420000,"timeStamp":"1987-05-31T11:37:00Z","enclosingClass":"my.enclosing.Class","message":"my message","context":{"hey":"dude","foo":"bar"}}"""
+      """{"level":"Debug","epochMillis":549459420000,"timeStamp":"1987-05-31T11:37:00Z","enclosingClass":"my.enclosing.Class","lineNumber":1337,"message":"my message","context":{"hey":"dude","foo":"bar"}}"""
 
     assertEquals(actual, expected)
   }
