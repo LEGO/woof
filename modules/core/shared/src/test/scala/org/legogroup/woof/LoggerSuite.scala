@@ -65,7 +65,6 @@ class LoggerSuite extends CatsEffectSuite:
     end for
   }
 
-
   test("log concurrently") {
 
     given Printer   = NoColorPrinter(testFormatTime)
@@ -81,7 +80,7 @@ class LoggerSuite extends CatsEffectSuite:
     yield assertEquals(
       logs.split("\n").toList,
       List(0, 200, 400, 600, 800)
-        .map(t => s"1987-05-31 13:37:00 [DEBUG] org.legogroup.woof.LoggerSuite: $t elapsed (LoggerSuite.scala:79)")
+        .map(t => s"1987-05-31 13:37:00 [DEBUG] org.legogroup.woof.LoggerSuite: $t elapsed (LoggerSuite.scala:78)")
     )
 
     executeWithStartTime(program)
@@ -97,8 +96,8 @@ class LoggerSuite extends CatsEffectSuite:
     def programLogic(using Logger[IO]) = Logger[IO].info("some info")
 
     // format: off
-    val expected = """1987-05-31 13:37:00 [INFO ] correlation-id=21c78595-ef21-4df0-987e-8af6aab6f346, locale=da-DK org.legogroup.woof.LoggerSuite: some info (LoggerSuite.scala:97)
-1987-05-31 13:37:00 [INFO ] org.legogroup.woof.LoggerSuite: some info (LoggerSuite.scala:97)
+    val expected = """1987-05-31 13:37:00 [INFO ] correlation-id=21c78595-ef21-4df0-987e-8af6aab6f346, locale=da-DK org.legogroup.woof.LoggerSuite: some info (LoggerSuite.scala:96)
+1987-05-31 13:37:00 [INFO ] org.legogroup.woof.LoggerSuite: some info (LoggerSuite.scala:96)
 """
     // format: on
     for
