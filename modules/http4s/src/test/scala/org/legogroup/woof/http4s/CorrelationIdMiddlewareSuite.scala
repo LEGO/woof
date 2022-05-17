@@ -6,7 +6,7 @@ import cats.syntax.all.*
 import cats.{Applicative, Monad}
 import munit.CatsEffectSuite
 import org.http4s.{HttpRoutes, Request, Response}
-import org.legogroup.woof.{given, *}
+import org.legogroup.woof.{*, given}
 import org.legogroup.woof.http4s.CorrelationIdMiddleware.UUIDGen
 import org.typelevel.ci.CIString
 

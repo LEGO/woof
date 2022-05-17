@@ -65,7 +65,6 @@ class LoggerSuite extends CatsEffectSuite:
     end for
   }
 
-
   test("log concurrently") {
 
     given Printer   = NoColorPrinter(testFormatTime)

@@ -57,7 +57,8 @@ class JsonSupportSuite extends munit.ScalaCheckSuite:
       val escaped  = "\"" + JsonSupport.escape(s) + "\""
       val parsed   = io.circe.parser.parse(escaped)
       val expected = Right(io.circe.Json.fromString(s))
-      if parsed != expected then println(s"Parsed: $parsed, expected: $expected, string: $escaped, original: $s ( ${s.toList.map(_.toInt)} )")
+      if parsed != expected then
+        println(s"Parsed: $parsed, expected: $expected, string: $escaped, original: $s ( ${s.toList.map(_.toInt)} )")
 
       parsed == expected
     }
