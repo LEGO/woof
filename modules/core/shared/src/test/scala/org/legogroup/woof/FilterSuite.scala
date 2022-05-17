@@ -77,7 +77,8 @@ class FilterSuite extends CatsEffectSuite:
   test("log levels have priorities") {
     import LogLevel.*
     import cats.Order.catsKernelOrderingForOrder
-    assertEquals(LogLevel.values.toList.sorted, List(Trace, Debug, Info, Warn, Error))
+    val ordinalValues: List[(LogLevel, Int)] = LogLevel.values.sorted.toList.fproduct(_.ordinal)
+    assertEquals(ordinalValues, List(Trace -> 0, Debug -> 1, Info -> 2, Warn -> 3, Error -> 4))
   }
 
 end FilterSuite
