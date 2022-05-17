@@ -45,10 +45,9 @@ extension [A](as: List[A])
     val n = as.length
     as.zipWithIndex.traverse((a, i) => g(a) <* Logger[G].debug(msg(a, (i + 1).toDouble / n.toDouble * 100d)))
 
-  inline def parTraverseLog[B, G[_]: Parallel: Concurrent: Logger: Applicative](parallelism: Int)(
-      g: A => G[B],
-      msg: (A, Double) => String,
-  ): G[List[B]] =
+  inline def parTraverseLog[B, G[_]: Parallel: Concurrent: Logger: Applicative](
+      parallelism: Int
+  )(g: A => G[B], msg: (A, Double) => String): G[List[B]] =
     val n = as.length
     for
       ref <- Ref[G].of(0)
@@ -69,7 +68,7 @@ extension [A](as: List[A])
   )(
       g: A => G[B],
       msg: Double => String,
-  ) =
+  ): G[List[B]] =
     val n = as.length
     for
       ref <- Ref[G].of(0)
@@ -85,7 +84,7 @@ extension [A](as: List[A])
           yield result
         )
         .start
-      rj <- result.join
+      rj <- result.joinWithNever
       _  <- logfiber.cancel
     yield rj
     end for

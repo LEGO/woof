@@ -49,7 +49,7 @@ class ExtensionsSuite extends CatsEffectSuite:
       given Logger[IO] <- DefaultLogger.makeIo(stringWriter)
       _                <- items.traverseLog(_.pure[IO], (item, percentage) => f"Item $item, $percentage%.2f%%")
       logs             <- stringWriter.get
-    yield assertEquals(logs, expected)
+    yield assertEquals(logs, expected),
 
   }
 
@@ -65,7 +65,7 @@ class ExtensionsSuite extends CatsEffectSuite:
     val program = for
       stringWriter     <- newStringWriter
       given Logger[IO] <- DefaultLogger.makeIo(stringWriter)
-      _                <- items.parTraverseLog(2)(_.pure[IO], (item, percentage) => f"Item $item, $percentage%.2f%%")
+      result           <- items.parTraverseLog(2)(IO.pure, (item, percentage) => f"Item $item, $percentage%.2f%%")
       logs             <- stringWriter.get
     yield expected.foreach(p => assert(logs.contains(p), s"should contain $p"))
 
