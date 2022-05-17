@@ -17,25 +17,19 @@ import scala.jdk.CollectionConverters.*
 class LoggerSuite extends CatsEffectSuite:
 
   given Filter = Filter.everything
-
   def clockOf(ref: Ref[IO, FiniteDuration]): Clock[IO] = new Clock[IO]:
     def applicative = Applicative[IO]
     def monotonic   = ref.get
     def realTime    = ref.get
 
-  val constantClock: Clock[IO] = new Clock[IO]:
-    def applicative = Applicative[IO]
-    def monotonic   = startTime.pure
-    def realTime    = startTime.pure
-
   test("log should make log line") {
 
-    given Clock[IO] = constantClock
+    given Clock[IO] = leetClock
     given Printer   = NoColorPrinter(testFormatTime)
 
     val message  = "log message"
     val logInfo  = summon[LogInfo]
-    val expected = "1987-05-31 13:37:00 [WARN ] org.legogroup.woof.LoggerSuite: log message (LoggerSuite.scala:37)"
+    val expected = "1987-05-31 13:37:00 [WARN ] org.legogroup.woof.LoggerSuite: log message (LoggerSuite.scala:31)"
 
     for
       given StringLocal[IO] <- ioStringLocal
@@ -46,13 +40,13 @@ class LoggerSuite extends CatsEffectSuite:
 
   test("log should log in colors") {
 
-    given Clock[IO]   = constantClock
+    given Clock[IO]   = leetClock
     val theme         = Theme.defaultTheme
     given Printer     = ColorPrinter(theme = theme, formatTime = testFormatTime)
     val reset         = Theme.Style.Reset
     val postfixFormat = theme.postfixFormat
     // format: off
-    val expected = s"""1987-05-31 13:37:00 ${theme.levelFormat(LogLevel.Warn)}[WARN ]$reset ${postfixFormat}org.legogroup.woof.LoggerSuite$reset: This is a warning $postfixFormat(LoggerSuite.scala:62)$reset
+    val expected = s"""1987-05-31 13:37:00 ${theme.levelFormat(LogLevel.Warn)}[WARN ]$reset ${postfixFormat}org.legogroup.woof.LoggerSuite$reset: This is a warning $postfixFormat(LoggerSuite.scala:56)$reset
 """
     // format: on
     for
@@ -81,14 +75,14 @@ class LoggerSuite extends CatsEffectSuite:
     yield assertEquals(
       logs.split("\n").toList,
       List(0, 200, 400, 600, 800)
-        .map(t => s"1987-05-31 13:37:00 [DEBUG] org.legogroup.woof.LoggerSuite: $t elapsed (LoggerSuite.scala:79)")
+        .map(t => s"1987-05-31 13:37:00 [DEBUG] org.legogroup.woof.LoggerSuite: $t elapsed (LoggerSuite.scala:73)")
     )
 
     executeWithStartTime(program)
   }
 
   test("Should use local context") {
-    given Clock[IO] = constantClock
+    given Clock[IO] = leetClock
     given Printer   = NoColorPrinter(testFormatTime)
 
     val message = "log message"
@@ -97,8 +91,8 @@ class LoggerSuite extends CatsEffectSuite:
     def programLogic(using Logger[IO]) = Logger[IO].info("some info")
 
     // format: off
-    val expected = """1987-05-31 13:37:00 [INFO ] correlation-id=21c78595-ef21-4df0-987e-8af6aab6f346, locale=da-DK org.legogroup.woof.LoggerSuite: some info (LoggerSuite.scala:97)
-1987-05-31 13:37:00 [INFO ] org.legogroup.woof.LoggerSuite: some info (LoggerSuite.scala:97)
+    val expected = """1987-05-31 13:37:00 [INFO ] correlation-id=21c78595-ef21-4df0-987e-8af6aab6f346, locale=da-DK org.legogroup.woof.LoggerSuite: some info (LoggerSuite.scala:91)
+1987-05-31 13:37:00 [INFO ] org.legogroup.woof.LoggerSuite: some info (LoggerSuite.scala:91)
 """
     // format: on
     for
