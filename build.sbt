@@ -108,3 +108,9 @@ lazy val http4s = crossProject(JSPlatform, JVMPlatform)
 lazy val slf4j = woofProject(file("./modules/slf4j"))
   .settings(libraryDependencies += D.slf4jApi)
   .dependsOn(core.jvm % "compile->compile;test->test")
+
+lazy val examples = project
+  .in(file("./modules/examples"))
+  .settings(commonSettings)
+  .settings(publish / skip := true)
+  .dependsOn(core.jvm)
