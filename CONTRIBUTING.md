@@ -4,9 +4,7 @@
 
 :+1::tada: First off, thanks for taking the time to contribute! :tada::+1:
 
-The following is a set of guidelines for contributing to our CCT engineering community. These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a pull request.
-
-Unsure where to start? Have a look at [open issues](https://github.com/LEGO/cct-matters/issues) or the [Discussions](https://github.com/LEGO/cct-matters/discussions) tab.
+The following is a set of guides for contributing and feel free to propose changes to this document in a pull request.
 
 Happy to have you onboard :+1:
 
