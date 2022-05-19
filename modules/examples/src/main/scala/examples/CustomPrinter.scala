@@ -19,7 +19,7 @@ object CustomPrinter extends IOApp.Simple:
     for
       given Logger[IO] <- DefaultLogger.makeIo(Output.fromConsole)
       _                <- Logger[IO].info("Hello, custom printer!")
-      _                <- Logger[IO].info("Hello again, custom printer!")
-      _                <- Logger[IO].info("Goodbye, custom printer!")
+      _                <- Logger[IO].warn("Hello again, custom printer!")
+      _                <- Logger[IO].debug("Goodbye, custom printer!")
     yield ()
 end CustomPrinter
