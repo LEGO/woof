@@ -28,7 +28,24 @@ libraryDependencies ++= Seq(
 )
 ```
 
-## Example
+You can see a bunch of self-contained examples in the [examples](modules/examples) sub-project. To run them, open `sbt` and run the command `examples/run`:
+
+```
+sbt:root> examples/run
+
+Multiple main classes detected. Select one to run:
+ [1] examples.AtLeastLevel
+ [2] examples.CustomPrinter
+ [3] examples.CustomTheme
+ [4] examples.HelloWorld
+ [5] examples.TaglessFinal
+
+Enter number:
+```
+
+it will ask you for a number corresponding to the example you wish to run. For a self-contained `Scala.Js` example, look at [modules/examples-scalajs/src/main/scala/examples/HelloScalaJs.scala](modules/examples-scalajs/src/main/scala/examples/HelloScalaJs.scala)
+
+## Example 
 
 ```scala
 import cats.effect.IO
@@ -61,10 +78,10 @@ and running it yields:
 ```scala
 import cats.effect.unsafe.implicits.global
 main.unsafeRunSync()
-// 2022-05-19 13:22:06 [DEBUG] repl.MdocSession$.App: This is some debug (.:27)
-// 2022-05-19 13:22:06 [INFO ] repl.MdocSession$.App: HEY! (.:28)
-// 2022-05-19 13:22:06 [WARN ] repl.MdocSession$.App: I'm warning you (.:29)
-// 2022-05-19 13:22:06 [ERROR] repl.MdocSession$.App: I give up (.:30)
+// 2022-05-19 14:33:41 [DEBUG] repl.MdocSession$.App: This is some debug (.:27)
+// 2022-05-19 14:33:41 [INFO ] repl.MdocSession$.App: HEY! (.:28)
+// 2022-05-19 14:33:41 [WARN ] repl.MdocSession$.App: I'm warning you (.:29)
+// 2022-05-19 14:33:41 [ERROR] repl.MdocSession$.App: I give up (.:30)
 ```
 
 We can also re-use the program and add context to our logger:
@@ -83,11 +100,11 @@ And running with context yields:
 
 ```scala
 mainWithContext.unsafeRunSync()
-// 2022-05-19 13:22:06 [DEBUG] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: This is some debug (.:27)
-// 2022-05-19 13:22:06 [INFO ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: HEY! (.:28)
-// 2022-05-19 13:22:06 [WARN ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I'm warning you (.:29)
-// 2022-05-19 13:22:06 [ERROR] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I give up (.:30)
-// 2022-05-19 13:22:06 [INFO ] repl.MdocSession$.App: Now the context is gone (.:61)
+// 2022-05-19 14:33:41 [DEBUG] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: This is some debug (.:27)
+// 2022-05-19 14:33:41 [INFO ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: HEY! (.:28)
+// 2022-05-19 14:33:41 [WARN ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I'm warning you (.:29)
+// 2022-05-19 14:33:41 [ERROR] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I give up (.:30)
+// 2022-05-19 14:33:41 [INFO ] repl.MdocSession$.App: Now the context is gone (.:61)
 ```
 
 ## Can I use SLF4J?
@@ -131,8 +148,8 @@ and running it:
 
 ```scala
 mainSlf4j.unsafeRunSync()
-// 2022-05-19 13:22:06 [INFO ] repl.MdocSession$App: Hello from SLF4j! (MdocSession$App.scala:81)
-// 2022-05-19 13:22:06 [WARN ] repl.MdocSession$App: This is not the pure woof. (MdocSession$App.scala:82)
+// 2022-05-19 14:33:41 [INFO ] repl.MdocSession$App: Hello from SLF4j! (MdocSession$App.scala:81)
+// 2022-05-19 14:33:41 [WARN ] repl.MdocSession$App: This is not the pure woof. (MdocSession$App.scala:82)
 ```
 
 ### Limitations of SLF4J bindings
@@ -184,8 +201,8 @@ the correlation ID is also returned in the header of the response.
 
 ```scala
 mainHttp4s.unsafeRunSync()
-// 2022-05-19 13:22:07 [INFO ] X-Trace-Id=3c29074e-8667-420b-80b8-59e1987fff5f repl.MdocSession$.App: I got a request with trace id! :D (.:121)
-// 2022-05-19 13:22:07 [INFO ] repl.MdocSession$.App: Got response headers: Headers(X-Trace-Id: 3c29074e-8667-420b-80b8-59e1987fff5f) (.:142)
+// 2022-05-19 14:33:42 [INFO ] X-Trace-Id=e220d0bd-9fd1-4669-b41f-39aaff0e8b0d repl.MdocSession$.App: I got a request with trace id! :D (.:121)
+// 2022-05-19 14:33:42 [INFO ] repl.MdocSession$.App: Got response headers: Headers(X-Trace-Id: e220d0bd-9fd1-4669-b41f-39aaff0e8b0d) (.:142)
 ```
 
 ## Structured Logging
@@ -210,11 +227,11 @@ And running with context yields:
 
 ```scala
 contextAsJson.unsafeRunSync()
-// {"level":"Debug","epochMillis":1652959327003,"timeStamp":"2022-05-19T11:22:07Z","enclosingClass":"repl.MdocSession$.App","lineNumber":26,"message":"This is some debug","context":{"bar":"1337","foo":"42"}}
-// {"level":"Info","epochMillis":1652959327005,"timeStamp":"2022-05-19T11:22:07Z","enclosingClass":"repl.MdocSession$.App","lineNumber":27,"message":"HEY!","context":{"bar":"1337","foo":"42"}}
-// {"level":"Warn","epochMillis":1652959327005,"timeStamp":"2022-05-19T11:22:07Z","enclosingClass":"repl.MdocSession$.App","lineNumber":28,"message":"I'm warning you","context":{"bar":"1337","foo":"42"}}
-// {"level":"Error","epochMillis":1652959327005,"timeStamp":"2022-05-19T11:22:07Z","enclosingClass":"repl.MdocSession$.App","lineNumber":29,"message":"I give up","context":{"bar":"1337","foo":"42"}}
-// {"level":"Info","epochMillis":1652959327005,"timeStamp":"2022-05-19T11:22:07Z","enclosingClass":"repl.MdocSession$.App","lineNumber":163,"message":"Now the context is gone","context":{}}
+// {"level":"Debug","epochMillis":1652963622483,"timeStamp":"2022-05-19T12:33:42Z","enclosingClass":"repl.MdocSession$.App","lineNumber":26,"message":"This is some debug","context":{"bar":"1337","foo":"42"}}
+// {"level":"Info","epochMillis":1652963622487,"timeStamp":"2022-05-19T12:33:42Z","enclosingClass":"repl.MdocSession$.App","lineNumber":27,"message":"HEY!","context":{"bar":"1337","foo":"42"}}
+// {"level":"Warn","epochMillis":1652963622488,"timeStamp":"2022-05-19T12:33:42Z","enclosingClass":"repl.MdocSession$.App","lineNumber":28,"message":"I'm warning you","context":{"bar":"1337","foo":"42"}}
+// {"level":"Error","epochMillis":1652963622488,"timeStamp":"2022-05-19T12:33:42Z","enclosingClass":"repl.MdocSession$.App","lineNumber":29,"message":"I give up","context":{"bar":"1337","foo":"42"}}
+// {"level":"Info","epochMillis":1652963622489,"timeStamp":"2022-05-19T12:33:42Z","enclosingClass":"repl.MdocSession$.App","lineNumber":163,"message":"Now the context is gone","context":{}}
 ```
 
 > We are considering if we should support matching different printers with different outputs: Maybe you want human readable logs for standard out and structured logging for your monitoring tools. However, this will be a breaking change.
