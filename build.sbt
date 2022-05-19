@@ -114,3 +114,12 @@ lazy val examples = project
   .settings(commonSettings)
   .settings(publish / skip := true)
   .dependsOn(core.jvm)
+
+lazy val examplesJs = crossProject(JSPlatform)
+  .withoutSuffixFor(JSPlatform)
+  .crossType(CrossType.Pure)
+  .in(file("./modules/examples-scalajs"))
+  .settings(commonSettings)
+  .settings(publish / skip := true)
+  .jsConfigure( _.settings(scalaJSUseMainModuleInitializer := true ) )
+  .dependsOn(core)
