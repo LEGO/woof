@@ -28,7 +28,24 @@ libraryDependencies ++= Seq(
 )
 ```
 
-## Example
+You can see a bunch of self-contained examples in the [examples](modules/examples) sub-project. To run them, open `sbt` and run the command `examples/run`:
+
+```
+sbt:root> examples/run
+
+Multiple main classes detected. Select one to run:
+ [1] examples.AtLeastLevel
+ [2] examples.CustomPrinter
+ [3] examples.CustomTheme
+ [4] examples.HelloWorld
+ [5] examples.TaglessFinal
+
+Enter number:
+```
+
+it will ask you for a number corresponding to the example you wish to run. For a self-contained `Scala.Js` example, look at [modules/examples-scalajs/src/main/scala/examples/HelloScalaJs.scala](modules/examples-scalajs/src/main/scala/examples/HelloScalaJs.scala)
+
+## Example 
 
 ```scala mdoc:silent
 import cats.effect.IO
