@@ -37,8 +37,12 @@ Multiple main classes detected. Select one to run:
  [1] examples.AtLeastLevel
  [2] examples.CustomPrinter
  [3] examples.CustomTheme
- [4] examples.HelloWorld
- [5] examples.TaglessFinal
+ [4] examples.ExactLevel
+ [5] examples.FileOutput
+ [6] examples.HelloWorld
+ [7] examples.LogLevelFromEnv
+ [8] examples.RegexFilter
+ [9] examples.TaglessFinal
 
 Enter number:
 ```
