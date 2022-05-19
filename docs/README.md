@@ -5,7 +5,7 @@
 
 A **pure** _(in both senses of the word!)_ **Scala 3** logging library with **no runtime reflection**.
 
-![](dog-svgrepo-com.svg)
+![logo](dog-svgrepo-com.svg)
 
 ## Highlights
 
@@ -28,7 +28,7 @@ libraryDependencies ++= Seq(
 )
 ```
 
-## Example 
+## Example
 
 ```scala mdoc:silent
 import cats.effect.IO
@@ -63,7 +63,6 @@ import cats.effect.unsafe.implicits.global
 main.unsafeRunSync()
 ```
 
-
 We can also re-use the program and add context to our logger:
 
 ```scala mdoc:silent
@@ -82,7 +81,7 @@ And running with context yields:
 mainWithContext.unsafeRunSync()
 ```
 
-# Can I use SLF4J?
+## Can I use SLF4J?
 
 Yes, you can. I don't think you should (for new projects), but you can use it for interop with existing SLF4J programs! Note, however, that not everything can be implemented perfectly against the
 `SLF4J` API, e.g. the filtering functionality in `woof` is much more flexible and thus does not map directly to, e.g., `isDebugEnabled`.
@@ -124,11 +123,12 @@ and running it:
 ```scala mdoc
 mainSlf4j.unsafeRunSync()
 ```
-## Limitations of SLF4J bindings
+
+### Limitations of SLF4J bindings
 
 Currently, markers do nothing. You can get the same behaviour easily with context when using the direct `woof` api with filters and printers.
 
-# Can I use __http4s__?
+## Can I use **http4s**?
 
 Yes you can. If you want to see internal logs from `http4s`, use the `SLF4J` module from above. If you want to use the context capabilities in `woof`, there's a module for adding correlation IDs to each request with a simple middleware.
 
@@ -166,7 +166,7 @@ val mainHttp4s: IO[Unit] =
   yield ()
 ```
 
-Finally, running it, we see that the correlation ID is added to the log message inside the routes (transparently), and that 
+Finally, running it, we see that the correlation ID is added to the log message inside the routes (transparently), and that
 the correlation ID is also returned in the header of the response.
 
 > NOTE: The correlation ID is _not_ present outside the routes, i.e. we have scoped it only to the service part of our code.
@@ -177,7 +177,7 @@ mainHttp4s.unsafeRunSync()
 
 ## Structured Logging
 
-Structured logging is useful when your logs are collected and inspected by a monitoring system. Having a well structured log output can save you 
+Structured logging is useful when your logs are collected and inspected by a monitoring system. Having a well structured log output can save you
 hours of reg-ex'ing your way towards the root cause of a burning issue.
 
 `Woof` supports printing as `Json`:
@@ -198,6 +198,5 @@ And running with context yields:
 ```scala mdoc
 contextAsJson.unsafeRunSync()
 ```
-
 
 > We are considering if we should support matching different printers with different outputs: Maybe you want human readable logs for standard out and structured logging for your monitoring tools. However, this will be a breaking change.
