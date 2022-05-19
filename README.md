@@ -5,7 +5,7 @@
 
 A **pure** _(in both senses of the word!)_ **Scala 3** logging library with **no runtime reflection**.
 
-![](dog-svgrepo-com.svg)
+![logo](dog-svgrepo-com.svg)
 
 ## Highlights
 
@@ -28,7 +28,7 @@ libraryDependencies ++= Seq(
 )
 ```
 
-## Example 
+## Example
 
 ```scala
 import cats.effect.IO
@@ -61,12 +61,11 @@ and running it yields:
 ```scala
 import cats.effect.unsafe.implicits.global
 main.unsafeRunSync()
-// 2022-04-27 09:19:16 [DEBUG] repl.MdocSession$.App: This is some debug (.:27)
-// 2022-04-27 09:19:16 [INFO ] repl.MdocSession$.App: HEY! (.:28)
-// 2022-04-27 09:19:16 [WARN ] repl.MdocSession$.App: I'm warning you (.:29)
-// 2022-04-27 09:19:16 [ERROR] repl.MdocSession$.App: I give up (.:30)
+// 2022-05-19 13:22:06 [DEBUG] repl.MdocSession$.App: This is some debug (.:27)
+// 2022-05-19 13:22:06 [INFO ] repl.MdocSession$.App: HEY! (.:28)
+// 2022-05-19 13:22:06 [WARN ] repl.MdocSession$.App: I'm warning you (.:29)
+// 2022-05-19 13:22:06 [ERROR] repl.MdocSession$.App: I give up (.:30)
 ```
-
 
 We can also re-use the program and add context to our logger:
 
@@ -84,14 +83,14 @@ And running with context yields:
 
 ```scala
 mainWithContext.unsafeRunSync()
-// 2022-04-27 09:19:16 [DEBUG] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: This is some debug (.:27)
-// 2022-04-27 09:19:16 [INFO ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: HEY! (.:28)
-// 2022-04-27 09:19:16 [WARN ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I'm warning you (.:29)
-// 2022-04-27 09:19:16 [ERROR] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I give up (.:30)
-// 2022-04-27 09:19:16 [INFO ] repl.MdocSession$.App: Now the context is gone (.:61)
+// 2022-05-19 13:22:06 [DEBUG] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: This is some debug (.:27)
+// 2022-05-19 13:22:06 [INFO ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: HEY! (.:28)
+// 2022-05-19 13:22:06 [WARN ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I'm warning you (.:29)
+// 2022-05-19 13:22:06 [ERROR] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.App: I give up (.:30)
+// 2022-05-19 13:22:06 [INFO ] repl.MdocSession$.App: Now the context is gone (.:61)
 ```
 
-# Can I use SLF4J?
+## Can I use SLF4J?
 
 Yes, you can. I don't think you should (for new projects), but you can use it for interop with existing SLF4J programs! Note, however, that not everything can be implemented perfectly against the
 `SLF4J` API, e.g. the filtering functionality in `woof` is much more flexible and thus does not map directly to, e.g., `isDebugEnabled`.
@@ -132,14 +131,15 @@ and running it:
 
 ```scala
 mainSlf4j.unsafeRunSync()
-// 2022-04-27 09:19:16 [INFO ] repl.MdocSession$App: Hello from SLF4j! (MdocSession$App.scala:81)
-// 2022-04-27 09:19:16 [WARN ] repl.MdocSession$App: This is not the pure woof. (MdocSession$App.scala:82)
+// 2022-05-19 13:22:06 [INFO ] repl.MdocSession$App: Hello from SLF4j! (MdocSession$App.scala:81)
+// 2022-05-19 13:22:06 [WARN ] repl.MdocSession$App: This is not the pure woof. (MdocSession$App.scala:82)
 ```
-## Limitations of SLF4J bindings
+
+### Limitations of SLF4J bindings
 
 Currently, markers do nothing. You can get the same behaviour easily with context when using the direct `woof` api with filters and printers.
 
-# Can I use __http4s__?
+## Can I use **http4s**?
 
 Yes you can. If you want to see internal logs from `http4s`, use the `SLF4J` module from above. If you want to use the context capabilities in `woof`, there's a module for adding correlation IDs to each request with a simple middleware.
 
@@ -177,20 +177,20 @@ val mainHttp4s: IO[Unit] =
   yield ()
 ```
 
-Finally, running it, we see that the correlation ID is added to the log message inside the routes (transparently), and that 
+Finally, running it, we see that the correlation ID is added to the log message inside the routes (transparently), and that
 the correlation ID is also returned in the header of the response.
 
 > NOTE: The correlation ID is _not_ present outside the routes, i.e. we have scoped it only to the service part of our code.
 
 ```scala
 mainHttp4s.unsafeRunSync()
-// 2022-04-27 09:19:16 [INFO ] X-Trace-Id=d82950b7-fa65-4b96-b215-0447be0e696b repl.MdocSession$.App: I got a request with trace id! :D (.:121)
-// 2022-04-27 09:19:16 [INFO ] repl.MdocSession$.App: Got response headers: Headers(X-Trace-Id: d82950b7-fa65-4b96-b215-0447be0e696b) (.:142)
+// 2022-05-19 13:22:07 [INFO ] X-Trace-Id=3c29074e-8667-420b-80b8-59e1987fff5f repl.MdocSession$.App: I got a request with trace id! :D (.:121)
+// 2022-05-19 13:22:07 [INFO ] repl.MdocSession$.App: Got response headers: Headers(X-Trace-Id: 3c29074e-8667-420b-80b8-59e1987fff5f) (.:142)
 ```
 
 ## Structured Logging
 
-Structured logging is useful when your logs are collected and inspected by a monitoring system. Having a well structured log output can save you 
+Structured logging is useful when your logs are collected and inspected by a monitoring system. Having a well structured log output can save you
 hours of reg-ex'ing your way towards the root cause of a burning issue.
 
 `Woof` supports printing as `Json`:
@@ -210,12 +210,11 @@ And running with context yields:
 
 ```scala
 contextAsJson.unsafeRunSync()
-// {"level":"Debug","epochMillis":1651043956785,"timeStamp":"2022-04-27T07:19:16Z","enclosingClass":"repl.MdocSession$.App","lineNumber":26,"message":"This is some debug","context":{"bar":"1337","foo":"42"}}
-// {"level":"Info","epochMillis":1651043956789,"timeStamp":"2022-04-27T07:19:16Z","enclosingClass":"repl.MdocSession$.App","lineNumber":27,"message":"HEY!","context":{"bar":"1337","foo":"42"}}
-// {"level":"Warn","epochMillis":1651043956789,"timeStamp":"2022-04-27T07:19:16Z","enclosingClass":"repl.MdocSession$.App","lineNumber":28,"message":"I'm warning you","context":{"bar":"1337","foo":"42"}}
-// {"level":"Error","epochMillis":1651043956789,"timeStamp":"2022-04-27T07:19:16Z","enclosingClass":"repl.MdocSession$.App","lineNumber":29,"message":"I give up","context":{"bar":"1337","foo":"42"}}
-// {"level":"Info","epochMillis":1651043956789,"timeStamp":"2022-04-27T07:19:16Z","enclosingClass":"repl.MdocSession$.App","lineNumber":163,"message":"Now the context is gone","context":{}}
+// {"level":"Debug","epochMillis":1652959327003,"timeStamp":"2022-05-19T11:22:07Z","enclosingClass":"repl.MdocSession$.App","lineNumber":26,"message":"This is some debug","context":{"bar":"1337","foo":"42"}}
+// {"level":"Info","epochMillis":1652959327005,"timeStamp":"2022-05-19T11:22:07Z","enclosingClass":"repl.MdocSession$.App","lineNumber":27,"message":"HEY!","context":{"bar":"1337","foo":"42"}}
+// {"level":"Warn","epochMillis":1652959327005,"timeStamp":"2022-05-19T11:22:07Z","enclosingClass":"repl.MdocSession$.App","lineNumber":28,"message":"I'm warning you","context":{"bar":"1337","foo":"42"}}
+// {"level":"Error","epochMillis":1652959327005,"timeStamp":"2022-05-19T11:22:07Z","enclosingClass":"repl.MdocSession$.App","lineNumber":29,"message":"I give up","context":{"bar":"1337","foo":"42"}}
+// {"level":"Info","epochMillis":1652959327005,"timeStamp":"2022-05-19T11:22:07Z","enclosingClass":"repl.MdocSession$.App","lineNumber":163,"message":"Now the context is gone","context":{}}
 ```
-
 
 > We are considering if we should support matching different printers with different outputs: Maybe you want human readable logs for standard out and structured logging for your monitoring tools. However, this will be a breaking change.
