@@ -4,6 +4,10 @@ import cats.effect.{IO, IOApp, Resource}
 import java.io.{PrintWriter, FileWriter}
 import org.legogroup.woof.{*, given}
 
+/*
+* Run the program and inspect the files `woof.err`,
+* and `woof.log` in the root of the project.
+*/
 object FileOutput extends IOApp.Simple:
 
   given Filter  = Filter.everything
@@ -24,3 +28,5 @@ object FileOutput extends IOApp.Simple:
       _                <- Logger[IO].info("Hello, Info!")
       _                <- Logger[IO].error("Hello, Error!")
     yield ()
+
+end FileOutput

@@ -11,17 +11,17 @@ object CustomTheme extends IOApp.Simple:
   given Printer = ColorPrinter(customTheme)
 
   private def customTheme: Theme = Theme(
-    {
+    levelFormat = {
       case LogLevel.Info  => Foreground.Black.withBackground(Background.Green)
       case LogLevel.Warn  => Foreground.Black.withBackground(Background.Yellow)
       case LogLevel.Trace => Foreground.Black.withBackground(Background.White).withStyle(Style.Underlined)
       case LogLevel.Error => Foreground.Black.withBackground(Background.Red).withStyle(Style.Bold)
       case level          => defaultTheme.levelFormat(level)
     },
-    Foreground.Cyan.withStyle(Style.Underlined),
-    Style.Reset,
-    Empty,
-    Empty,
+    postfixFormat = Foreground.Cyan.withStyle(Style.Underlined),
+    reset = Style.Reset,
+    contextKey = Empty,
+    contextValue = Empty,
   )
 
   def run: IO[Unit] =
