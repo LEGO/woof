@@ -1,4 +1,4 @@
-package examples
+package examples.filters
 
 import org.legogroup.woof.{*, given}
 import cats.syntax.all.*
@@ -17,6 +17,17 @@ class RegexFilter[F[_]: Logger: Monad]:
 
 end RegexFilter
 
+class AnotherProgram[F[_]: Logger: Monad]:
+
+  def run(): F[Unit] =
+    for
+      _ <- Logger[F].trace("This is [TRACE]")
+      _ <- Logger[F].debug("This is [DEBUG]")
+    yield ()
+  end run
+
+end AnotherProgram
+
 object RegexFilter extends IOApp.Simple:
 
   given Filter  = Filter.regexFilter(".*.RegexFilter.*".r)
@@ -26,7 +37,7 @@ object RegexFilter extends IOApp.Simple:
     for
       given Logger[IO] <- DefaultLogger.makeIo(Output.fromConsole)
       _                <- RegexFilter[IO].run()
-      _                <- AtLeastLevel[IO].run() // logs from AtLeastLevel won't be shown here
+      _                <- AnotherProgram[IO].run() // logs from AnotherProgram won't be shown here
     yield ()
 
 end RegexFilter

@@ -1,4 +1,4 @@
-package examples
+package examples.filters
 
 import org.legogroup.woof.{*, given}
 import cats.syntax.all.*
