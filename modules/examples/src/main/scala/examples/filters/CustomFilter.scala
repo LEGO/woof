@@ -18,7 +18,7 @@ object CustomFilter extends IOApp.Simple:
       _ <- Logger[IO].info("important")
     yield ()
 
-  def oddLines: IO[Unit] =
+  def evenLines: IO[Unit] =
     given Filter = logLine => logLine.info.lineNumber % 2 == 0 // only print *even* lines
     for
       given Logger[IO] <- DefaultLogger.makeIo(Output.fromConsole)
@@ -41,6 +41,6 @@ object CustomFilter extends IOApp.Simple:
       _                <- program
     yield ()
 
-  def run = List(oddLines, filterWords, filterNotWords).traverse_(_ *> IO.delay(println()))
+  def run = List(evenLines, filterWords, filterNotWords).traverse_(_ *> IO.delay(println()))
 
 end CustomFilter
