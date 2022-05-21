@@ -1,6 +1,6 @@
 val V = new {
   val cats            = "2.7.0"
-  val catsEffect      = "3.3.11"
+  val catsEffect      = "3.3.12"
   val circe           = "0.15.0-M1"
   val http4s          = "0.23.11"
   val munit           = "0.7.29"
