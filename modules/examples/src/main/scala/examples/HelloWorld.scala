@@ -7,7 +7,7 @@ object HelloWorld extends IOApp.Simple:
 
   given Filter  = Filter.everything
   given Printer = ColorPrinter()
-  
+
   def run =
     for
       given Logger[IO] <- DefaultLogger.makeIo(Output.fromConsole)
