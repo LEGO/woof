@@ -6,7 +6,7 @@ val V = new {
   val munit           = "0.7.29"
   val munitCatsEffect = "1.0.7"
   val scala           = "3.2.0"
-  val slf4j           = "1.7.36"
+  val slf4j           = "2.0.0"
   val scalacheck      = "0.7.29"
 }
 
