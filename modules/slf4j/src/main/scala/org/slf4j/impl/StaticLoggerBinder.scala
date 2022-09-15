@@ -18,7 +18,7 @@ class StaticLoggerBinder extends LoggerFactoryBinder:
 end StaticLoggerBinder
 
 object StaticLoggerBinder:
-  @static val REQUESTED_API_VERSION: String    = "1.7.36"
+  @static val REQUESTED_API_VERSION: String    = "2.0.1"
   @static val SINGLETON: StaticLoggerBinder    = StaticLoggerBinder()
   @static def getSingleton: StaticLoggerBinder = SINGLETON
   lazy val factory                             = WoofLoggerFactory()
