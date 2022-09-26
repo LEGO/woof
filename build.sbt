@@ -75,7 +75,13 @@ lazy val docs =
 lazy val root =
   project
     .in(file("."))
-    .aggregate(core.jvm, core.js, http4s.jvm, http4s.js, slf4j)
+    .aggregate(
+      List(
+        core,
+        http4s,
+        slf4j
+      ).flatMap(_.componentProjects).map(_.project): _*
+    )
     .settings(
       publish / skip := true,
     )
