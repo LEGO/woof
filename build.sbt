@@ -1,13 +1,15 @@
+Global / onChangedBuildSource := ReloadOnSourceChanges
+
 val V = new {
   val cats            = "2.8.0"
   val catsEffect      = "3.3.14"
-  val circe           = "0.15.0-M1"
-  val http4s          = "0.23.15"
-  val munit           = "0.7.29"
-  val munitCatsEffect = "1.0.7"
+  val circe           = "0.14.3"
+  val http4s          = "0.23.16"
+  val munit           = "1.0.0-M6"
+  val munitCatsEffect = "2.0.0-M3"
   val scala           = "3.2.0"
   val slf4j           = "1.7.36"
-  val scalacheck      = "0.7.29"
+  val tzdb            = "2.4.0"
 }
 
 val D = new {
@@ -18,9 +20,10 @@ val D = new {
   val catsEffectTestKit = Def.setting("org.typelevel" %%% "cats-effect-testkit" % V.catsEffect)
   val http4s            = Def.setting("org.http4s" %%% "http4s-core" % V.http4s)
   val munit             = Def.setting("org.scalameta" %%% "munit" % V.munit)
-  val munitCatsEffect   = Def.setting("org.typelevel" %%% "munit-cats-effect-3" % V.munitCatsEffect)
+  val munitCatsEffect   = Def.setting("org.typelevel" %%% "munit-cats-effect" % V.munitCatsEffect)
+  val munitScalacheck   = Def.setting("org.scalameta" %%% "munit-scalacheck" % V.munit)
   val circe             = Def.setting("io.circe" %%% "circe-parser" % V.circe)
-  val scalacheck        = Def.setting("org.scalameta" %%% "munit-scalacheck" % V.scalacheck)
+  val tzdb              = Def.setting("io.github.cquiroz" %%% "scala-java-time-tzdb" % V.tzdb)
 }
 
 /*
@@ -78,7 +81,7 @@ lazy val root =
     )
 
 val coreFolder = file("./modules/core")
-lazy val core = crossProject(JSPlatform, JVMPlatform)
+lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .in(coreFolder)
   .settings(commonSettings)
   .settings(
@@ -90,12 +93,13 @@ lazy val core = crossProject(JSPlatform, JVMPlatform)
       D.munitCatsEffect.value   % Test,
       D.catsEffectTestKit.value % Test,
       D.circe.value             % Test,
-      D.scalacheck.value        % Test
+      D.munitScalacheck.value   % Test,
+      D.tzdb.value              % Test
     ),
   )
 
 val http4sFolder = file("./modules/http4s")
-lazy val http4s = crossProject(JSPlatform, JVMPlatform)
+lazy val http4s = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Pure)
   .in(http4sFolder)
   .settings(
