@@ -8,7 +8,7 @@ val V = new {
   val munit           = "1.0.0-M6"
   val munitCatsEffect = "2.0.0-M3"
   val scala           = "3.2.0"
-  val slf4j           = "1.7.36"
+  val slf4j           = "2.0.3"
   val tzdb            = "2.4.0"
 }
 
