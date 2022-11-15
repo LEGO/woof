@@ -8,9 +8,6 @@ A **pure** _(in both senses of the word!)_ **Scala 3** logging library with **no
 ![logo](dog-svgrepo-com.svg)
 
 # Table of Contents
-
-- [Woof](#woof)
-- [Table of Contents](#table-of-contents)
   - [Highlights](#highlights)
     - [Cross platform](#cross-platform)
   - [Installation](#installation)
