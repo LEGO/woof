@@ -11,7 +11,7 @@ import scala.concurrent.duration.*
 
 class Slf4jSuite extends munit.CatsEffectSuite:
 
-  override def munitTimeout = 10.minutes
+  override def munitIOTimeout = 10.minutes
 
   test("should log stuff") {
     given Printer   = NoColorPrinter(testFormatTime)
