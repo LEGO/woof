@@ -7,14 +7,30 @@ A **pure** _(in both senses of the word!)_ **Scala 3** logging library with **no
 
 ![logo](dog-svgrepo-com.svg)
 
+# Table of Contents
+  - [Highlights](#highlights)
+    - [Cross platform](#cross-platform)
+  - [Installation](#installation)
+  - [Example](#example)
+  - [Can I use `SLF4J`?](#can-i-use-slf4j)
+    - [Limitations of SLF4J bindings](#limitations-of-slf4j-bindings)
+  - [Can I use `http4s`?](#can-i-use-http4s)
+  - [Structured Logging](#structured-logging)
+
 ## Highlights
 
 * Pure **Scala 3** library
 * Made with _Cats Effect_
 * Macro based (_no runtime reflection_)
-  * ~~Can be built for _scala.js_ in the future!~~
-  * Cross-built for `Scala.js`
 * Configured with plain Scala code
+
+### Cross platform
+
+| Module | JVM | scala.js | native |
+| ------ | --- | -------- | ------ |
+| core   | ✅   | ✅        | ✅      |
+| http4s | ✅   | ✅        | ✅      |
+| slf4j  | ✅   | 🚫        | 🚫      |
 
 ## Installation
 
@@ -102,7 +118,7 @@ And running with context yields:
 mainWithContext.unsafeRunSync()
 ```
 
-## Can I use SLF4J?
+## Can I use `SLF4J`?
 
 Yes, you can. I don't think you should (for new projects), but you can use it for interop with existing SLF4J programs! Note, however, that not everything can be implemented perfectly against the
 `SLF4J` API, e.g. the filtering functionality in `woof` is much more flexible and thus does not map directly to, e.g., `isDebugEnabled`.
@@ -149,7 +165,7 @@ mainSlf4j.unsafeRunSync()
 
 Currently, markers do nothing. You can get the same behaviour easily with context when using the direct `woof` api with filters and printers.
 
-## Can I use **http4s**?
+## Can I use `http4s`?
 
 Yes you can. If you want to see internal logs from `http4s`, use the `SLF4J` module from above. If you want to use the context capabilities in `woof`, there's a module for adding correlation IDs to each request with a simple middleware.
 
