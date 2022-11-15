@@ -55,7 +55,7 @@ ThisBuild / versionScheme := Some("early-semver")
 val commonSettings = Seq(
   scalaVersion := V.scala,
   organization := "org.legogroup",
-  scalacOptions ++= Seq("-source", "future","-deprecation"),
+  scalacOptions ++= Seq("-source", "future", "-deprecation"),
 )
 
 def nameForFile(file: File): String = s"woof-${file.getName()}"
