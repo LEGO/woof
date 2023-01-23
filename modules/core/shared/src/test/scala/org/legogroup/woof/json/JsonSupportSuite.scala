@@ -8,6 +8,8 @@ import org.legogroup.woof.json.JsonSupportSuite.epochMillisGen
 import org.scalacheck.Prop.*
 import org.scalacheck.*
 
+import scala.collection.immutable.ArraySeq
+
 class JsonSupportFunSuite extends munit.FunSuite:
 
   test("Escape characters") {
@@ -78,7 +80,7 @@ object JsonSupportSuite:
       lineNumber         <- Gen.posNum[Int]
     yield LogInfo(EnclosingClass(enclosingClassName.mkString(".")), fileName, lineNumber)
 
-  val levelGen = Gen.oneOf(LogLevel.values)
+  val levelGen = Gen.oneOf(ArraySeq.unsafeWrapArray(LogLevel.values))
 
   val epochMillisGen = Gen.posNum[Long].map(EpochMillis.apply)
 
