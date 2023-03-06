@@ -31,6 +31,7 @@ A **pure** _(in both senses of the word!)_ **Scala 3** logging library with **no
 | core   | ✅   | ✅        | ✅      |
 | http4s | ✅   | ✅        | ✅      |
 | slf4j  | ✅   | 🚫        | 🚫      |
+| slf4j-2 | ✅   | 🚫        | 🚫      |
 
 ## Installation
 
@@ -147,12 +148,15 @@ To use this program with woof
 
 ```scala mdoc:silent
 import org.legogroup.woof.slf4j.*
+import cats.effect.std.Dispatcher
 val mainSlf4j: IO[Unit] = 
-  for
-    woofLogger  <- DefaultLogger.makeIo(consoleOutput)
-    _           <- woofLogger.registerSlf4j
-    _           <- programWithSlf4j
-  yield ()
+  Dispatcher.sequential[IO].use( implicit dispatcher =>
+    for
+      woofLogger  <- DefaultLogger.makeIo(consoleOutput)
+      _           <- woofLogger.registerSlf4j
+      _           <- programWithSlf4j
+    yield ()
+  )
 ```
 
 and running it:

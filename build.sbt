@@ -81,7 +81,8 @@ lazy val root =
       List(
         core,
         http4s,
-        slf4j
+        slf4j,
+        slf4j2
       ).flatMap(_.componentProjects).map(_.project): _*
     )
     .settings(
@@ -119,11 +120,15 @@ lazy val http4s = crossProject(JSPlatform, JVMPlatform, NativePlatform)
 
 lazy val slf4j = woofProject(file("./modules/slf4j"))
   .settings(libraryDependencies += D.slf4jApi)
-  .dependsOn(core.jvm % "compile->compile;test->test")
+  .dependsOn(slf4jCommon % "compile->compile;test->test")
 
 lazy val slf4j2 = woofProject(file("./modules/slf4j-2"))
   .settings(libraryDependencies += D.slf4jApi2)
-  .dependsOn(core.jvm % "compile->compile;test->test")
+  .dependsOn(slf4jCommon % "compile->compile;test->test")
+
+lazy val slf4jCommon =
+  woofProject(file("./modules/slf4j-common"))
+    .dependsOn(core.jvm % "compile->compile;test->test")
 
 lazy val examples = project
   .in(file("./modules/examples"))
