@@ -3,6 +3,7 @@ package org.legogroup.woof.slf4j
 import cats.Id
 import cats.effect.IO
 import cats.effect.kernel.Clock
+import cats.effect.std.Dispatcher
 import org.legogroup.woof.*
 import org.slf4j.LoggerFactory
 import org.slf4j.impl.StaticLoggerBinder
@@ -13,7 +14,9 @@ class Slf4jSuite extends munit.CatsEffectSuite:
 
   override def munitIOTimeout = 10.minutes
 
-  test("should log stuff") {
+  val dispatcher = ResourceFunFixture(Dispatcher.sequential[IO](true))
+
+  dispatcher.test("should log stuff") { implicit dispatcher =>
     given Printer   = NoColorPrinter(testFormatTime)
     given Filter    = Filter.everything
     given Clock[IO] = leetClock
@@ -26,12 +29,12 @@ class Slf4jSuite extends munit.CatsEffectSuite:
       result       <- stringOutput.get
     yield assertEquals(
       result,
-      "1987-05-31 13:37:00 [INFO ] org.legogroup.woof.slf4j.Slf4jSuite: HELLO, SLF4J! (Slf4jSuite.scala:25)\n",
+      "1987-05-31 13:37:00 [INFO ] org.legogroup.woof.slf4j.Slf4jSuite: HELLO, SLF4J! (Slf4jSuite.scala:28)\n",
     )
     end for
   }
 
-  test("should log arrays of objects") {
+  dispatcher.test("should log arrays of objects") { implicit dispatcher =>
     given Printer   = NoColorPrinter(testFormatTime)
     given Filter    = Filter.everything
     given Clock[IO] = leetClock
@@ -44,12 +47,12 @@ class Slf4jSuite extends munit.CatsEffectSuite:
       result       <- stringOutput.get
     yield assertEquals(
       result,
-      "1987-05-31 13:37:00 [INFO ] org.legogroup.woof.slf4j.Slf4jSuite: HELLO, ARRAYS! 1, Some(42), List(1337) (Slf4jSuite.scala:43)\n",
+      "1987-05-31 13:37:00 [INFO ] org.legogroup.woof.slf4j.Slf4jSuite: HELLO, ARRAYS! 1, Some(42), List(1337) (Slf4jSuite.scala:46)\n",
     )
     end for
   }
 
-  test("should respect log levels") {
+  dispatcher.test("should respect log levels") { implicit dispatcher =>
     given Printer   = NoColorPrinter(testFormatTime)
     given Filter    = Filter.exactLevel(LogLevel.Warn)
     given Clock[IO] = leetClock
@@ -65,12 +68,12 @@ class Slf4jSuite extends munit.CatsEffectSuite:
       result       <- stringWriter.get
     yield assertEquals(
       result,
-      "1987-05-31 13:37:00 [WARN ] org.legogroup.woof.slf4j.Slf4jSuite: WARN, SLF4J! (Slf4jSuite.scala:63)\n",
+      "1987-05-31 13:37:00 [WARN ] org.legogroup.woof.slf4j.Slf4jSuite: WARN, SLF4J! (Slf4jSuite.scala:66)\n",
     )
     end for
   }
 
-  test("should not fail on null throwable") {
+  dispatcher.test("should not fail on null throwable") { implicit dispatcher =>
     given Printer   = NoColorPrinter(testFormatTime)
     given Filter    = Filter.everything
     given Clock[IO] = leetClock
@@ -84,7 +87,7 @@ class Slf4jSuite extends munit.CatsEffectSuite:
       result       <- stringWriter.get
     yield assertEquals(
       result,
-      "1987-05-31 13:37:00 [DEBUG] org.legogroup.woof.slf4j.Slf4jSuite: null exception  (Slf4jSuite.scala:83)\n",
+      "1987-05-31 13:37:00 [DEBUG] org.legogroup.woof.slf4j.Slf4jSuite: null exception  (Slf4jSuite.scala:86)\n",
     )
     end for
   }

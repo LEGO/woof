@@ -1,5 +1,7 @@
 package org.slf4j.impl
 
+import cats.effect.IO
+import cats.effect.std.Dispatcher
 import org.legogroup.woof.slf4j.WoofLogger
 import org.slf4j.spi.LoggerFactoryBinder
 import org.slf4j.{ILoggerFactory, Logger, LoggerFactory}
