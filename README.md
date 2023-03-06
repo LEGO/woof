@@ -26,11 +26,12 @@ A **pure** _(in both senses of the word!)_ **Scala 3** logging library with **no
 
 ### Cross platform
 
-| Module | JVM | scala.js | native |
-| ------ | --- | -------- | ------ |
-| core   | ✅   | ✅        | ✅      |
-| http4s | ✅   | ✅        | ✅      |
-| slf4j  | ✅   | 🚫        | 🚫      |
+| Module  | JVM | scala.js | native |
+|---------| --- | -------- | ------ |
+| core    | ✅   | ✅        | ✅      |
+| http4s  | ✅   | ✅        | ✅      |
+| slf4j   | ✅   | 🚫        | 🚫      |
+| slf4j-2 | ✅   | 🚫        | 🚫      |
 
 ## Installation
 
@@ -38,9 +39,10 @@ A **pure** _(in both senses of the word!)_ **Scala 3** logging library with **no
 
 ```scala
 libraryDependencies ++= Seq(
-  "org.legogroup" %% "woof-core"   % "$VERSION",
-  "org.legogroup" %% "woof-slf4j"  % "$VERSION", // only if you need to use Woof via slf4j
-  "org.legogroup" %% "woof-http4s" % "$VERSION", // only if you need to add correlation IDs in http4s 
+  "org.legogroup" %% "woof-core"    % "$VERSION",
+  "org.legogroup" %% "woof-slf4j"   % "$VERSION", // only if you need to use Woof via slf4j 1.x.x
+  "org.legogroup" %% "woof-slf4j-2" % "$VERSION", // only if you need to use Woof via slf4j 2.x.x (only pick ONE of the SLF4J modules!)
+  "org.legogroup" %% "woof-http4s"  % "$VERSION", // only if you need to add correlation IDs in http4s 
 )
 ```
 
