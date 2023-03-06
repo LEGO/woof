@@ -9,11 +9,13 @@ val V = new {
   val munitCatsEffect = "2.0.0-M3"
   val scala           = "3.2.2"
   val slf4j           = "1.7.36"
+  val slf4j2          = "2.0.6"
   val tzdb            = "2.5.0"
 }
 
 val D = new {
-  val slf4jApi = "org.slf4j" % "slf4j-api" % V.slf4j
+  val slf4jApi  = "org.slf4j" % "slf4j-api" % V.slf4j
+  val slf4jApi2 = "org.slf4j" % "slf4j-api" % V.slf4j2
 
   val catsCore          = Def.setting("org.typelevel" %%% "cats-core" % V.cats)
   val catsEffect        = Def.setting("org.typelevel" %%% "cats-effect" % V.catsEffect)
@@ -117,6 +119,10 @@ lazy val http4s = crossProject(JSPlatform, JVMPlatform, NativePlatform)
 
 lazy val slf4j = woofProject(file("./modules/slf4j"))
   .settings(libraryDependencies += D.slf4jApi)
+  .dependsOn(core.jvm % "compile->compile;test->test")
+
+lazy val slf4j2 = woofProject(file("./modules/slf4j-2"))
+  .settings(libraryDependencies += D.slf4jApi2)
   .dependsOn(core.jvm % "compile->compile;test->test")
 
 lazy val examples = project
