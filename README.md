@@ -26,12 +26,12 @@ A **pure** _(in both senses of the word!)_ **Scala 3** logging library with **no
 
 ### Cross platform
 
-| Module | JVM | scala.js | native |
-| ------ | --- | -------- | ------ |
-| core   | ✅   | ✅        | ✅      |
-| http4s | ✅   | ✅        | ✅      |
-| slf4j  | ✅   | 🚫        | 🚫      |
-| slf4j-2 | ✅   | 🚫        | 🚫      |
+| Module  | JVM   | scala.js  | native |
+|---------|-------|-----------|--------|
+| core    | ✅    | ✅        | ✅     |
+| http4s  | ✅    | ✅        | ✅     |
+| slf4j   | ✅    | 🚫        | 🚫     |
+| slf4j-2 | ✅    | 🚫        | 🚫     |
 
 ## Installation
 
@@ -99,10 +99,10 @@ and running it yields:
 ```scala
 import cats.effect.unsafe.implicits.global
 main.unsafeRunSync()
-// 2023-03-06 11:16:45 [DEBUG] repl.MdocSession$.MdocApp: This is some debug (README.md:27)
-// 2023-03-06 11:16:45 [INFO ] repl.MdocSession$.MdocApp: HEY! (README.md:28)
-// 2023-03-06 11:16:45 [WARN ] repl.MdocSession$.MdocApp: I'm warning you (README.md:29)
-// 2023-03-06 11:16:45 [ERROR] repl.MdocSession$.MdocApp: I give up (README.md:30)
+// 2023-03-07 08:45:23 [DEBUG] repl.MdocSession$.MdocApp: This is some debug (README.md:27)
+// 2023-03-07 08:45:23 [INFO ] repl.MdocSession$.MdocApp: HEY! (README.md:28)
+// 2023-03-07 08:45:23 [WARN ] repl.MdocSession$.MdocApp: I'm warning you (README.md:29)
+// 2023-03-07 08:45:23 [ERROR] repl.MdocSession$.MdocApp: I give up (README.md:30)
 ```
 
 We can also re-use the program and add context to our logger:
@@ -121,11 +121,11 @@ And running with context yields:
 
 ```scala
 mainWithContext.unsafeRunSync()
-// 2023-03-06 11:16:45 [DEBUG] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.MdocApp: This is some debug (README.md:27)
-// 2023-03-06 11:16:45 [INFO ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.MdocApp: HEY! (README.md:28)
-// 2023-03-06 11:16:45 [WARN ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.MdocApp: I'm warning you (README.md:29)
-// 2023-03-06 11:16:45 [ERROR] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.MdocApp: I give up (README.md:30)
-// 2023-03-06 11:16:45 [INFO ] repl.MdocSession$.MdocApp: Now the context is gone (README.md:61)
+// 2023-03-07 08:45:23 [DEBUG] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.MdocApp: This is some debug (README.md:27)
+// 2023-03-07 08:45:23 [INFO ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.MdocApp: HEY! (README.md:28)
+// 2023-03-07 08:45:23 [WARN ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.MdocApp: I'm warning you (README.md:29)
+// 2023-03-07 08:45:23 [ERROR] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.MdocApp: I give up (README.md:30)
+// 2023-03-07 08:45:23 [INFO ] repl.MdocSession$.MdocApp: Now the context is gone (README.md:61)
 ```
 
 ## Can I use `SLF4J`?
@@ -223,8 +223,8 @@ the correlation ID is also returned in the header of the response.
 
 ```scala
 mainHttp4s.unsafeRunSync()
-// 2023-03-06 11:16:45 [INFO ] X-Trace-Id=851ce675-7164-4f77-acba-77aa7fa89502 repl.MdocSession$.MdocApp: I got a request with trace id! :D (README.md:126)
-// 2023-03-06 11:16:45 [INFO ] repl.MdocSession$.MdocApp: Got response headers: Headers(X-Trace-Id: 851ce675-7164-4f77-acba-77aa7fa89502) (README.md:147)
+// 2023-03-07 08:45:24 [INFO ] X-Trace-Id=aba486cd-d6bc-4f1a-b64e-15eed546bca3 repl.MdocSession$.MdocApp: I got a request with trace id! :D (README.md:126)
+// 2023-03-07 08:45:24 [INFO ] repl.MdocSession$.MdocApp: Got response headers: Headers(X-Trace-Id: aba486cd-d6bc-4f1a-b64e-15eed546bca3) (README.md:147)
 ```
 
 ## Structured Logging
@@ -249,11 +249,11 @@ And running with context yields:
 
 ```scala
 contextAsJson.unsafeRunSync()
-// {"level":"Debug","epochMillis":1678097805301,"timeStamp":"2023-03-06T10:16:45Z","enclosingClass":"repl.MdocSession$.MdocApp","lineNumber":26,"message":"This is some debug","context":{"bar":"1337","foo":"42"}}
-// {"level":"Info","epochMillis":1678097805303,"timeStamp":"2023-03-06T10:16:45Z","enclosingClass":"repl.MdocSession$.MdocApp","lineNumber":27,"message":"HEY!","context":{"bar":"1337","foo":"42"}}
-// {"level":"Warn","epochMillis":1678097805303,"timeStamp":"2023-03-06T10:16:45Z","enclosingClass":"repl.MdocSession$.MdocApp","lineNumber":28,"message":"I'm warning you","context":{"bar":"1337","foo":"42"}}
-// {"level":"Error","epochMillis":1678097805303,"timeStamp":"2023-03-06T10:16:45Z","enclosingClass":"repl.MdocSession$.MdocApp","lineNumber":29,"message":"I give up","context":{"bar":"1337","foo":"42"}}
-// {"level":"Info","epochMillis":1678097805303,"timeStamp":"2023-03-06T10:16:45Z","enclosingClass":"repl.MdocSession$.MdocApp","lineNumber":168,"message":"Now the context is gone","context":{}}
+// {"level":"Debug","epochMillis":1678175124381,"timeStamp":"2023-03-07T07:45:24Z","enclosingClass":"repl.MdocSession$.MdocApp","lineNumber":26,"message":"This is some debug","context":{"bar":"1337","foo":"42"}}
+// {"level":"Info","epochMillis":1678175124383,"timeStamp":"2023-03-07T07:45:24Z","enclosingClass":"repl.MdocSession$.MdocApp","lineNumber":27,"message":"HEY!","context":{"bar":"1337","foo":"42"}}
+// {"level":"Warn","epochMillis":1678175124383,"timeStamp":"2023-03-07T07:45:24Z","enclosingClass":"repl.MdocSession$.MdocApp","lineNumber":28,"message":"I'm warning you","context":{"bar":"1337","foo":"42"}}
+// {"level":"Error","epochMillis":1678175124383,"timeStamp":"2023-03-07T07:45:24Z","enclosingClass":"repl.MdocSession$.MdocApp","lineNumber":29,"message":"I give up","context":{"bar":"1337","foo":"42"}}
+// {"level":"Info","epochMillis":1678175124383,"timeStamp":"2023-03-07T07:45:24Z","enclosingClass":"repl.MdocSession$.MdocApp","lineNumber":168,"message":"Now the context is gone","context":{}}
 ```
 
 > We are considering if we should support matching different printers with different outputs: Maybe you want human readable logs for standard out and structured logging for your monitoring tools. However, this will be a breaking change.
