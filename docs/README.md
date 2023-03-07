@@ -26,12 +26,12 @@ A **pure** _(in both senses of the word!)_ **Scala 3** logging library with **no
 
 ### Cross platform
 
-| Module | JVM | scala.js | native |
-| ------ | --- | -------- | ------ |
-| core   | ✅   | ✅        | ✅      |
-| http4s | ✅   | ✅        | ✅      |
-| slf4j  | ✅   | 🚫        | 🚫      |
-| slf4j-2 | ✅   | 🚫        | 🚫      |
+| Module  | JVM   | scala.js  | native |
+|---------|-------|-----------|--------|
+| core    | ✅    | ✅        | ✅     |
+| http4s  | ✅    | ✅        | ✅     |
+| slf4j   | ✅    | 🚫        | 🚫     |
+| slf4j-2 | ✅    | 🚫        | 🚫     |
 
 ## Installation
 
