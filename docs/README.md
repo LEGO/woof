@@ -150,13 +150,13 @@ To use this program with woof
 import org.legogroup.woof.slf4j.*
 import cats.effect.std.Dispatcher
 val mainSlf4j: IO[Unit] = 
-  Dispatcher.sequential[IO].use( implicit dispatcher =>
+  Dispatcher.sequential[IO].use{ implicit dispatcher =>
     for
       woofLogger  <- DefaultLogger.makeIo(consoleOutput)
       _           <- woofLogger.registerSlf4j
       _           <- programWithSlf4j
     yield ()
-  )
+  }
 ```
 
 and running it:
