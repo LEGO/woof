@@ -10,7 +10,7 @@ import scala.util.Try
 trait Slf4jWoofLoggerImpl[F[_], Marker](name: String):
 
   private def getLogInfo() =
-    val stacktraceElements = Thread.currentThread().getStackTrace()
+    val stacktraceElements = (new Throwable).getStackTrace()
     val lastIndex = stacktraceElements.reverse.indexWhere(s =>
       s.getClassName == this.getClass.getName
     ) // after last mention of this class
