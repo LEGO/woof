@@ -39,9 +39,10 @@ A **pure** _(in both senses of the word!)_ **Scala 3** logging library with **no
 
 ```scala
 libraryDependencies ++= Seq(
-  "org.legogroup" %% "woof-core"   % "$VERSION",
-  "org.legogroup" %% "woof-slf4j"  % "$VERSION", // only if you need to use Woof via slf4j
-  "org.legogroup" %% "woof-http4s" % "$VERSION", // only if you need to add correlation IDs in http4s 
+  "org.legogroup" %% "woof-core"    % "$VERSION",
+  "org.legogroup" %% "woof-slf4j"   % "$VERSION", // only if you need to use Woof via slf4j 1.x.x
+  "org.legogroup" %% "woof-slf4j-2" % "$VERSION", // only if you need to use Woof via slf4j 2.x.x
+  "org.legogroup" %% "woof-http4s"  % "$VERSION", // only if you need to add correlation IDs in http4s 
 )
 ```
 
@@ -99,10 +100,10 @@ and running it yields:
 ```scala
 import cats.effect.unsafe.implicits.global
 main.unsafeRunSync()
-// 2023-03-10 13:06:28 [DEBUG] repl.MdocSession$.MdocApp: This is some debug (README.md:27)
-// 2023-03-10 13:06:28 [INFO ] repl.MdocSession$.MdocApp: HEY! (README.md:28)
-// 2023-03-10 13:06:28 [WARN ] repl.MdocSession$.MdocApp: I'm warning you (README.md:29)
-// 2023-03-10 13:06:28 [ERROR] repl.MdocSession$.MdocApp: I give up (README.md:30)
+// 2023-03-13 09:00:42 [DEBUG] repl.MdocSession$.MdocApp: This is some debug (README.md:27)
+// 2023-03-13 09:00:42 [INFO ] repl.MdocSession$.MdocApp: HEY! (README.md:28)
+// 2023-03-13 09:00:42 [WARN ] repl.MdocSession$.MdocApp: I'm warning you (README.md:29)
+// 2023-03-13 09:00:42 [ERROR] repl.MdocSession$.MdocApp: I give up (README.md:30)
 ```
 
 We can also re-use the program and add context to our logger:
@@ -121,11 +122,11 @@ And running with context yields:
 
 ```scala
 mainWithContext.unsafeRunSync()
-// 2023-03-10 13:06:28 [DEBUG] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.MdocApp: This is some debug (README.md:27)
-// 2023-03-10 13:06:28 [INFO ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.MdocApp: HEY! (README.md:28)
-// 2023-03-10 13:06:28 [WARN ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.MdocApp: I'm warning you (README.md:29)
-// 2023-03-10 13:06:28 [ERROR] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.MdocApp: I give up (README.md:30)
-// 2023-03-10 13:06:28 [INFO ] repl.MdocSession$.MdocApp: Now the context is gone (README.md:61)
+// 2023-03-13 09:00:42 [DEBUG] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.MdocApp: This is some debug (README.md:27)
+// 2023-03-13 09:00:42 [INFO ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.MdocApp: HEY! (README.md:28)
+// 2023-03-13 09:00:42 [WARN ] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.MdocApp: I'm warning you (README.md:29)
+// 2023-03-13 09:00:42 [ERROR] trace-id=4d334544-6462-43fa-b0b1-12846f871573 repl.MdocSession$.MdocApp: I give up (README.md:30)
+// 2023-03-13 09:00:42 [INFO ] repl.MdocSession$.MdocApp: Now the context is gone (README.md:61)
 ```
 
 ## Can I use `SLF4J`?
@@ -223,8 +224,8 @@ the correlation ID is also returned in the header of the response.
 
 ```scala
 mainHttp4s.unsafeRunSync()
-// 2023-03-10 13:06:29 [INFO ] X-Trace-Id=91a8965a-d73c-45f9-8f5a-72f8feebf0b8 repl.MdocSession$.MdocApp: I got a request with trace id! :D (README.md:126)
-// 2023-03-10 13:06:29 [INFO ] repl.MdocSession$.MdocApp: Got response headers: Headers(X-Trace-Id: 91a8965a-d73c-45f9-8f5a-72f8feebf0b8) (README.md:147)
+// 2023-03-13 09:00:43 [INFO ] X-Trace-Id=33a38390-647a-4876-9a05-7898a8f4db44 repl.MdocSession$.MdocApp: I got a request with trace id! :D (README.md:126)
+// 2023-03-13 09:00:43 [INFO ] repl.MdocSession$.MdocApp: Got response headers: Headers(X-Trace-Id: 33a38390-647a-4876-9a05-7898a8f4db44) (README.md:147)
 ```
 
 ## Structured Logging
@@ -249,11 +250,11 @@ And running with context yields:
 
 ```scala
 contextAsJson.unsafeRunSync()
-// {"level":"Debug","epochMillis":1678449989181,"timeStamp":"2023-03-10T12:06:29Z","enclosingClass":"repl.MdocSession$.MdocApp","lineNumber":26,"message":"This is some debug","context":{"bar":"1337","foo":"42"}}
-// {"level":"Info","epochMillis":1678449989183,"timeStamp":"2023-03-10T12:06:29Z","enclosingClass":"repl.MdocSession$.MdocApp","lineNumber":27,"message":"HEY!","context":{"bar":"1337","foo":"42"}}
-// {"level":"Warn","epochMillis":1678449989183,"timeStamp":"2023-03-10T12:06:29Z","enclosingClass":"repl.MdocSession$.MdocApp","lineNumber":28,"message":"I'm warning you","context":{"bar":"1337","foo":"42"}}
-// {"level":"Error","epochMillis":1678449989183,"timeStamp":"2023-03-10T12:06:29Z","enclosingClass":"repl.MdocSession$.MdocApp","lineNumber":29,"message":"I give up","context":{"bar":"1337","foo":"42"}}
-// {"level":"Info","epochMillis":1678449989183,"timeStamp":"2023-03-10T12:06:29Z","enclosingClass":"repl.MdocSession$.MdocApp","lineNumber":168,"message":"Now the context is gone","context":{}}
+// {"level":"Debug","epochMillis":1678694443157,"timeStamp":"2023-03-13T08:00:43Z","enclosingClass":"repl.MdocSession$.MdocApp","lineNumber":26,"message":"This is some debug","context":{"bar":"1337","foo":"42"}}
+// {"level":"Info","epochMillis":1678694443159,"timeStamp":"2023-03-13T08:00:43Z","enclosingClass":"repl.MdocSession$.MdocApp","lineNumber":27,"message":"HEY!","context":{"bar":"1337","foo":"42"}}
+// {"level":"Warn","epochMillis":1678694443159,"timeStamp":"2023-03-13T08:00:43Z","enclosingClass":"repl.MdocSession$.MdocApp","lineNumber":28,"message":"I'm warning you","context":{"bar":"1337","foo":"42"}}
+// {"level":"Error","epochMillis":1678694443159,"timeStamp":"2023-03-13T08:00:43Z","enclosingClass":"repl.MdocSession$.MdocApp","lineNumber":29,"message":"I give up","context":{"bar":"1337","foo":"42"}}
+// {"level":"Info","epochMillis":1678694443159,"timeStamp":"2023-03-13T08:00:43Z","enclosingClass":"repl.MdocSession$.MdocApp","lineNumber":168,"message":"Now the context is gone","context":{}}
 ```
 
 > We are considering if we should support matching different printers with different outputs: Maybe you want human readable logs for standard out and structured logging for your monitoring tools. However, this will be a breaking change.
