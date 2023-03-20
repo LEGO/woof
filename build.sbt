@@ -82,7 +82,8 @@ lazy val root =
         core,
         http4s,
         slf4j,
-        slf4j2
+        slf4j2,
+        slf4jCommon,
       ).flatMap(_.componentProjects).map(_.project): _*
     )
     .settings(
