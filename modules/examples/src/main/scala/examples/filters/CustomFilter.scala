@@ -19,7 +19,7 @@ object CustomFilter extends IOApp.Simple:
     yield ()
 
   def evenLines: IO[Unit] =
-    given Filter = logLine => logLine.info.lineNumber % 2 == 0 // only print *even* lines
+    given Filter = Filter.lineNumberFilter(_ % 2 == 0) // only print *even* lines
     for
       given Logger[IO] <- DefaultLogger.makeIo(Output.fromConsole)
       _                <- program
@@ -27,7 +27,7 @@ object CustomFilter extends IOApp.Simple:
 
   def filterWords: IO[Unit] =
     val filterWords = Set("Serious", "business", "crazy")
-    given Filter    = logLine => logLine.message.split("\\s").exists(filterWords.contains)
+    given Filter    = Filter.messageFilter(_.split("\\s").exists(filterWords.contains))
     for
       given Logger[IO] <- DefaultLogger.makeIo(Output.fromConsole)
       _                <- program
@@ -35,7 +35,7 @@ object CustomFilter extends IOApp.Simple:
 
   def filterNotWords: IO[Unit] =
     val filterWords = Set("crazy")
-    given Filter    = logLine => !logLine.message.split("\\s").exists(filterWords.contains)
+    given Filter    = Filter.messageFilter(!_.split("\\s").exists(filterWords))
     for
       given Logger[IO] <- DefaultLogger.makeIo(Output.fromConsole)
       _                <- program
