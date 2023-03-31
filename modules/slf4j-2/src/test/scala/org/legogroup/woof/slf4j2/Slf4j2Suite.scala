@@ -31,7 +31,7 @@ class Slf4j2Suite extends munit.CatsEffectSuite:
       result       <- stringOutput.get
     yield assertEquals(
       result,
-      "1987-05-31 13:37:00 [INFO ] org.legogroup.woof.slf4j2.Slf4j2Suite: HELLO, SLF4J! (Slf4j2Suite.scala:31)\n",
+      "1987-05-31 13:37:00 [INFO ] org.legogroup.woof.slf4j2.Slf4j2Suite: HELLO, SLF4J! (Slf4j2Suite.scala:30)\n",
     )
     end for
   }
@@ -52,7 +52,7 @@ class Slf4j2Suite extends munit.CatsEffectSuite:
       result       <- stringOutput.get
     yield assertEquals(
       result,
-      "1987-05-31 13:37:00 [INFO ] org.legogroup.woof.slf4j2.Slf4j2Suite: HELLO, ARRAYS! 1, Some(42), List(1337) (Slf4j2Suite.scala:52)\n",
+      "1987-05-31 13:37:00 [INFO ] org.legogroup.woof.slf4j2.Slf4j2Suite: HELLO, ARRAYS! 1, Some(42), List(1337) (Slf4j2Suite.scala:51)\n",
     )
     end for
   }
@@ -76,7 +76,7 @@ class Slf4j2Suite extends munit.CatsEffectSuite:
       result       <- stringWriter.get
     yield assertEquals(
       result,
-      "1987-05-31 13:37:00 [WARN ] org.legogroup.woof.slf4j2.Slf4j2Suite: WARN, SLF4J! (Slf4j2Suite.scala:75)\n",
+      "1987-05-31 13:37:00 [WARN ] org.legogroup.woof.slf4j2.Slf4j2Suite: WARN, SLF4J! (Slf4j2Suite.scala:74)\n",
     )
     end for
   }
@@ -97,7 +97,7 @@ class Slf4j2Suite extends munit.CatsEffectSuite:
       result       <- stringWriter.get
     yield assertEquals(
       result,
-      "1987-05-31 13:37:00 [DEBUG] org.legogroup.woof.slf4j2.Slf4j2Suite: null exception  (Slf4j2Suite.scala:97)\n",
+      "1987-05-31 13:37:00 [DEBUG] org.legogroup.woof.slf4j2.Slf4j2Suite: null exception  (Slf4j2Suite.scala:96)\n",
     )
     end for
   }
