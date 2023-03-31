@@ -8,15 +8,15 @@ import scala.util.matching.Regex
 case class LogLine(level: LogLevel, info: LogInfo, message: String, context: List[(String, String)])
 
 enum Filter:
-  private case AtLeastLevel(level: LogLevel)
-  private case ExactLevel(level: LogLevel)
-  private case ClassRegex(regex: Regex)
-  private case MessageFilter(filter: String => Boolean)
-  private case LineNumberFilter(filter: Int => Boolean)
-  private case CompositeAnd(a: Filter, b: Filter)
-  private case CompositeOr(a: Filter, b: Filter)
-  private case Nothing
-  private case Everything
+  private[woof] case AtLeastLevel(level: LogLevel)
+  private[woof] case ExactLevel(level: LogLevel)
+  private[woof] case ClassRegex(regex: Regex)
+  private[woof] case MessageFilter(filter: String => Boolean)
+  private[woof] case LineNumberFilter(filter: Int => Boolean)
+  private[woof] case CompositeAnd(a: Filter, b: Filter)
+  private[woof] case CompositeOr(a: Filter, b: Filter)
+  private[woof] case Nothing
+  private[woof] case Everything
 end Filter
 
 object Filter:
