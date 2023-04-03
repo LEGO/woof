@@ -36,17 +36,5 @@ object Filter:
   extension (f: Filter)
     infix def and(g: Filter): Filter = Filter.CompositeAnd(f, g)
     infix def or(g: Filter): Filter  = Filter.CompositeOr(f, g)
-    def interpret: LogLine => Boolean = line =>
-      f match
-        case Filter.AtLeastLevel(level)      => line.level >= level
-        case Filter.ExactLevel(level)        => line.level == level
-        case Filter.ClassRegex(regex)        => regex.matches(line.info.enclosingClass.printableName)
-        case Filter.CompositeAnd(a, b)       => a.interpret(line) && b.interpret(line)
-        case Filter.CompositeOr(a, b)        => a.interpret(line) || b.interpret(line)
-        case Filter.LineNumberFilter(filter) => filter(line.info.lineNumber)
-        case Filter.MessageFilter(filter)    => filter(line.message)
-        case Filter.Nothing                  => false
-        case Filter.Everything               => true
-  end extension
 
 end Filter
