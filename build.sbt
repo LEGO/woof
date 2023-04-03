@@ -146,10 +146,9 @@ lazy val examplesJs = crossProject(JSPlatform)
   .jsConfigure(_.settings(scalaJSUseMainModuleInitializer := true))
   .dependsOn(core)
 
-lazy val benchmarks = crossProject(JSPlatform, JVMPlatform, NativePlatform)
-  .crossType(CrossType.Pure)
+lazy val benchmarks = project
   .in(file("./modules/benchmarks"))
-  .dependsOn(core)
+  .dependsOn(core.jvm)
   .enablePlugins(JmhPlugin)
   .settings(commonSettings)
   .settings(publish / skip := true)
