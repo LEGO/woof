@@ -47,7 +47,7 @@ class DefaultLogger[F[_]: StringLocal: Monad: Clock](output: Output[F], outputs:
   private[woof] def logToOutputs(level: LogLevel, message: String)(using logInfo: LogInfo): F[Unit] = for
     context <- summon[StringLocal[F]].ask
     logLine <- makeLogString(level, logInfo, message, context)
-    _       <- doOutputs(level, logLine).whenA(summon[Filter].interpret(LogLine(level, logInfo, logLine, context)))
+    _       <- doOutputs(level, logLine)
   yield ()
 
 end DefaultLogger
