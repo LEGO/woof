@@ -23,7 +23,6 @@ Hardware:
 ```
 [info] # JMH version: 1.32
 [info] # VM version: JDK 17.0.1, OpenJDK 64-Bit Server VM, 17.0.1+12
-[info] # VM invoker: /Users/dkFePaHa/.asdf/installs/java/adoptopenjdk-17.0.1+12/bin/java
 [info] # VM options: <none>
 [info] # Blackhole mode: full + dont-inline hint
 [info] # Warmup: 5 iterations, 10 s each
@@ -51,14 +50,18 @@ Hardware:
 
 ## Interpretation
 
-The results look similar to what I would expect. The benchmarks log 3 times at different levels (Info, Warn, Error) in a
+My hypothesis going in was that materializing the output string was a significant part of the work, and the results seem
+to corroborate this.
+
+The benchmarks log 3 times at different levels (Info, Warn, Error) in a
 tight loop of 1000 iterations. `testEverything` uses `Filter.everything`, i.e. it has to _always_ materialize the log
 output. This is the worst case scenario.
 
 `testInfo` uses the `Filter.exactLevel(LogLevel.Info)` which will only materialize `1/3` of the lines. This is almost 3
 times as fast as `everything`.
 
-`testNothing` is the best case scenario where nothing is materialized. This is more than 3 times faster, since not only
+`testNothing` is the best case scenario where nothing is materialized. This is more than 3 times faster
+than `testEverything`, since not only
 is nothing materialized, the outputs are never called, i.e. the compiler should be able to eliminate a lot of code (no
 blackhole consume calls anymore!).
 
