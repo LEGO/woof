@@ -19,14 +19,14 @@ class LoggerSuite extends CatsEffectSuite:
   given Filter = Filter.everything
 
   def clockOf(ref: Ref[IO, FiniteDuration]): Clock[IO] = new Clock[IO]:
-    def applicative = Applicative[IO]
-    def monotonic   = ref.get
-    def realTime    = ref.get
+    def applicative: Applicative[IO]  = Applicative[IO]
+    def monotonic: IO[FiniteDuration] = ref.get
+    def realTime: IO[FiniteDuration]  = ref.get
 
   val constantClock: Clock[IO] = new Clock[IO]:
-    def applicative = Applicative[IO]
-    def monotonic   = startTime.pure
-    def realTime    = startTime.pure
+    def applicative: Applicative[IO]  = Applicative[IO]
+    def monotonic: IO[FiniteDuration] = startTime.pure
+    def realTime: IO[FiniteDuration]  = startTime.pure
 
   test("log should make log line") {
 
@@ -48,7 +48,7 @@ class LoggerSuite extends CatsEffectSuite:
 
     given Clock[IO]   = constantClock
     val theme         = Theme.defaultTheme
-    given Printer     = ColorPrinter(theme = theme, formatTime = testFormatTime)
+    given Printer     = ColorPrinter(theme, formatTime = testFormatTime)
     val reset         = Theme.Style.Reset
     val postfixFormat = theme.postfixFormat
     // format: off
@@ -111,5 +111,28 @@ class LoggerSuite extends CatsEffectSuite:
       output <- strRef.get
     yield assertEquals(output, expected)
     end for
+  }
+
+  test("Add var-args context") {
+    given Clock[IO] = constantClock
+
+    given Printer = NoColorPrinter(testFormatTime)
+
+    def programLogic(using Logger[IO]) = Logger[IO].info("some info")
+
+    // format: off
+    val expected =
+      """1987-05-31 13:37:00 [INFO ] foo=bar, baz=1337 org.legogroup.woof.LoggerSuite: some info (LoggerSuite.scala:121)
+1987-05-31 13:37:00 [INFO ] org.legogroup.woof.LoggerSuite: some info (LoggerSuite.scala:121)
+"""
+    // format: on
+    for
+      given StringLocal[IO] <- Local.makeIoLocal[List[(String, String)]]
+      strRef                <- Ref[IO].of("")
+      given Logger[IO] = new DefaultLogger[IO](StringWriter(strRef))
+      _      <- programLogic.withLogContext(keyValuePairs = "foo" -> "bar", "baz" -> "1337")
+      _      <- programLogic
+      output <- strRef.get
+    yield assertEquals(output, expected)
   }
 end LoggerSuite
