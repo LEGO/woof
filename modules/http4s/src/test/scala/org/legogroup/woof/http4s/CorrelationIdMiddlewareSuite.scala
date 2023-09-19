@@ -1,13 +1,13 @@
 package org.legogroup.woof.http4s
 
 import cats.data.{Kleisli, OptionT}
+import cats.effect.std.UUIDGen
 import cats.effect.{Clock, IO}
 import cats.syntax.all.*
 import cats.{Applicative, Monad}
 import munit.CatsEffectSuite
 import org.http4s.{HttpRoutes, Request, Response}
 import org.legogroup.woof.{*, given}
-import org.legogroup.woof.http4s.CorrelationIdMiddleware.UUIDGen
 import org.typelevel.ci.CIString
 
 import java.time.ZoneId
@@ -24,9 +24,9 @@ class CorrelationIdMiddlewareSuite extends CatsEffectSuite:
   given Printer = NoColorPrinter()
   given Filter  = Filter.everything
 
-  val testUuid = UUID.fromString("E20A27FE-5142-4E21-BA09-35BC6FB84591")
+  val testUuid: UUID = UUID.fromString("E20A27FE-5142-4E21-BA09-35BC6FB84591")
   given UUIDGen[IO] with
-    def gen = testUuid.pure[IO]
+    def randomUUID: IO[UUID] = testUuid.pure[IO]
 
   test("add trace id with middleware") {
 

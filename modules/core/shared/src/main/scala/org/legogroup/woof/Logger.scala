@@ -39,14 +39,6 @@ object Logger:
 
   given Printer = ColorPrinter()
 
-  val ioStringLocal = Local.makeIoLocal[List[(String, String)]]
-
-  @deprecated(s"Use `DefaultLogger.makeIo`") def makeIoLogger(output: Output[IO], outputs: Output[IO]*)(using
-      Clock[IO],
-      Printer,
-      Filter,
-  ): IO[Logger[IO]] =
-    for given StringLocal[IO] <- ioStringLocal
-    yield new DefaultLogger[IO](output, outputs*)
+  val ioStringLocal: IO[StringLocal[IO]] = Local.makeIoLocal[List[(String, String)]]
 
 end Logger
