@@ -20,8 +20,8 @@ We use as password protected, encrypted signing key when signing releases for ma
 7. Refresh the key expiration date
    8. `gpg --edit-key <key id>`
    9. `expire`
-   10. **IMPORTANT:** When promted, write `1y`. The default is `no-expiration`, **which is not what we want**.
-   11. You should be prompted for the pass-phrase again. Enter the same pass-phrase as before.
+   10. **IMPORTANT:** When promted, write `1y`. The default is `no-expiration`, **which is not what we want**
+   11. You should be prompted for the pass-phrase again. Enter the same pass-phrase as before
    10. `save` + enter
 11. If done correctly, it should exit the `gpg` interactive prompt
 
@@ -29,11 +29,11 @@ We use as password protected, encrypted signing key when signing releases for ma
 
 1. Export the public key: `gpg --output maven.public.gpg --armor --export <key id>` 
 2. Export the private key: `gpg --output maven.secret.gpg --armor --export-secret-keys <key id>`
-   3. You will be prompted for the pass-phrase. Enter the same pass-phrase as before.
-4. Rename the existing public and private keys in your secret manager to something like `maven.public.gpg[expired]`. 
-   5. You can delete the `n-2`nd iteration of keys, as we are pretty sure we won't need them again at this point.
-5. Upload `maven.public.gpg` and `maven.secret.gpg` to your secret manager.
-6. **IMPORTANT** Delete `maven.public.gpg` and `maven.secret.gpg` from your local machine.
+   3. You will be prompted for the pass-phrase. Enter the same pass-phrase as before
+4. Rename the existing public and private keys in your secret manager to something like `maven.public.gpg[expired]`
+   5. You can delete the `n-2`nd iteration of keys, as we are pretty sure we won't need them again at this point
+5. Upload `maven.public.gpg` and `maven.secret.gpg` to your secret manager
+6. **IMPORTANT** Delete `maven.public.gpg` and `maven.secret.gpg` from your local machine
 
 ## Publish the public key to a key server
 
