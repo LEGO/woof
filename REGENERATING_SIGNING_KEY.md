@@ -8,7 +8,7 @@ To sign a new release _after the key expires_, you need to:
 
 ## Generating a new key
 
-We use as password protected, encrypted signing key when signing releases for maven central. To refresh the key, you need to:
+We use a password protected, encrypted signing key when signing releases for maven central. To refresh the key, you need to:
 
 1. Download the secret key file from your secret manager
 2. Note the encryption password from your secret manager
