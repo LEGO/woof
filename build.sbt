@@ -9,7 +9,7 @@ val V = new {
   val munitCatsEffect = "2.0.0-M4"
   val scala           = "3.3.1"
   val slf4j           = "1.7.36"
-  val slf4j2          = "2.0.11"
+  val slf4j2          = "2.0.12"
   val tzdb            = "2.5.0"
 }
 
