@@ -15,6 +15,7 @@ A **pure** _(in both senses of the word!)_ **Scala 3** logging library with **no
   - [Can I use `SLF4J`?](#can-i-use-slf4j)
     - [Limitations of SLF4J bindings](#limitations-of-slf4j-bindings)
   - [Can I use `http4s`?](#can-i-use-http4s)
+  - [Can I use `log4cats`?](#can-i-use-log4cats)
   - [Structured Logging](#structured-logging)
 
 ## Highlights
@@ -215,6 +216,44 @@ the correlation ID is also returned in the header of the response.
 
 ```scala mdoc
 mainHttp4s.unsafeRunSync()
+```
+
+## Can I use `log4cats`?
+Yes, you can. Create a Woof `Logger[F]` instance, and wrap it into Log4Cats' `LoggerFactory[F]`:
+```scala mdoc
+import cats.effect.IO
+
+import org.legogroup.woof.ColorPrinter
+import org.legogroup.woof.DefaultLogger
+import org.legogroup.woof.Filter
+import org.legogroup.woof.log4cats.WoofFactory
+import org.legogroup.woof.Output
+import org.legogroup.woof.Printer
+
+import org.typelevel.log4cats.Logger
+import org.typelevel.log4cats.LoggerFactory
+import org.typelevel.log4cats.syntax.*
+
+
+def program(using LoggerFactory[IO]): IO[Unit] =
+  given Logger[IO] = LoggerFactory[IO].getLogger
+
+  for
+    _ <- error"This is some error from log4cats!"
+    _ <- warn"This is some warn from log4cats!"
+    _ <- info"This is some info from log4cats!"
+    _ <- debug"This is some debug from log4cats!"
+    _ <- trace"This is some trace from log4cats!"
+  yield ()
+
+val main: IO[Unit] =
+  given Filter = Filter.everything
+  given Printer = ColorPrinter()
+
+  for
+    given LoggerFactory[IO] <- DefaultLogger.makeIo(Output.fromConsole).map(WoofFactory[IO](_))
+    _                       <- program
+  yield ()
 ```
 
 ## Structured Logging
