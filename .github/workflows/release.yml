@@ -15,6 +15,9 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           cache: 'sbt'
+      - uses: sbt/setup-sbt@v1
+        with:
+          sbt-runner-version: 1.10.2
       - run: sbt ci-release
         env:
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
