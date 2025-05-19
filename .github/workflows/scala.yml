@@ -16,6 +16,9 @@ jobs:
         with:
           java-version: "16"
           distribution: "adopt"
+      - uses: sbt/setup-sbt@v1
+        with:
+          sbt-runner-version: 1.10.2
       - name: Check sources formatting
         run: sbt scalafmtCheck
       - name: Check sbt and project dir formatting
