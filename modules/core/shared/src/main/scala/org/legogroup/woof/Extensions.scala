@@ -23,6 +23,7 @@ extension [F[_]: Concurrent: Clock: Sleep: Logger: Monad, T](f: F[T])
       .flatMap(
         _.fold(_ => new Exception("Log should never terminate on it's own...\"this can't happen\"").raiseError, _.pure),
       )
+end extension
 
 private def repeat[F[_]: Clock: Sleep: FlatMap](period: FiniteDuration, task: FiniteDuration => F[Unit]): F[Unit] =
   for
