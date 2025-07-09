@@ -2,7 +2,7 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 
 val V = new {
   val cats            = "2.10.0"
-  val catsEffect      = "3.6.1"
+  val catsEffect      = "3.6.2"
   val circe           = "0.14.8"
   val http4s          = "0.23.28"
   val munit           = "1.0.0-M11"
