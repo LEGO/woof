@@ -27,7 +27,7 @@ open class ColorPrinter(
     val reset        = theme.reset
     val prefix       = level.productPrefix.toUpperCase.padTo(5, ' ')
     val time         = formatTime(epochMillis)
-    val contextPart =
+    val contextPart  =
       if context.isEmpty then ""
       else
         " " +
