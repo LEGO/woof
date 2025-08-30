@@ -15,7 +15,7 @@ object Local:
   def makeIoLocal[T: Monoid]: IO[Local[IO, T]] = IOLocal(Monoid[T].empty).map(fromIoLocal)
 
   def fromIoLocal[T](ioLocal: IOLocal[T]): Local[IO, T] = new Local[IO, T]:
-    def ask: IO[T] = ioLocal.get
+    def ask: IO[T]                            = ioLocal.get
     def local[A](fa: IO[A])(f: T => T): IO[A] =
       for
         before <- ioLocal.get
