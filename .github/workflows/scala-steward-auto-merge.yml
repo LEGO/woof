@@ -13,9 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     if: github.actor == 'scala-steward' || github.actor == 'scala-steward[bot]'
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      
       - name: Approve PR
         uses: actions/github-script@v7
         with:
