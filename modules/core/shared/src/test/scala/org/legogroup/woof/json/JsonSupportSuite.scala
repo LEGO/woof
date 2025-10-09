@@ -22,15 +22,15 @@ class JsonSupportFunSuite extends munit.FunSuite:
     val logInfo     = LogInfo(EnclosingClass("my.enclosing.Class"), "filename", 1337)
     val context     = List("hey" -> "dude", "foo" -> "bar")
     val epochMillis = EpochMillis(startTime.toMillis)
-    val logLine = LogLine(
+    val logLine     = LogLine(
       LogLevel.Debug,
       logInfo,
       "my message",
       context
     )
 
-    val js     = JsonSupport
-    val actual = js.toJsonString(logLine, epochMillis)
+    val js       = JsonSupport
+    val actual   = js.toJsonString(logLine, epochMillis)
     val expected =
       """{"level":"Debug","epochMillis":549459420000,"timeStamp":"1987-05-31T11:37:00Z","enclosingClass":"my.enclosing.Class","lineNumber":1337,"message":"my message","context":{"hey":"dude","foo":"bar"}}"""
 
