@@ -34,8 +34,8 @@ object JsonSupport:
 
   private[json] object Json:
 
-    def fromLong(l: Long): Json.JsonNumber     = Json.JsonNumber(l)
-    def fromString(s: String): Json.JsonString = JsonString(s)
+    def fromLong(l: Long): Json.JsonNumber        = Json.JsonNumber(l)
+    def fromString(s: String): Json.JsonString    = JsonString(s)
     def fromMap(kvps: List[(String, Json)]): Json =
       Json.JsonObject(kvps.toList.map((key, value) => fromString(key) -> value))
 
@@ -69,7 +69,7 @@ object JsonSupport:
     case '\r' => "\\r"
     case '"'  => "\\\""
     case '\\' => "\\\\"
-    case _ =>
+    case _    =>
       if ch.isControl then "\\" + escapedCharToHex(ch)
       else String.valueOf(ch)
 
