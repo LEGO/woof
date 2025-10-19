@@ -20,7 +20,7 @@ class FilterBenchmark:
     given Printer = ColorPrinter()
     for
       logger <- DefaultLogger.makeIo(blackholeOutput)
-      _ <-
+      _      <-
         def loop(remaining: Int): IO[Unit] =
           val message = s"message$remaining"
           if remaining <= 0 then IO.unit
