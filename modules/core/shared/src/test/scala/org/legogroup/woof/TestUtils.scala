@@ -22,7 +22,7 @@ val newStringWriter: IO[StringWriter] =
   for ref <- Ref[IO].of("")
   yield StringWriter(ref)
 
-val startTime = 549459420.seconds
+val startTime            = 549459420.seconds
 val leetClock: Clock[IO] = new Clock[IO]:
   def applicative = Applicative[IO]
   def monotonic   = startTime.pure
@@ -36,7 +36,7 @@ def executeWithStartTime[T](f: IO[T]): IO[Unit] =
         _       <- control.advance(startTime)
         _       <- control.tickAll
         results <- control.results
-        _ <- results match
+        _       <- results match
           case Some(Outcome.Errored(e)) => IO.raiseError(e)
           case x                        => IO.unit
       yield ()

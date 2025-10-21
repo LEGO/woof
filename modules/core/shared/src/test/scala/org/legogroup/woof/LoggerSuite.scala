@@ -69,7 +69,7 @@ class LoggerSuite extends CatsEffectSuite:
 
     given Printer   = NoColorPrinter(testFormatTime)
     given Sleep[IO] = IO.sleep
-    val program = for
+    val program     = for
       ref         <- Ref[IO].of("")
       stringLocal <- Local.makeIoLocal[List[(String, String)]]
       given Logger[IO] = new DefaultLogger[IO](StringWriter(ref))(using stringLocal)
