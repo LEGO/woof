@@ -3,6 +3,8 @@ name: Scala Steward Auto-Merge
 on:
   pull_request:
     branches: [main]
+  pull_request_target:
+    types: [opened, synchronize]
 
 permissions:
   contents: write
