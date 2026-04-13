@@ -4,7 +4,7 @@ val V = new {
   val cats            = "2.13.0"
   val catsEffect      = "3.7.0"
   val circe           = "0.14.15"
-  val http4s          = "0.23.33"
+  val http4s          = "0.23.34"
   val munit           = "1.2.4"
   val munitScalacheck = "1.2.0"
   val munitCatsEffect = "2.2.0"
@@ -108,7 +108,7 @@ lazy val core  = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   )
 
 val http4sFolder = file("./modules/http4s")
-lazy val http4s  = crossProject(JSPlatform, JVMPlatform /* , NativePlatform */ )
+lazy val http4s  = crossProject(JSPlatform, JVMPlatform , NativePlatform)
   .crossType(CrossType.Pure)
   .in(http4sFolder)
   .settings(
