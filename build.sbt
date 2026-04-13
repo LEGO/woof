@@ -34,10 +34,10 @@ val D = new {
  */
 inThisBuild(
   List(
-    organization           := "org.legogroup",
-    homepage               := Some(url("https://github.com/LEGO/woof")),
-    licenses               := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
-    developers             := List(
+    organization := "org.legogroup",
+    homepage     := Some(url("https://github.com/LEGO/woof")),
+    licenses     := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+    developers   := List(
       Developer(
         "hejfelix",
         "Felix Bjært Hargreaves",
@@ -108,7 +108,7 @@ lazy val core  = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   )
 
 val http4sFolder = file("./modules/http4s")
-lazy val http4s  = crossProject(JSPlatform, JVMPlatform , NativePlatform)
+lazy val http4s  = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Pure)
   .in(http4sFolder)
   .settings(
