@@ -34,12 +34,10 @@ val D = new {
  */
 inThisBuild(
   List(
-    sonatypeCredentialHost := "s01.oss.sonatype.org",
-    sonatypeRepository     := "https://s01.oss.sonatype.org/service/local",
-    organization           := "org.legogroup",
-    homepage               := Some(url("https://github.com/LEGO/woof")),
-    licenses               := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
-    developers             := List(
+    organization := "org.legogroup",
+    homepage     := Some(url("https://github.com/LEGO/woof")),
+    licenses     := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+    developers   := List(
       Developer(
         "hejfelix",
         "Felix Bjært Hargreaves",
