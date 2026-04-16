@@ -1,16 +1,17 @@
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
 val V = new {
-  val cats            = "2.10.0"
-  val catsEffect      = "3.6.3"
-  val circe           = "0.14.8"
-  val http4s          = "0.23.33"
-  val munit           = "1.0.0-M11"
-  val munitCatsEffect = "2.1.0"
+  val cats            = "2.13.0"
+  val catsEffect      = "3.7.0"
+  val circe           = "0.14.15"
+  val http4s          = "0.23.34"
+  val munit           = "1.3.0"
+  val munitScalacheck = "1.3.0"
+  val munitCatsEffect = "2.2.0"
   val scala           = "3.3.7"
   val slf4j           = "1.7.36"
   val slf4j2          = "2.0.17"
-  val tzdb            = "2.5.0"
+  val tzdb            = "2.6.0"
 }
 
 val D = new {
@@ -23,7 +24,7 @@ val D = new {
   val http4s            = Def.setting("org.http4s" %%% "http4s-core" % V.http4s)
   val munit             = Def.setting("org.scalameta" %%% "munit" % V.munit)
   val munitCatsEffect   = Def.setting("org.typelevel" %%% "munit-cats-effect" % V.munitCatsEffect)
-  val munitScalacheck   = Def.setting("org.scalameta" %%% "munit-scalacheck" % V.munit)
+  val munitScalacheck   = Def.setting("org.scalameta" %%% "munit-scalacheck" % V.munitScalacheck)
   val circe             = Def.setting("io.circe" %%% "circe-parser" % V.circe)
   val tzdb              = Def.setting("io.github.cquiroz" %%% "scala-java-time-tzdb" % V.tzdb)
 }
