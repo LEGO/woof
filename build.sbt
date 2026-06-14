@@ -11,7 +11,7 @@ val V = new {
   val scala           = "3.3.7"
   val slf4j           = "1.7.36"
   val slf4j2          = "2.0.17"
-  val tzdb            = "2.6.0"
+  val tzdb            = "2.7.0"
 }
 
 val D = new {
