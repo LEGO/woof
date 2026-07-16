@@ -16,7 +16,7 @@ jobs:
         with:
           java-version: "16"
           distribution: "adopt"
-      - uses: sbt/setup-sbt@93e926cbdb4a428e41b4ef754124ec82925ffdc2 # v1.1.23
+      - uses: sbt/setup-sbt@9d56cf12e9b58d219605e1d8bfe69a8395fedde0 # v1.5.1
         with:
           sbt-runner-version: 1.10.2
       - name: Check sources formatting
