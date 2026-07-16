@@ -5,6 +5,7 @@ val V = new {
   val catsEffect      = "3.7.0"
   val circe           = "0.14.16"
   val http4s          = "0.23.36"
+  val log4cats        = "2.8.0"
   val munit           = "1.3.4"
   val munitScalacheck = "1.3.0"
   val munitCatsEffect = "2.2.0"
@@ -22,6 +23,7 @@ val D = new {
   val catsEffect        = Def.setting("org.typelevel" %%% "cats-effect" % V.catsEffect)
   val catsEffectTestKit = Def.setting("org.typelevel" %%% "cats-effect-testkit" % V.catsEffect)
   val http4s            = Def.setting("org.http4s" %%% "http4s-core" % V.http4s)
+  val log4cats          = Def.setting("org.typelevel" %%% "log4cats-core" % V.log4cats)
   val munit             = Def.setting("org.scalameta" %%% "munit" % V.munit)
   val munitCatsEffect   = Def.setting("org.typelevel" %%% "munit-cats-effect" % V.munitCatsEffect)
   val munitScalacheck   = Def.setting("org.scalameta" %%% "munit-scalacheck" % V.munitScalacheck)
@@ -83,6 +85,7 @@ lazy val root =
         slf4j,
         slf4j2,
         slf4jCommon,
+        log4cats,
       ).flatMap(_.componentProjects).map(_.project): _*
     )
     .settings(
@@ -106,6 +109,17 @@ lazy val core  = crossProject(JSPlatform, JVMPlatform, NativePlatform)
       D.tzdb.value              % Test
     ),
   )
+
+val log4catsFolder = file("./modules/log4cats")
+lazy val log4cats  = crossProject(JSPlatform, JVMPlatform, NativePlatform)
+  .crossType(CrossType.Pure)
+  .in(log4catsFolder)
+  .settings(
+    name := nameForFile(log4catsFolder),
+    libraryDependencies += D.log4cats.value,
+  )
+  .settings(commonSettings)
+  .dependsOn(core % "compile->compile;test->test") // we also want the test utils
 
 val http4sFolder = file("./modules/http4s")
 lazy val http4s  = crossProject(JSPlatform, JVMPlatform, NativePlatform)
