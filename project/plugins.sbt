@@ -1,4 +1,4 @@
-addSbtPlugin("org.scalameta"      % "sbt-mdoc"                      % "2.9.0")
+addSbtPlugin("org.scalameta"      % "sbt-mdoc"                      % "2.9.1")
 addSbtPlugin("com.github.sbt"     % "sbt-ci-release"                % "1.12.0")
 addSbtPlugin("org.scala-js"       % "sbt-scalajs"                   % "1.22.0")
 addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject"      % "1.3.2")
