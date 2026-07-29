@@ -29,7 +29,7 @@ object Filter:
   def lineNumberFilter(test: Int => Boolean): Filter = LineNumberFilter(test)
   def messageFilter(test: String => Boolean): Filter = MessageFilter(test)
 
-  given Monoid[Filter] with
+  given Monoid[Filter]:
     def empty: Filter                         = nothing
     def combine(f: Filter, g: Filter): Filter = f or g
 

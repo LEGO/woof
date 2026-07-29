@@ -7,12 +7,12 @@ import scala.quoted.*
 
 object Macro:
 
-  private given ToExpr[File] with
+  private given ToExpr[File]:
     def apply(f: File)(using Quotes): Expr[File] =
       val path = Expr(f.getAbsolutePath)
       '{ new java.io.File($path) }
 
-  private given ToExpr[EnclosingClass] with
+  private given ToExpr[EnclosingClass]:
     def apply(name: EnclosingClass)(using Quotes): Expr[EnclosingClass] =
       val exp = Expr(name.fullName)
       '{ EnclosingClass($exp) }

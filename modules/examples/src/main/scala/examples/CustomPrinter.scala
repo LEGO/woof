@@ -6,7 +6,7 @@ import org.legogroup.woof.{*, given}
 object CustomPrinter extends IOApp.Simple:
 
   given Filter = Filter.everything
-  given Printer with
+  given Printer:
     def toPrint(
         epochMillis: EpochMillis,
         level: LogLevel,

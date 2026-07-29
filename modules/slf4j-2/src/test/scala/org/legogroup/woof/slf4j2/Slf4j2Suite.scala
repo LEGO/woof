@@ -15,8 +15,9 @@ class Slf4j2Suite extends munit.CatsEffectSuite:
 
   val dispatcher = ResourceFunFixture(Dispatcher.sequential[IO](true))
 
-  dispatcher.test("should log stuff") { implicit dispatcher =>
-    given Printer = NoColorPrinter(testFormatTime)
+  dispatcher.test("should log stuff") { dispatcher =>
+    given Dispatcher[IO] = dispatcher
+    given Printer        = NoColorPrinter(testFormatTime)
 
     given Filter = Filter.everything
 
@@ -31,13 +32,14 @@ class Slf4j2Suite extends munit.CatsEffectSuite:
       result       <- stringOutput.get
     yield assertEquals(
       result,
-      "1987-05-31 13:37:00 [INFO ] org.legogroup.woof.slf4j2.Slf4j2Suite: HELLO, SLF4J! (Slf4j2Suite.scala:30)\n",
+      "1987-05-31 13:37:00 [INFO ] org.legogroup.woof.slf4j2.Slf4j2Suite: HELLO, SLF4J! (Slf4j2Suite.scala:31)\n",
     )
     end for
   }
 
-  dispatcher.test("should log arrays of objects") { implicit dispatcher =>
-    given Printer = NoColorPrinter(testFormatTime)
+  dispatcher.test("should log arrays of objects") { dispatcher =>
+    given Dispatcher[IO] = dispatcher
+    given Printer        = NoColorPrinter(testFormatTime)
 
     given Filter = Filter.everything
 
@@ -52,13 +54,14 @@ class Slf4j2Suite extends munit.CatsEffectSuite:
       result       <- stringOutput.get
     yield assertEquals(
       result,
-      "1987-05-31 13:37:00 [INFO ] org.legogroup.woof.slf4j2.Slf4j2Suite: HELLO, ARRAYS! 1, Some(42), List(1337) (Slf4j2Suite.scala:51)\n",
+      "1987-05-31 13:37:00 [INFO ] org.legogroup.woof.slf4j2.Slf4j2Suite: HELLO, ARRAYS! 1, Some(42), List(1337) (Slf4j2Suite.scala:53)\n",
     )
     end for
   }
 
-  dispatcher.test("should respect log levels") { implicit dispatcher =>
-    given Printer = NoColorPrinter(testFormatTime)
+  dispatcher.test("should respect log levels") { dispatcher =>
+    given Dispatcher[IO] = dispatcher
+    given Printer        = NoColorPrinter(testFormatTime)
 
     given Filter = Filter.exactLevel(LogLevel.Warn)
 
@@ -76,13 +79,14 @@ class Slf4j2Suite extends munit.CatsEffectSuite:
       result       <- stringWriter.get
     yield assertEquals(
       result,
-      "1987-05-31 13:37:00 [WARN ] org.legogroup.woof.slf4j2.Slf4j2Suite: WARN, SLF4J! (Slf4j2Suite.scala:74)\n",
+      "1987-05-31 13:37:00 [WARN ] org.legogroup.woof.slf4j2.Slf4j2Suite: WARN, SLF4J! (Slf4j2Suite.scala:77)\n",
     )
     end for
   }
 
-  dispatcher.test("should not fail on null throwable") { implicit dispatcher =>
-    given Printer = NoColorPrinter(testFormatTime)
+  dispatcher.test("should not fail on null throwable") { dispatcher =>
+    given Dispatcher[IO] = dispatcher
+    given Printer        = NoColorPrinter(testFormatTime)
 
     given Filter = Filter.everything
 
@@ -97,7 +101,7 @@ class Slf4j2Suite extends munit.CatsEffectSuite:
       result       <- stringWriter.get
     yield assertEquals(
       result,
-      "1987-05-31 13:37:00 [DEBUG] org.legogroup.woof.slf4j2.Slf4j2Suite: null exception  (Slf4j2Suite.scala:96)\n",
+      "1987-05-31 13:37:00 [DEBUG] org.legogroup.woof.slf4j2.Slf4j2Suite: null exception  (Slf4j2Suite.scala:100)\n",
     )
     end for
   }

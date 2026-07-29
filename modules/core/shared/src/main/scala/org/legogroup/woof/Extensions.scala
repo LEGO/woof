@@ -13,7 +13,7 @@ trait Sleep[F[_]]:
 object Sleep:
   def apply[F[_]](using s: Sleep[F]): Sleep[F] = s
 
-extension [F[_]: Concurrent: Clock: Sleep: Logger: Monad, T](f: F[T])
+extension [F[_]: {Concurrent, Clock, Sleep, Logger, Monad}, T](f: F[T])
   inline def logConcurrently(
       every: FiniteDuration,
   )(inline log: FiniteDuration => String, level: LogLevel = LogLevel.Debug)(using LogInfo): F[T] =
@@ -25,13 +25,13 @@ extension [F[_]: Concurrent: Clock: Sleep: Logger: Monad, T](f: F[T])
       )
 end extension
 
-private def repeat[F[_]: Clock: Sleep: FlatMap](period: FiniteDuration, task: FiniteDuration => F[Unit]): F[Unit] =
+private def repeat[F[_]: {Clock, Sleep, FlatMap}](period: FiniteDuration, task: FiniteDuration => F[Unit]): F[Unit] =
   for
     start <- Clock[F].realTime
     _     <- repeatAtFixedRate(period, task, start)
   yield ()
 
-private def repeatAtFixedRate[F[_]: Clock: Sleep: FlatMap](
+private def repeatAtFixedRate[F[_]: {Clock, Sleep, FlatMap}](
     period: FiniteDuration,
     task: FiniteDuration => F[Unit],
     startedAt: FiniteDuration,
