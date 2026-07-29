@@ -16,7 +16,7 @@ import scala.concurrent.duration.*
 
 class CorrelationIdMiddlewareSuite extends CatsEffectSuite:
 
-  def routes[F[_]: Monad: Logger]: HttpRoutes[F] = Kleisli(request =>
+  def routes[F[_]: {Monad, Logger}]: HttpRoutes[F] = Kleisli(request =>
     for _ <- OptionT.liftF(Logger[F].info("Message with trace id :D"))
     yield Response[F](),
   )
@@ -25,7 +25,7 @@ class CorrelationIdMiddlewareSuite extends CatsEffectSuite:
   given Filter  = Filter.everything
 
   val testUuid: UUID = UUID.fromString("E20A27FE-5142-4E21-BA09-35BC6FB84591")
-  given UUIDGen[IO] with
+  given UUIDGen[IO]:
     def randomUUID: IO[UUID] = testUuid.pure[IO]
 
   test("add trace id with middleware") {

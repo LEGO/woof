@@ -6,7 +6,7 @@ import cats.Monad
 import cats.effect.{IO, IOApp}
 import scala.util.matching.Regex
 
-class RegexFilter[F[_]: Logger: Monad]:
+class RegexFilter[F[_]: {Logger, Monad}]:
 
   def run(): F[Unit] =
     for
@@ -17,7 +17,7 @@ class RegexFilter[F[_]: Logger: Monad]:
 
 end RegexFilter
 
-class AnotherProgram[F[_]: Logger: Monad]:
+class AnotherProgram[F[_]: {Logger, Monad}]:
 
   def run(): F[Unit] =
     for

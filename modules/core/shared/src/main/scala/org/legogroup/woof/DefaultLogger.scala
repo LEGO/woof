@@ -6,7 +6,7 @@ import cats.effect.kernel.Clock
 import org.legogroup.woof.Logger.{ioStringLocal, StringLocal}
 import cats.syntax.all.*
 
-class DefaultLogger[F[_]: StringLocal: Monad: Clock](output: Output[F], outputs: Output[F]*)(using Printer, Filter)
+class DefaultLogger[F[_]: {StringLocal, Monad, Clock}](output: Output[F], outputs: Output[F]*)(using Printer, Filter)
     extends Logger[F]:
 
   val stringLocal: StringLocal[F] = summon[StringLocal[F]]

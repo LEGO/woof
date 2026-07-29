@@ -5,7 +5,7 @@ import cats.syntax.all.*
 import cats.Monad
 import cats.effect.{IO, IOApp}
 
-class TaglessFinal[F[_]: Logger: Monad]:
+class TaglessFinal[F[_]: {Logger, Monad}]:
 
   def run(): F[Unit] =
     for

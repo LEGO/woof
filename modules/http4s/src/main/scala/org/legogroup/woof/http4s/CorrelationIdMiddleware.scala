@@ -17,7 +17,10 @@ object CorrelationIdMiddleware:
 
   private val defaultTraceHeaderName: CIString = CIString("X-Trace-Id")
 
-  private def getOrGenerate[F[_]: Applicative: UUIDGen](headerName: Option[CIString], request: Request[F]): F[String] =
+  private def getOrGenerate[F[_]: {Applicative, UUIDGen}](
+      headerName: Option[CIString],
+      request: Request[F]
+  ): F[String] =
     val key = headerName.getOrElse(defaultTraceHeaderName)
     request.headers
       .get(key)
@@ -25,8 +28,9 @@ object CorrelationIdMiddleware:
       .fold(
         summon[UUIDGen[F]].randomUUID.map(_.toString),
       )(_.pure[F])
+  end getOrGenerate
 
-  def middleware[F[_]: Logger: Monad: UUIDGen](headerName: Option[CIString] = None): HttpRoutes[F] => HttpRoutes[F] =
+  def middleware[F[_]: {Logger, Monad, UUIDGen}](headerName: Option[CIString] = None): HttpRoutes[F] => HttpRoutes[F] =
     routes =>
       Kleisli[[T] =>> OptionT[F, T], Request[F], Response[F]] { request =>
         val key = headerName.getOrElse(defaultTraceHeaderName)
