@@ -16,7 +16,7 @@ jobs:
         with:
           java-version: "17"
           distribution: "temurin"
-      - uses: sbt/setup-sbt@d059c39de700f4cc5cb64f9f56577315e44a984e # v1.5.5
+      - uses: sbt/setup-sbt@8feba82adc7f01ddcf8165b86f778bdb5b82cebc # v1.5.7
         with:
           sbt-runner-version: 1.10.2
       - name: Check sources formatting
