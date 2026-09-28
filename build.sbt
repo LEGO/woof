@@ -4,13 +4,13 @@ val V = new {
   val cats            = "2.13.0"
   val catsEffect      = "3.7.1"
   val circe           = "0.14.16"
-  val http4s          = "0.23.36"
+  val http4s          = "0.23.37"
   val munit           = "1.3.6"
   val munitScalacheck = "1.3.1"
   val munitCatsEffect = "2.2.0"
-  val scala           = "3.8.4"
+  val scala           = "3.9.0"
   val slf4j           = "1.7.36"
-  val slf4j2          = "2.0.19"
+  val slf4j2          = "2.0.20"
   val tzdb            = "2.7.0"
 }
 
